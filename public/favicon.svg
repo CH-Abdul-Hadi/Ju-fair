@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" shape-rendering="geometricPrecision">
+  <!-- Background: deep navy blue, rounded corners -->
+  <rect width="64" height="64" rx="12" ry="12" fill="#0B3D91"/>
+
+  <!-- Gold accent underline bar -->
+  <rect x="18" y="48" width="28" height="4" rx="2" fill="#F5A623"/>
+
+  <!-- Letter J -->
+  <text
+    x="32"
+    y="44"
+    font-family="'Poppins', 'Montserrat', Arial, sans-serif"
+    font-weight="800"
+    font-size="32"
+    fill="white"
+    text-anchor="middle"
+    dominant-baseline="auto"
+    letter-spacing="-1"
+  >JU</text>
+</svg>
