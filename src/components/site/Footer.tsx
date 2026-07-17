@@ -13,13 +13,12 @@ export function Footer() {
     <footer className="bg-primary text-primary-foreground mt-20">
       <div className="container-x py-14 grid gap-10 md:grid-cols-4">
         <div>
-          <div className="flex items-center gap-2 mb-4">
-            <div className="w-9 h-9 rounded-lg bg-white text-primary grid place-items-center font-display font-bold text-sm">
-              JU
-            </div>
-            <span className="font-display font-bold">
-              JU FAIR <span className="text-accent">GLOBAL</span>
-            </span>
+          <div className="mb-4">
+            <img
+              src="/favicon.png"
+              alt="JU Fair Global Logo"
+              className="h-16 w-auto object-contain brightness-0 invert"
+            />
           </div>
           <p className="text-sm text-white/80 leading-relaxed">
             Connecting global buyers with real trade opportunities through world-class exhibitions
