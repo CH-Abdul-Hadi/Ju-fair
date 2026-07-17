@@ -2,29 +2,32 @@ export function SectionTitle({
   eyebrow,
   title,
   align = "center",
-  subtitle,
+  description,
 }: {
   eyebrow?: string;
   title: string;
   align?: "center" | "left";
-  subtitle?: string;
+  description?: string;
 }) {
   return (
-    <div className={align === "center" ? "text-center" : ""}>
+    <div className={`max-w-2xl ${align === "center" ? "mx-auto text-center" : ""}`}>
+      {/* Line 1: Eyebrow */}
       {eyebrow && (
-        <span className="inline-block text-xs uppercase tracking-[0.2em] text-accent font-semibold mb-2">
-          {eyebrow}
-        </span>
+        <p className="eyebrow">{eyebrow}</p>
       )}
-      <h2 className="text-3xl md:text-4xl font-bold text-primary">{title}</h2>
-      <div className={`mt-3 h-1 w-16 bg-accent rounded ${align === "center" ? "mx-auto" : ""}`} />
-      {subtitle && (
-        <p
-          className={`mt-4 text-muted-foreground max-w-2xl ${align === "center" ? "mx-auto" : ""}`}
-        >
-          {subtitle}
+      {/* Line 2: Main heading — 38px */}
+      <h2 className="text-[38px] font-bold text-primary leading-[1.2] mt-2">
+        {title}
+      </h2>
+      {/* Line 3: Description (optional) */}
+      {description && (
+        <p className="mt-4 text-[18px] text-muted-foreground leading-[1.6]">
+          {description}
         </p>
       )}
+      {/* Accent underline */}
+      <div className={`mt-5 h-1 w-12 rounded-full bg-accent
+                       ${align === "center" ? "mx-auto" : ""}`} />
     </div>
   );
 }

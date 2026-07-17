@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 
 const nav = [
@@ -14,28 +14,62 @@ const nav = [
 
 export function Header() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handler = () => setScrolled(window.scrollY > 60);
+    handler(); // Initialize
+    window.addEventListener("scroll", handler, { passive: true });
+    return () => window.removeEventListener("scroll", handler);
+  }, []);
+
+  const isTransparent = !scrolled && !open;
+
   return (
-    <header className="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-border">
-      <div className="container-x flex items-center justify-between h-16">
+    <header
+      className={[
+        "fixed top-0 inset-x-0 z-50 transition-all duration-300",
+        isTransparent
+          ? "h-[80px] bg-transparent"
+          : "h-[72px] bg-white/95 backdrop-blur-md shadow-[0_2px_20px_rgba(0,0,0,.08)] border-b border-border",
+      ].join(" ")}
+    >
+      <div className="container-x flex items-center justify-between h-full">
+        {/* Logo */}
         <Link to="/" className="flex items-center gap-2">
-          <div className="w-9 h-9 rounded-lg bg-primary text-primary-foreground grid place-items-center font-display font-bold text-sm">
+          <div
+            className={`w-9 h-9 rounded-lg grid place-items-center font-display font-bold text-sm transition-colors ${
+              isTransparent ? "bg-white text-primary" : "bg-primary text-white"
+            }`}
+          >
             JU
           </div>
-          <span className="font-display font-bold text-primary tracking-tight">
+          <span
+            className={`font-display font-bold tracking-tight transition-colors ${
+              isTransparent ? "text-white" : "text-primary"
+            }`}
+          >
             JU FAIR <span className="text-accent">GLOBAL</span>
           </span>
         </Link>
+
+        {/* Desktop Nav Links */}
         <nav className="hidden lg:flex items-center gap-7">
           {nav.map((n) => (
             <Link
               key={n.to}
               to={n.to}
-              className="text-sm font-medium text-foreground hover:text-primary transition-colors relative
+              className={`text-sm font-medium transition-colors relative
                          after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:w-0 after:bg-accent after:rounded-full
-                         after:transition-[width] after:duration-300 hover:after:w-full"
+                         after:transition-[width] after:duration-300 hover:after:w-full ${
+                           isTransparent
+                             ? "text-white/90 hover:text-white"
+                             : "text-foreground hover:text-primary"
+                         }`}
               activeProps={{
-                className:
-                  "text-primary font-semibold after:w-full after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:bg-accent after:rounded-full",
+                className: `font-semibold after:w-full after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:bg-accent after:rounded-full ${
+                  isTransparent ? "text-white" : "text-primary"
+                }`,
               }}
               activeOptions={{ exact: n.to === "/" }}
             >
@@ -43,35 +77,51 @@ export function Header() {
             </Link>
           ))}
         </nav>
-        <Link to="/partner" className="hidden lg:inline-flex btn-primary">
-          Become Partner
-        </Link>
+
+        {/* Desktop Buttons */}
+        <div className="hidden lg:flex items-center gap-3">
+          <Link to="/partner" className="btn-primary ml-1">
+            Become Partner
+          </Link>
+        </div>
+
+        {/* Mobile Toggle */}
         <button
-          className="lg:hidden p-2 text-primary"
+          className={`lg:hidden p-2 transition-colors ${
+            isTransparent ? "text-white" : "text-primary"
+          }`}
           onClick={() => setOpen(!open)}
           aria-label="Menu"
         >
-          {open ? <X size={22} /> : <Menu size={22} />}
+          {open ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
+
+      {/* Mobile Menu Drawer */}
       {open && (
-        <div className="lg:hidden border-t border-border bg-white">
-          <div className="container-x py-4 flex flex-col gap-3">
+        <div className="lg:hidden absolute top-full left-0 w-full bg-white border-t border-border shadow-lg">
+          <div className="container-x py-4 flex flex-col">
             {nav.map((n) => (
               <Link
                 key={n.to}
                 to={n.to}
                 onClick={() => setOpen(false)}
-                className="py-2 text-sm font-medium text-foreground"
+                className="py-3 text-[16px] font-medium text-foreground border-b border-border/50 last:border-0"
                 activeProps={{ className: "text-primary font-semibold" }}
                 activeOptions={{ exact: n.to === "/" }}
               >
                 {n.label}
               </Link>
             ))}
-            <Link to="/partner" onClick={() => setOpen(false)} className="btn-primary mt-2">
-              Become Partner
-            </Link>
+            <div className="flex flex-col gap-3 mt-6">
+              <Link
+                to="/partner"
+                onClick={() => setOpen(false)}
+                className="btn-primary w-full justify-center"
+              >
+                Become Partner
+              </Link>
+            </div>
           </div>
         </div>
       )}

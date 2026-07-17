@@ -30,15 +30,17 @@ export function PageHero({
             "radial-gradient(circle at 20% 30%, rgba(245,166,35,0.4) 0, transparent 40%), radial-gradient(circle at 80% 70%, rgba(255,255,255,0.15) 0, transparent 40%)",
         }}
       />
-      <div className="container-x relative py-20 md:py-28 text-center">
+      <div className="container-x relative py-24 md:py-32 text-center">
         {eyebrow && (
-          <span className="inline-block text-xs uppercase tracking-[0.2em] text-accent font-semibold mb-3">
-            {eyebrow}
-          </span>
+          <p className="eyebrow inline-block">{eyebrow}</p>
         )}
-        <h1 className="text-white text-4xl md:text-5xl font-bold max-w-3xl mx-auto">{title}</h1>
+        <h1 className="text-white text-[40px] md:text-[48px] font-extrabold max-w-3xl mx-auto leading-[1.1]">
+          {title}
+        </h1>
         {subtitle && (
-          <p className="mt-4 text-white/80 max-w-2xl mx-auto text-base md:text-lg">{subtitle}</p>
+          <p className="mt-6 text-[18px] text-white/80 max-w-2xl mx-auto leading-[1.6]">
+            {subtitle}
+          </p>
         )}
       </div>
     </section>

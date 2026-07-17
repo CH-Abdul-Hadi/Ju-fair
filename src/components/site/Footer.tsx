@@ -1,7 +1,14 @@
 import { Link } from "@tanstack/react-router";
-import { Facebook, Twitter, Linkedin, Instagram, Mail, Phone, MapPin } from "lucide-react";
+import { Facebook, Linkedin, Instagram, MessageCircle, Mail, Phone, MapPin } from "lucide-react";
 
 export function Footer() {
+  const socials = [
+    { icon: Facebook, href: "https://www.facebook.com/share/1BdSxmw4wg/" },
+    { icon: Instagram, href: "https://www.instagram.com/jufair_global?igsh=cmhnNHV1Y3RtajZm" },
+    { icon: Linkedin, href: "https://www.linkedin.com/company/ju-global-private-limited/" },
+    { icon: MessageCircle, href: "https://wa.me/8618916909892" },
+  ];
+
   return (
     <footer className="bg-primary text-primary-foreground mt-20">
       <div className="container-x py-14 grid gap-10 md:grid-cols-4">
@@ -18,16 +25,17 @@ export function Footer() {
             Connecting global buyers with real trade opportunities through world-class exhibitions
             and matchmaking services.
           </p>
-          {/* Social icons — increased gap and touch target */}
           <div className="flex gap-4 mt-7">
-            {[Facebook, Twitter, Linkedin, Instagram].map((I, i) => (
+            {socials.map((s, i) => (
               <a
                 key={i}
-                href="#"
+                href={s.href}
+                target="_blank"
+                rel="noreferrer"
                 className="w-10 h-10 rounded-full bg-white/10 hover:bg-accent grid place-items-center transition-all duration-200 hover:scale-110"
                 aria-label="social"
               >
-                <I size={16} />
+                <s.icon size={16} />
               </a>
             ))}
           </div>
