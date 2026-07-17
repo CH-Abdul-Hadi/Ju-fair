@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { SiteLayout, PageHero } from "@/components/site/SiteLayout";
+import { ScrollReveal } from "@/components/site/ScrollReveal";
 import {
   Mail,
   Phone,
@@ -43,104 +44,110 @@ function ContactPage() {
       <section className="section-pad">
         <div className="container-x grid gap-10 lg:grid-cols-3">
           {/* Form */}
-          <div className="lg:col-span-2 card-elevated">
-            {sent ? (
-              <div className="py-6 text-center max-w-md mx-auto animate-fade-in">
-                <div className="w-16 h-16 bg-accent/15 text-accent rounded-full grid place-items-center mx-auto mb-4 border border-accent/35">
-                  <CheckCircle2 size={36} className="animate-bounce" />
-                </div>
-                <h3 className="text-2xl font-bold text-primary mb-2">Message Sent!</h3>
-                <p className="text-sm text-muted-foreground mb-6">
-                  Thank you for contacting JU Fair Global. Our international trade team will review
-                  your message and get back to you within one business day.
-                </p>
-                <div className="flex justify-center gap-3">
-                  <Link to="/services" className="btn-outline py-2 px-4 text-xs font-semibold">
-                    Our Services
-                  </Link>
-                  <Link to="/" className="btn-primary py-2 px-4 text-xs font-semibold">
-                    Back Home
-                  </Link>
-                </div>
-              </div>
-            ) : (
-              <>
-                <h2 className="text-2xl font-bold text-primary mb-6">Send us a message</h2>
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    setSent(true);
-                  }}
-                  className="grid gap-4 md:grid-cols-2"
-                >
-                  <Field label="Name" name="name" required />
-                  <Field label="Email" name="email" type="email" required />
-                  <Field label="Company" name="company" />
-                  <Field label="Phone" name="phone" />
-                  <div className="md:col-span-2">
-                    <label
-                      htmlFor="message"
-                      className="block text-sm font-medium text-foreground mb-2"
-                    >
-                      Message
-                    </label>
-                    <textarea
-                      id="message"
-                      name="message"
-                      required
-                      rows={5}
-                      className="w-full rounded-lg border border-input bg-background px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-                    />
+          <ScrollReveal direction="left" className="lg:col-span-2">
+            <div className="card-elevated h-full">
+              {sent ? (
+                <div className="py-6 text-center max-w-md mx-auto animate-fade-in">
+                  <div className="w-16 h-16 bg-accent/15 text-accent rounded-full grid place-items-center mx-auto mb-4 border border-accent/35">
+                    <CheckCircle2 size={36} className="animate-bounce" />
                   </div>
-                  <div className="md:col-span-2">
-                    <button type="submit" className="btn-primary cursor-pointer">
-                      <Send size={16} /> Send Message
-                    </button>
+                  <h3 className="text-2xl font-bold text-primary mb-2">Message Sent!</h3>
+                  <p className="text-sm text-muted-foreground mb-6">
+                    Thank you for contacting JU Fair Global. Our international trade team will review
+                    your message and get back to you within one business day.
+                  </p>
+                  <div className="flex justify-center gap-3">
+                    <Link to="/services" className="btn-outline py-2 px-4 text-xs font-semibold">
+                      Our Services
+                    </Link>
+                    <Link to="/" className="btn-primary py-2 px-4 text-xs font-semibold">
+                      Back Home
+                    </Link>
                   </div>
-                </form>
-              </>
-            )}
-          </div>
-
-          {/* Info */}
-          <div className="space-y-4">
-            <div className="card-elevated">
-              <h3 className="font-semibold text-primary mb-4">Contact Info</h3>
-              <ul className="space-y-3 text-sm text-muted-foreground">
-                <li className="flex gap-3">
-                  <MapPin size={18} className="text-accent shrink-0 mt-0.5" />
-                  1234 Trade Ave, Business City, 10001
-                </li>
-                <li className="flex gap-3">
-                  <Phone size={18} className="text-accent shrink-0 mt-0.5" />
-                  +1 (555) 123-4567
-                </li>
-                <li className="flex gap-3">
-                  <Mail size={18} className="text-accent shrink-0 mt-0.5" />
-                  info@jufairglobal.com
-                </li>
-              </ul>
-            </div>
-            <div className="card-elevated">
-              <h3 className="font-semibold text-primary mb-4">Social Media</h3>
-              <div className="flex gap-3">
-                {[Facebook, Twitter, Linkedin, Instagram].map((I, i) => (
-                  <a
-                    key={i}
-                    href="#"
-                    aria-label="social"
-                    className="w-10 h-10 rounded-full bg-primary text-primary-foreground grid place-items-center hover:bg-accent transition-colors"
+                </div>
+              ) : (
+                <>
+                  <h2 className="text-2xl font-bold text-primary mb-6">Send us a message</h2>
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      setSent(true);
+                    }}
+                    className="grid gap-4 md:grid-cols-2"
                   >
-                    <I size={16} />
-                  </a>
-                ))}
-              </div>
+                    <Field label="Name"    name="name"    required />
+                    <Field label="Email"   name="email"   type="email" required />
+                    <Field label="Company" name="company" />
+                    <Field label="Phone"   name="phone" />
+                    <div className="md:col-span-2">
+                      <label
+                        htmlFor="message"
+                        className="block text-sm font-medium text-foreground mb-2"
+                      >
+                        Message
+                      </label>
+                      <textarea
+                        id="message"
+                        name="message"
+                        required
+                        rows={5}
+                        className="w-full rounded-[var(--radius)] border border-input bg-background px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition-shadow"
+                      />
+                    </div>
+                    <div className="md:col-span-2">
+                      <button type="submit" className="btn-primary cursor-pointer">
+                        <Send size={16} /> Send Message
+                      </button>
+                    </div>
+                  </form>
+                </>
+              )}
             </div>
+          </ScrollReveal>
+
+          {/* Info sidebar */}
+          <div className="space-y-4">
+            <ScrollReveal direction="right" delay={100}>
+              <div className="card-elevated">
+                <h3 className="font-semibold text-primary mb-4">Contact Info</h3>
+                <ul className="space-y-3 text-sm text-muted-foreground">
+                  <li className="flex gap-3">
+                    <MapPin size={18} className="text-accent shrink-0 mt-0.5" />
+                    1234 Trade Ave, Business City, 10001
+                  </li>
+                  <li className="flex gap-3">
+                    <Phone size={18} className="text-accent shrink-0 mt-0.5" />
+                    +1 (555) 123-4567
+                  </li>
+                  <li className="flex gap-3">
+                    <Mail size={18} className="text-accent shrink-0 mt-0.5" />
+                    info@jufairglobal.com
+                  </li>
+                </ul>
+              </div>
+            </ScrollReveal>
+            <ScrollReveal direction="right" delay={200}>
+              <div className="card-elevated">
+                <h3 className="font-semibold text-primary mb-4">Social Media</h3>
+                <div className="flex gap-3">
+                  {[Facebook, Twitter, Linkedin, Instagram].map((I, i) => (
+                    <a
+                      key={i}
+                      href="#"
+                      aria-label="social"
+                      className="w-10 h-10 rounded-full bg-primary text-primary-foreground grid place-items-center hover:bg-accent transition-all duration-200 hover:scale-110"
+                    >
+                      <I size={16} />
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </ScrollReveal>
           </div>
         </div>
 
-        {/* Map */}
-        <div className="container-x mt-12">
+        {/* Map — scroll-triggered entrance */}
+        <ScrollReveal className="container-x mt-12" direction="up">
           <div className="card-elevated p-0 overflow-hidden">
             <iframe
               title="Office location"
@@ -149,7 +156,7 @@ function ContactPage() {
               loading="lazy"
             />
           </div>
-        </div>
+        </ScrollReveal>
       </section>
     </SiteLayout>
   );
@@ -176,7 +183,7 @@ function Field({
         name={name}
         type={type}
         required={required}
-        className="w-full rounded-lg border border-input bg-background px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+        className="w-full rounded-[var(--radius)] border border-input bg-background px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition-shadow"
       />
     </div>
   );

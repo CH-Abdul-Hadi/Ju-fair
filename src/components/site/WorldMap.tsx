@@ -69,22 +69,33 @@ export function WorldMap({
         markers.map((m, i) => (
           <g key={`m${i}`} className="group cursor-pointer">
             <title>{m.label}</title>
-            {/* Outer animated/pulsing hover boundary */}
+            {/* Outermost pulsing ring — CSS keyframe animation */}
+            <circle
+              cx={m.x}
+              cy={m.y}
+              r={11}
+              fill="#F5A623"
+              className={`map-marker-pulse`}
+              style={{
+                animationDelay: `${(i * 0.4) % 1.6}s`,
+                opacity: 0.2,
+              }}
+            />
+            {/* Outer hover boundary */}
             <circle
               cx={m.x}
               cy={m.y}
               r={9}
               fill="#F5A623"
-              className="opacity-20 transition-all duration-300 group-hover:scale-150 group-hover:opacity-45"
-              style={{ transformOrigin: `${m.x}px ${m.y}px` }}
+              className="opacity-20 transition-all duration-300 group-hover:opacity-40"
             />
-            {/* Middle hover ring */}
+            {/* Middle ring */}
             <circle
               cx={m.x}
               cy={m.y}
               r={6}
               fill="#F5A623"
-              className="opacity-45 transition-all duration-300 group-hover:opacity-65"
+              className="opacity-45 transition-all duration-300 group-hover:opacity-70"
             />
             {/* Core dot */}
             <circle

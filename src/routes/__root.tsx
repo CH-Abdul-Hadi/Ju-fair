@@ -7,7 +7,8 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, type ReactNode } from "react";
+import { useRouterState } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -123,11 +124,39 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+
+  // Prevent the browser from trying to restore old scroll positions on navigation.
+  // Must be 'manual' so we fully own scroll behaviour.
+  useLayoutEffect(() => {
+    if (typeof window !== "undefined") {
+      window.history.scrollRestoration = "manual";
+    }
+  }, []);
+
+  // Scroll to top BEFORE the browser paints the new page.
+  //
+  // Why useLayoutEffect and not useEffect?
+  //   useLayoutEffect fires synchronously after the DOM is updated but BEFORE
+  //   the browser paints. useEffect fires AFTER paint. IntersectionObservers in
+  //   child ScrollReveal components use useEffect — so they start observing only
+  //   after this layout effect has already reset scroll to 0. This prevents the
+  //   classic race where observers fire while the browser is still repositioning
+  //   the viewport from the previous page's scroll position.
+  useLayoutEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [pathname]);
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      {/* Key on pathname so React fully unmounts/remounts content on navigation */}
+      <div
+        key={pathname}
+        className="animate-fade-in"
+        style={{ animationDuration: "250ms", animationFillMode: "both" }}
+      >
+        <Outlet />
+      </div>
     </QueryClientProvider>
   );
 }

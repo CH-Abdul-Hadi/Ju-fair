@@ -18,12 +18,13 @@ export function Footer() {
             Connecting global buyers with real trade opportunities through world-class exhibitions
             and matchmaking services.
           </p>
-          <div className="flex gap-3 mt-5">
+          {/* Social icons — increased gap and touch target */}
+          <div className="flex gap-4 mt-7">
             {[Facebook, Twitter, Linkedin, Instagram].map((I, i) => (
               <a
                 key={i}
                 href="#"
-                className="w-9 h-9 rounded-full bg-white/10 hover:bg-accent grid place-items-center transition-colors"
+                className="w-10 h-10 rounded-full bg-white/10 hover:bg-accent grid place-items-center transition-all duration-200 hover:scale-110"
                 aria-label="social"
               >
                 <I size={16} />
@@ -38,22 +39,22 @@ export function Footer() {
           </h4>
           <ul className="space-y-2 text-sm text-white/80">
             <li>
-              <Link to="/about" className="hover:text-accent">
+              <Link to="/about" className="hover:text-accent transition-colors">
                 About Us
               </Link>
             </li>
             <li>
-              <Link to="/services" className="hover:text-accent">
+              <Link to="/services" className="hover:text-accent transition-colors">
                 Services
               </Link>
             </li>
             <li>
-              <Link to="/experience" className="hover:text-accent">
+              <Link to="/experience" className="hover:text-accent transition-colors">
                 Experience
               </Link>
             </li>
             <li>
-              <Link to="/partner" className="hover:text-accent">
+              <Link to="/partner" className="hover:text-accent transition-colors">
                 Partner
               </Link>
             </li>
@@ -66,22 +67,22 @@ export function Footer() {
           </h4>
           <ul className="space-y-2 text-sm text-white/80">
             <li>
-              <Link to="/contact" className="hover:text-accent">
+              <Link to="/contact" className="hover:text-accent transition-colors">
                 Contact
               </Link>
             </li>
             <li>
-              <a href="#" className="hover:text-accent">
+              <a href="#" className="hover:text-accent transition-colors">
                 FAQs
               </a>
             </li>
             <li>
-              <a href="#" className="hover:text-accent">
+              <a href="#" className="hover:text-accent transition-colors">
                 Privacy Policy
               </a>
             </li>
             <li>
-              <a href="#" className="hover:text-accent">
+              <a href="#" className="hover:text-accent transition-colors">
                 Terms of Service
               </a>
             </li>

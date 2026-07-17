@@ -30,8 +30,13 @@ export function Header() {
             <Link
               key={n.to}
               to={n.to}
-              className="text-sm font-medium text-foreground hover:text-primary transition-colors"
-              activeProps={{ className: "text-primary font-semibold" }}
+              className="text-sm font-medium text-foreground hover:text-primary transition-colors relative
+                         after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:w-0 after:bg-accent after:rounded-full
+                         after:transition-[width] after:duration-300 hover:after:w-full"
+              activeProps={{
+                className:
+                  "text-primary font-semibold after:w-full after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:bg-accent after:rounded-full",
+              }}
               activeOptions={{ exact: n.to === "/" }}
             >
               {n.label}
