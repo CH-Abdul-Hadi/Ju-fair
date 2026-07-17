@@ -41,11 +41,16 @@ export const Route = createFileRoute("/")({
 });
 
 const trustLogos = [
-  { name: "Canton Fair", src: "/logos/cantonFair.png" },
-  { name: "Hannover Messe", src: "/logos/hm_logo_col.png" },
-  { name: "Gulfood", src: "/logos/Gulfood.png" },
-  { name: "Bauma", src: "/logos/bauma-logo.svg" },
-  { name: "IFA", src: "/logos/GFU.png" },
+  // { name: "Canton Fair", src: "/logos/cantonFair.png" },
+  // { name: "Hannover Messe", src: "/logos/hm_logo_col.png" },
+  // { name: "Gulfood", src: "/logos/Gulfood.png" },
+  // { name: "Bauma", src: "/logos/bauma-logo.svg" },
+  // { name: "IFA", src: "/logos/GFU.png" },
+  { name: "JU Fair Gloabal", src: "/favicon.png" },
+  { name: "JU Fair Gloabal", src: "/favicon.png" },
+  { name: "JU Fair Gloabal", src: "/favicon.png" },
+  { name: "JU Fair Gloabal", src: "/favicon.png" },
+  { name: "JU Fair Gloabal", src: "/favicon.png" },
 ];
 
 const testimonials = [
