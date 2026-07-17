@@ -38,16 +38,14 @@ export function Header() {
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2">
           <div
-            className={`w-9 h-9 rounded-lg grid place-items-center font-display font-bold text-sm transition-colors ${
-              isTransparent ? "bg-white text-primary" : "bg-primary text-white"
-            }`}
+            className={`w-9 h-9 rounded-lg grid place-items-center font-display font-bold text-sm transition-colors ${isTransparent ? "bg-white text-primary" : "bg-primary text-white"
+              }`}
           >
             JU
           </div>
           <span
-            className={`font-display font-bold tracking-tight transition-colors ${
-              isTransparent ? "text-white" : "text-primary"
-            }`}
+            className={`font-display font-bold tracking-tight transition-colors ${isTransparent ? "text-white" : "text-primary"
+              }`}
           >
             JU FAIR <span className="text-accent">GLOBAL</span>
           </span>
@@ -61,15 +59,13 @@ export function Header() {
               to={n.to}
               className={`text-sm font-medium transition-colors relative
                          after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:w-0 after:bg-accent after:rounded-full
-                         after:transition-[width] after:duration-300 hover:after:w-full ${
-                           isTransparent
-                             ? "text-white/90 hover:text-white"
-                             : "text-foreground hover:text-primary"
-                         }`}
+                         after:transition-[width] after:duration-300 hover:after:w-full ${isTransparent
+                  ? "text-white/90 hover:text-white"
+                  : "text-foreground hover:text-primary"
+                }`}
               activeProps={{
-                className: `font-semibold after:w-full after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:bg-accent after:rounded-full ${
-                  isTransparent ? "text-white" : "text-primary"
-                }`,
+                className: `font-semibold after:w-full after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:bg-accent after:rounded-full ${isTransparent ? "text-white" : "text-primary"
+                  }`,
               }}
               activeOptions={{ exact: n.to === "/" }}
             >
@@ -87,9 +83,8 @@ export function Header() {
 
         {/* Mobile Toggle */}
         <button
-          className={`lg:hidden p-2 transition-colors ${
-            isTransparent ? "text-white" : "text-primary"
-          }`}
+          className={`lg:hidden p-2 transition-colors ${isTransparent ? "text-white" : "text-primary"
+            }`}
           onClick={() => setOpen(!open)}
           aria-label="Menu"
         >

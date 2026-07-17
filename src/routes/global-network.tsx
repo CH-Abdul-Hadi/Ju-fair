@@ -44,35 +44,35 @@ function NetworkPage() {
         <div className="container-x">
           <ScrollReveal>
             <div className="mb-16">
-              <SectionTitle 
-                eyebrow="Coverage" 
-                title="Global Presence" 
+              <SectionTitle
+                eyebrow="Coverage"
+                title="Global Presence"
                 description="Our proprietary database spans 40+ countries across every major continent, enabling unmatched access to localized decision-makers."
               />
             </div>
           </ScrollReveal>
 
           <div className="grid lg:grid-cols-3 gap-8">
-            
+
             {/* Left 2 Columns: World Map & Stats */}
             <div className="lg:col-span-2 space-y-8 flex flex-col">
               <ScrollReveal direction="left" className="flex-1">
                 <div className="card-elevated bg-[#F7F8FA] border border-border text-primary p-4 md:p-8 h-full min-h-[400px] flex items-center justify-center relative overflow-hidden group">
                   <WorldMap highlighted className="w-full absolute opacity-30 transition-transform duration-700 group-hover:scale-105 group-hover:opacity-50" />
-                  
+
                   {/* Decorative map pin over Europe */}
                   <div className="absolute top-1/3 left-1/2 w-4 h-4 bg-accent rounded-full animate-bounce shadow-[0_0_20px_rgba(245,166,35,0.8)]" />
                   {/* Decorative map pin over Asia */}
                   <div className="absolute top-[40%] right-[20%] w-3 h-3 bg-accent rounded-full animate-pulse shadow-[0_0_15px_rgba(245,166,35,0.8)]" />
-                  
+
                 </div>
               </ScrollReveal>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {[
-                  { icon: Globe2,    t: "40+", d: "Countries" },
-                  { icon: Users,     t: "3,000+",  d: "Verified Buyers" },
-                  { icon: Building2, t: "150+",    d: "Exhibitions" },
+                  { icon: Globe2, t: "40+", d: "Countries" },
+                  { icon: Users, t: "3,000+", d: "Verified Buyers" },
+                  { icon: Building2, t: "150+", d: "Exhibitions" },
                 ].map((c, i) => (
                   <ScrollReveal key={c.t} delay={i * 120} direction="up">
                     <div className="card-elevated text-center h-full p-6 border-transparent hover:border-accent/30 transition-all duration-300">
@@ -91,20 +91,20 @@ function NetworkPage() {
             <div className="lg:col-span-1">
               <ScrollReveal direction="right" className="h-full">
                 <div className="card-elevated h-full bg-primary text-white border-none shadow-[0_20px_50px_rgba(11,61,145,0.2)] p-8 relative overflow-hidden">
-                  
+
                   {/* Faint background texture */}
-                  <div 
+                  <div
                     className="absolute inset-0 opacity-[0.03]"
                     style={{ backgroundImage: "radial-gradient(#ffffff 1px, transparent 1px)", backgroundSize: "16px 16px" }}
                   />
-                  
+
                   <h3 className="text-[24px] font-bold text-white mb-8 flex items-center gap-3 relative z-10">
                     <div className="w-10 h-10 rounded-full bg-white/10 grid place-items-center">
                       <MapPin className="text-accent" size={20} />
                     </div>
                     Active Regions
                   </h3>
-                  
+
                   <div className="space-y-8 relative z-10">
                     {Object.entries(regions).map(([region, countries], i) => (
                       <div key={region} className="group">

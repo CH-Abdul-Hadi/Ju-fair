@@ -70,82 +70,76 @@ function Home() {
   return (
     <SiteLayout>
       {/* ─── HERO ─── */}
-      <section className="relative bg-primary min-h-screen flex items-center overflow-hidden">
-        {/* Background dot-grid texture */}
-        <div 
-          className="absolute inset-0 opacity-[0.05]"
-          style={{
-            backgroundImage: "radial-gradient(#ffffff 1px, transparent 1px)",
-            backgroundSize: "24px 24px"
-          }}
-        />
+      <section
+        className="relative min-h-screen flex items-center overflow-hidden"
+        style={{
+          backgroundImage: "url('/hero.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center top",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
+        {/* Dark overlay for text readability */}
+        <div className="absolute inset-0 bg-primary/50" />
 
         <div className="container-x relative grid lg:grid-cols-[55%_45%] gap-16 items-center py-32 z-10">
           {/* LEFT: Content */}
           <div>
-            <span className="hero-animate inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 text-accent text-xs font-bold tracking-[0.2em] uppercase mb-8" style={{ animationDelay: "0ms" }}>
+            <span className="hero-animate inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 text-accent text-xs font-bold tracking-[0.2em] uppercase mb-8 backdrop-blur-sm border border-white/10" style={{ animationDelay: "0ms" }}>
               <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
               International Trade Partner
             </span>
 
-            <h1 className="hero-animate text-[40px] lg:text-[56px] font-extrabold text-white leading-[1.1] max-w-xl" style={{ animationDelay: "120ms" }}>
+            <h1 className="hero-animate text-[40px] lg:text-[56px] font-extrabold text-white leading-[1.1] max-w-xl drop-shadow-lg" style={{ animationDelay: "120ms" }}>
               Connecting Global Buyers with{" "}
               <span className="text-accent">Real Trade Opportunities</span>
             </h1>
 
-            <p className="hero-animate mt-6 text-[18px] text-white/75 leading-[1.6] max-w-md" style={{ animationDelay: "260ms" }}>
-              We help exhibitors, organizers and international representatives meet qualified buyers across 40+ countries through targeted matchmaking.
+            <p className="hero-animate mt-6 text-[18px] text-white/80 leading-[1.6] max-w-md" style={{ animationDelay: "260ms" }}>
+              We help exhibitors, organizers and international representatives meet qualified buyers across 100+ countries through targeted matchmaking.
             </p>
 
             <div className="hero-animate mt-10 flex flex-wrap gap-4" style={{ animationDelay: "380ms" }}>
-              <Link to="/partner" className="btn-primary">
-                Become Our Partner <ArrowRight size={16} />
+              <Link to="/partner" className="btn-primary shadow-[0_0_24px_rgba(245,166,35,0.4)] hover:shadow-[0_0_32px_rgba(245,166,35,0.6)]">
+                Become a Partner <ArrowRight size={16} className="ml-1" />
               </Link>
-              <Link to="/services" className="btn-outline !border-white/40 !text-white hover:!bg-white/10">
-                Request Buyer Recruitment
+              <Link to="/services" className="btn-outline !border-white/40 !text-white hover:!bg-white/15 backdrop-blur-sm">
+                Explore Opportunities
               </Link>
             </div>
 
-            {/* Social proof strip */}
-            <div className="hero-animate mt-16 flex gap-8 items-center" style={{ animationDelay: "500ms" }}>
-              <div>
-                <div className="text-[28px] font-bold text-white">3,000+</div>
-                <div className="text-[13px] text-white/60 uppercase tracking-wider mt-1">Qualified Buyers</div>
-              </div>
-              <div className="w-px h-10 bg-white/20" />
-              <div>
-                <div className="text-[28px] font-bold text-white">40+</div>
-                <div className="text-[13px] text-white/60 uppercase tracking-wider mt-1">Countries</div>
-              </div>
-              <div className="w-px h-10 bg-white/20" />
-              <div>
-                <div className="text-[28px] font-bold text-white">$1M+</div>
-                <div className="text-[13px] text-white/60 uppercase tracking-wider mt-1">Trade Facilitated</div>
-              </div>
+            {/* Stats */}
+            <div className="hero-animate mt-12 grid grid-cols-3 gap-6" style={{ animationDelay: "500ms" }}>
+              {[
+                { value: "3,000+", label: "Qualified Buyers" },
+                { value: "100+", label: "Countries" },
+                { value: "25+", label: "Exhibitions" },
+              ].map((s) => (
+                <div key={s.label} className="text-center py-3 px-2 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10">
+                  <div className="text-[24px] font-extrabold text-white">{s.value}</div>
+                  <div className="text-[11px] text-accent uppercase tracking-wider font-bold mt-1">{s.label}</div>
+                </div>
+              ))}
             </div>
-          </div>
-
-          {/* RIGHT: World Map */}
-          <div className="hero-animate relative hidden lg:block" style={{ animationDelay: "200ms" }}>
-            <WorldMap highlighted className="w-full opacity-80" />
           </div>
         </div>
 
-        {/* Curved bottom separator */}
-        <div className="absolute bottom-0 inset-x-0">
+        {/* Bottom wave separator */}
+        <div className="absolute bottom-0 inset-x-0 z-10">
           <svg viewBox="0 0 1440 60" fill="white" preserveAspectRatio="none" className="w-full h-[60px] block">
             <path d="M0,60 C360,0 1080,0 1440,60 L1440,60 L0,60 Z" />
           </svg>
         </div>
       </section>
 
+
       {/* ─── SERVICES ─── */}
       <section className="section-pad bg-white">
         <div className="container-x">
           <ScrollReveal>
-            <SectionTitle 
-              eyebrow="What We Offer" 
-              title="Helping Buyers Expand Globally" 
+            <SectionTitle
+              eyebrow="What We Offer"
+              title="Helping Buyers Expand Globally"
               description="From targeted buyer recruitment to curated matchmaking — every service is designed to drive measurable international trade outcomes."
             />
           </ScrollReveal>
@@ -222,9 +216,9 @@ function Home() {
         <div className="container-x grid gap-12 lg:grid-cols-2 items-center">
           <ScrollReveal direction="left">
             <div>
-              <SectionTitle 
-                eyebrow="Advantages" 
-                title="Why Choose JU Fair Global" 
+              <SectionTitle
+                eyebrow="Advantages"
+                title="Why Choose JU Fair Global"
                 align="left"
                 description="Our proprietary methodology guarantees measurable trade outcomes for your events."
               />
@@ -270,7 +264,7 @@ function Home() {
       {/* SVG Wave separator (Gray to White) */}
       <div className="relative h-16 overflow-hidden -mb-1 bg-[#FAFAFA]">
         <svg viewBox="0 0 1440 64" preserveAspectRatio="none" className="absolute bottom-0 w-full h-full" fill="white">
-          <path d="M0,0 C480,64 960,64 1440,0 L1440,64 L0,64 Z"/>
+          <path d="M0,0 C480,64 960,64 1440,0 L1440,64 L0,64 Z" />
         </svg>
       </div>
 
@@ -278,9 +272,9 @@ function Home() {
       <section className="section-pad bg-white">
         <div className="container-x">
           <ScrollReveal>
-            <SectionTitle 
-              eyebrow="Process" 
-              title="How We Deliver Results" 
+            <SectionTitle
+              eyebrow="Process"
+              title="How We Deliver Results"
               description="A streamlined four-step methodology to connect you with the world's most qualified buyers."
             />
           </ScrollReveal>
@@ -289,10 +283,10 @@ function Home() {
             <div className="hidden md:block absolute top-10 left-[12%] right-[12%] h-[2px] bg-border border-dashed border-t-2" />
 
             {[
-              { icon: Search,       title: "Discovery",  desc: "We analyze your ideal buyer profiles and show metrics." },
-              { icon: Target,       title: "Targeting",  desc: "Proprietary matching against our 3000+ database." },
-              { icon: MessageSquare,title: "Engagement", desc: "Multi-channel outreach and meeting curation." },
-              { icon: Rocket,       title: "Outcomes",   desc: "Guaranteed meetings and comprehensive reporting." },
+              { icon: Search, title: "Discovery", desc: "We analyze your ideal buyer profiles and show metrics." },
+              { icon: Target, title: "Targeting", desc: "Proprietary matching against our 3000+ database." },
+              { icon: MessageSquare, title: "Engagement", desc: "Multi-channel outreach and meeting curation." },
+              { icon: Rocket, title: "Outcomes", desc: "Guaranteed meetings and comprehensive reporting." },
             ].map((s, i) => (
               <ScrollReveal key={s.title} delay={i * 150} direction="up">
                 <div className="relative text-center group bg-white">
@@ -312,7 +306,7 @@ function Home() {
       {/* SVG Wave separator (White to Light Gray) */}
       <div className="relative h-16 overflow-hidden -mb-1 bg-white">
         <svg viewBox="0 0 1440 64" preserveAspectRatio="none" className="absolute bottom-0 w-full h-full" fill="#F7F8FA">
-          <path d="M0,0 C480,64 960,64 1440,0 L1440,64 L0,64 Z"/>
+          <path d="M0,0 C480,64 960,64 1440,0 L1440,64 L0,64 Z" />
         </svg>
       </div>
 
