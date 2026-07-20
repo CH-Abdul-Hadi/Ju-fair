@@ -3,6 +3,8 @@ import { SiteLayout } from "@/components/site/SiteLayout";
 import { WorldMap } from "@/components/site/WorldMap";
 import { SectionTitle } from "@/components/site/SectionTitle";
 import { ScrollReveal } from "@/components/site/ScrollReveal";
+import { useLanguage } from "@/hooks/useLanguage";
+import { t } from "@/translations";
 import {
   Users,
   Handshake,
@@ -41,37 +43,20 @@ export const Route = createFileRoute("/")({
 });
 
 const trustLogos = [
-  // { name: "Canton Fair", src: "/logos/cantonFair.png" },
-  // { name: "Hannover Messe", src: "/logos/hm_logo_col.png" },
-  // { name: "Gulfood", src: "/logos/Gulfood.png" },
-  // { name: "Bauma", src: "/logos/bauma-logo.svg" },
-  // { name: "IFA", src: "/logos/GFU.png" },
-  { name: "JU Fair Gloabal", src: "/favicon.png" },
-  { name: "JU Fair Gloabal", src: "/favicon.png" },
-  { name: "JU Fair Gloabal", src: "/favicon.png" },
-  { name: "JU Fair Gloabal", src: "/favicon.png" },
-  { name: "JU Fair Gloabal", src: "/favicon.png" },
+  { name: "JU Fair Global", src: "/favicon.png" },
+  { name: "JU Fair Global", src: "/favicon.png" },
+  { name: "JU Fair Global", src: "/favicon.png" },
+  { name: "JU Fair Global", src: "/favicon.png" },
+  { name: "JU Fair Global", src: "/favicon.png" },
 ];
 
-const testimonials = [
-  {
-    quote: "JU Fair Global delivered an outstanding matchmaking experience. We secured three major international distributors within two days of the expo.",
-    name: "Sarah Jenkins",
-    company: "Global Tech Exhibitions",
-  },
-  {
-    quote: "Their targeted buyer recruitment methodology transformed our visitor quality. Our exhibitors reported a 40% increase in meaningful leads.",
-    name: "Michael Chen",
-    company: "Asia Pacific Trade Board",
-  },
-  {
-    quote: "The most reliable international sales representation we've ever partnered with. Transparent reporting and consistently high conversion rates.",
-    name: "Elena Rodriguez",
-    company: "European Auto Shows",
-  },
-];
+const serviceIcons = [Handshake, Building2, LineChart];
+const stepIcons = [Search, Target, MessageSquare, Rocket];
 
 function Home() {
+  const { lang } = useLanguage();
+  const tx = t(lang).home;
+
   return (
     <SiteLayout>
       {/* ─── HERO ─── */}
@@ -92,34 +77,30 @@ function Home() {
           <div>
             <span className="hero-animate inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 text-accent text-xs font-bold tracking-[0.2em] uppercase mb-8 backdrop-blur-sm border border-white/10" style={{ animationDelay: "0ms" }}>
               <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-              International Trade Partner
+              {tx.hero.badge}
             </span>
 
             <h1 className="hero-animate text-[40px] lg:text-[56px] font-extrabold text-white leading-[1.1] max-w-xl drop-shadow-lg" style={{ animationDelay: "120ms" }}>
-              Connecting Global Buyers with{" "}
-              <span className="text-accent">Real Trade Opportunities</span>
+              {tx.hero.headline}{" "}
+              <span className="text-accent">{tx.hero.headlineAccent}</span>
             </h1>
 
             <p className="hero-animate mt-6 text-[18px] text-white/80 leading-[1.6] max-w-md" style={{ animationDelay: "260ms" }}>
-              We help exhibitors, organizers and international representatives meet qualified buyers across 100+ countries through targeted matchmaking.
+              {tx.hero.description}
             </p>
 
             <div className="hero-animate mt-10 flex flex-wrap gap-4" style={{ animationDelay: "380ms" }}>
-              <Link to="/partner" className="btn-primary shadow-[0_0_24px_rgba(245,166,35,0.4)] hover:shadow-[0_0_32px_rgba(245,166,35,0.6)]">
-                Become a Partner <ArrowRight size={16} className="ml-1" />
+              <Link to="/partner" search={(p) => ({ ...p })} className="btn-primary shadow-[0_0_24px_rgba(245,166,35,0.4)] hover:shadow-[0_0_32px_rgba(245,166,35,0.6)]">
+                {tx.hero.btnPartner} <ArrowRight size={16} className="ml-1" />
               </Link>
-              <Link to="/services" className="btn-outline !border-white/40 !text-white hover:!bg-white/15 backdrop-blur-sm">
-                Explore Opportunities
+              <Link to="/services" search={(p) => ({ ...p })} className="btn-outline !border-white/40 !text-white hover:!bg-white/15 backdrop-blur-sm">
+                {tx.hero.btnExplore}
               </Link>
             </div>
 
             {/* Stats */}
             <div className="hero-animate mt-12 grid grid-cols-3 gap-6" style={{ animationDelay: "500ms" }}>
-              {[
-                { value: "3,000+", label: "Qualified Buyers" },
-                { value: "100+", label: "Countries" },
-                { value: "25+", label: "Exhibitions" },
-              ].map((s) => (
+              {tx.hero.stats.map((s) => (
                 <div key={s.label} className="text-center py-3 px-2 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10">
                   <div className="text-[24px] font-extrabold text-white">{s.value}</div>
                   <div className="text-[11px] text-accent uppercase tracking-wider font-bold mt-1">{s.label}</div>
@@ -143,9 +124,9 @@ function Home() {
         <div className="container-x">
           <ScrollReveal>
             <SectionTitle
-              eyebrow="What We Offer"
-              title="Helping Buyers Expand Globally"
-              description="From targeted buyer recruitment to curated matchmaking — every service is designed to drive measurable international trade outcomes."
+              eyebrow={tx.services.eyebrow}
+              title={tx.services.title}
+              description={tx.services.description}
             />
           </ScrollReveal>
 
@@ -157,16 +138,16 @@ function Home() {
                   <div className="w-16 h-16 rounded-2xl bg-accent/20 grid place-items-center mb-6">
                     <Users size={32} className="text-accent" />
                   </div>
-                  <h3 className="text-[28px] font-bold text-white leading-tight">International Buyer Recruitment</h3>
+                  <h3 className="text-[28px] font-bold text-white leading-tight">{tx.services.featured.title}</h3>
                   <p className="mt-4 text-[17px] text-white/75 leading-[1.6]">
-                    Qualified buyer sourcing across 40+ markets using our proprietary matching system. We guarantee the right decision-makers at your event.
+                    {tx.services.featured.desc}
                   </p>
-                  <Link to="/services" className="mt-8 inline-flex items-center gap-2 text-accent font-semibold text-[15px] hover:gap-3 transition-all duration-200">
-                    Explore Recruitment <ArrowRight size={16} />
+                  <Link to="/services" search={(p) => ({ ...p })} className="mt-8 inline-flex items-center gap-2 text-accent font-semibold text-[15px] hover:gap-3 transition-all duration-200">
+                    {tx.services.featured.link} <ArrowRight size={16} />
                   </Link>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
-                  {['Verified Global Database', 'Multi-channel Outreach', 'Guaranteed Attendance', 'Post-event Reporting'].map((s) => (
+                  {tx.services.featured.points.map((s) => (
                     <div key={s} className="rounded-xl bg-white/10 p-5 text-white font-semibold flex items-start gap-3">
                       <CheckCircle2 size={18} className="text-accent shrink-0 mt-0.5" />
                       <span className="text-[14px] leading-snug">{s}</span>
@@ -178,36 +159,23 @@ function Home() {
 
             {/* Supporting Cards */}
             <div className="grid md:grid-cols-3 gap-6">
-              {[
-                {
-                  icon: Handshake,
-                  title: "Business Matchmaking",
-                  desc: "Curated 1:1 B2B meetings that lead to real trade outcomes and measurable ROI.",
-                },
-                {
-                  icon: Building2,
-                  title: "Exhibition Sales",
-                  desc: "Global sales representation to fill your show floor with premium international exhibitors.",
-                },
-                {
-                  icon: LineChart,
-                  title: "Buyer Knowledge",
-                  desc: "Actionable insights and data analytics to convert trade leads faster.",
-                },
-              ].map((s, i) => (
-                <ScrollReveal key={s.title} delay={200 + (i * 100)}>
-                  <div className="card-elevated group h-full">
-                    <div className="w-12 h-12 rounded-[10px] bg-accent/12 grid place-items-center mb-5 transition-transform duration-300 group-hover:scale-110 group-hover:bg-accent/20">
-                      <s.icon size={22} className="text-accent" />
+              {tx.services.cards.map((s, i) => {
+                const Icon = serviceIcons[i];
+                return (
+                  <ScrollReveal key={s.title} delay={200 + (i * 100)}>
+                    <div className="card-elevated group h-full">
+                      <div className="w-12 h-12 rounded-[10px] bg-accent/12 grid place-items-center mb-5 transition-transform duration-300 group-hover:scale-110 group-hover:bg-accent/20">
+                        <Icon size={22} className="text-accent" />
+                      </div>
+                      <h3 className="text-[20px] font-semibold text-primary">{s.title}</h3>
+                      <p className="mt-3 text-[16px] text-muted-foreground leading-[1.6]">{s.desc}</p>
+                      <Link to="/services" search={(p) => ({ ...p })} className="mt-6 inline-flex items-center gap-1.5 text-accent text-[14px] font-semibold hover:gap-2.5 transition-all duration-200">
+                        {tx.services.readMore} <ArrowRight size={14} />
+                      </Link>
                     </div>
-                    <h3 className="text-[20px] font-semibold text-primary">{s.title}</h3>
-                    <p className="mt-3 text-[16px] text-muted-foreground leading-[1.6]">{s.desc}</p>
-                    <Link to="/services" className="mt-6 inline-flex items-center gap-1.5 text-accent text-[14px] font-semibold hover:gap-2.5 transition-all duration-200">
-                      Read more <ArrowRight size={14} />
-                    </Link>
-                  </div>
-                </ScrollReveal>
-              ))}
+                  </ScrollReveal>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -222,26 +190,21 @@ function Home() {
           <ScrollReveal direction="left">
             <div>
               <SectionTitle
-                eyebrow="Advantages"
-                title="Why Choose JU Fair Global"
+                eyebrow={tx.whyChoose.eyebrow}
+                title={tx.whyChoose.title}
                 align="left"
-                description="Our proprietary methodology guarantees measurable trade outcomes for your events."
+                description={tx.whyChoose.description}
               />
               <ul className="mt-10 space-y-4">
-                {[
-                  { label: "Vast Global Network", desc: "Access to verified decision-makers across 40+ countries." },
-                  { label: "Proven Matchmaking", desc: "Data-driven framework that maximizes meeting relevancy." },
-                  { label: "Dedicated Account Management", desc: "Local experts across major international trading regions." },
-                  { label: "Transparent Reporting", desc: "Clear metrics and validation for every lead generated." },
-                ].map((t, i) => (
-                  <ScrollReveal key={t.label} delay={i * 80}>
+                {tx.whyChoose.items.map((item, i) => (
+                  <ScrollReveal key={item.label} delay={i * 80}>
                     <li className="flex items-start gap-4 p-4 rounded-xl bg-white shadow-sm border border-black/[0.03]">
                       <div className="w-8 h-8 rounded-full bg-accent/15 grid place-items-center shrink-0">
                         <CheckCircle2 size={16} className="text-accent" />
                       </div>
                       <div>
-                        <div className="font-semibold text-primary text-[16px]">{t.label}</div>
-                        <div className="text-[14px] text-muted-foreground mt-1">{t.desc}</div>
+                        <div className="font-semibold text-primary text-[16px]">{item.label}</div>
+                        <div className="text-[14px] text-muted-foreground mt-1">{item.desc}</div>
                       </div>
                     </li>
                   </ScrollReveal>
@@ -278,32 +241,30 @@ function Home() {
         <div className="container-x">
           <ScrollReveal>
             <SectionTitle
-              eyebrow="Process"
-              title="How We Deliver Results"
-              description="A streamlined four-step methodology to connect you with the world's most qualified buyers."
+              eyebrow={tx.howItWorks.eyebrow}
+              title={tx.howItWorks.title}
+              description={tx.howItWorks.description}
             />
           </ScrollReveal>
           <div className="mt-16 grid gap-8 md:grid-cols-4 relative">
             {/* Connecting line for desktop */}
             <div className="hidden md:block absolute top-10 left-[12%] right-[12%] h-[2px] bg-border border-dashed border-t-2" />
 
-            {[
-              { icon: Search, title: "Discovery", desc: "We analyze your ideal buyer profiles and show metrics." },
-              { icon: Target, title: "Targeting", desc: "Proprietary matching against our 3000+ database." },
-              { icon: MessageSquare, title: "Engagement", desc: "Multi-channel outreach and meeting curation." },
-              { icon: Rocket, title: "Outcomes", desc: "Guaranteed meetings and comprehensive reporting." },
-            ].map((s, i) => (
-              <ScrollReveal key={s.title} delay={i * 150} direction="up">
-                <div className="relative text-center group bg-white">
-                  <div className="w-20 h-20 rounded-full bg-surface border-[6px] border-white text-primary grid place-items-center mx-auto shadow-sm relative z-10 transition-transform duration-300 group-hover:-translate-y-2 group-hover:shadow-[0_10px_30px_rgba(245,166,35,.2)] group-hover:text-accent">
-                    <s.icon size={28} />
+            {tx.howItWorks.steps.map((s, i) => {
+              const Icon = stepIcons[i];
+              return (
+                <ScrollReveal key={s.title} delay={i * 150} direction="up">
+                  <div className="relative text-center group bg-white">
+                    <div className="w-20 h-20 rounded-full bg-surface border-[6px] border-white text-primary grid place-items-center mx-auto shadow-sm relative z-10 transition-transform duration-300 group-hover:-translate-y-2 group-hover:shadow-[0_10px_30px_rgba(245,166,35,.2)] group-hover:text-accent">
+                      <Icon size={28} />
+                    </div>
+                    <div className="mt-6 text-[12px] font-bold text-accent tracking-[0.2em] uppercase">Step 0{i + 1}</div>
+                    <h3 className="mt-2 text-[20px] font-bold text-primary">{s.title}</h3>
+                    <p className="mt-3 text-[15px] text-muted-foreground leading-[1.6] px-4">{s.desc}</p>
                   </div>
-                  <div className="mt-6 text-[12px] font-bold text-accent tracking-[0.2em] uppercase">Step 0{i + 1}</div>
-                  <h3 className="mt-2 text-[20px] font-bold text-primary">{s.title}</h3>
-                  <p className="mt-3 text-[15px] text-muted-foreground leading-[1.6] px-4">{s.desc}</p>
-                </div>
-              </ScrollReveal>
-            ))}
+                </ScrollReveal>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -320,9 +281,9 @@ function Home() {
         <div className="container-x">
           <ScrollReveal>
             <SectionTitle
-              eyebrow="Trusted Worldwide"
-              title="Trusted by 3,000+ International Buyers"
-              description="Join the top exhibitors and organizers who rely on JU Fair Global for qualified buyer acquisition across every industry."
+              eyebrow={tx.trust.eyebrow}
+              title={tx.trust.title}
+              description={tx.trust.description}
             />
           </ScrollReveal>
 
@@ -353,7 +314,7 @@ function Home() {
 
           {/* Testimonial Cards */}
           <div className="grid md:grid-cols-3 gap-8 mt-16">
-            {testimonials.map((t, i) => (
+            {tx.testimonials.map((testimonial, i) => (
               <ScrollReveal key={i} delay={i * 150} direction="up">
                 <div className="card-elevated flex flex-col h-full">
                   <div className="flex gap-1 mb-6">
@@ -362,15 +323,15 @@ function Home() {
                     ))}
                   </div>
                   <p className="text-[16px] text-foreground leading-[1.7] italic flex-1">
-                    "{t.quote}"
+                    "{testimonial.quote}"
                   </p>
                   <div className="flex items-center gap-4 mt-8 pt-6 border-t border-black/[0.04]">
                     <div className="w-12 h-12 rounded-full bg-primary/5 grid place-items-center shrink-0">
                       <User size={20} className="text-primary" />
                     </div>
                     <div>
-                      <div className="text-[15px] font-bold text-primary">{t.name}</div>
-                      <div className="text-[13px] text-muted-foreground mt-0.5">{t.company}</div>
+                      <div className="text-[15px] font-bold text-primary">{testimonial.name}</div>
+                      <div className="text-[13px] text-muted-foreground mt-0.5">{testimonial.company}</div>
                     </div>
                   </div>
                 </div>
@@ -391,13 +352,13 @@ function Home() {
               <div className="relative z-10">
                 <Award className="mx-auto text-accent mb-6" size={48} />
                 <h2 className="text-white text-[32px] md:text-[44px] font-extrabold leading-[1.2]">
-                  Ready to Grow Your Trade Potential?
+                  {tx.cta.title}
                 </h2>
                 <p className="mt-6 text-white/80 max-w-2xl mx-auto text-[18px] leading-[1.6]">
-                  Join our network of international representatives, exhibitors, and organizers. Unlock access to a world of verified buyers.
+                  {tx.cta.description}
                 </p>
-                <Link to="/partner" className="btn-primary mt-10 inline-flex !h-14 !px-8 !text-[16px]">
-                  Partner With Us Today <ArrowRight size={18} className="ml-1" />
+                <Link to="/partner" search={(p) => ({ ...p })} className="btn-primary mt-10 inline-flex !h-14 !px-8 !text-[16px]">
+                  {tx.cta.btn} <ArrowRight size={18} className="ml-1" />
                 </Link>
               </div>
             </div>

@@ -3,6 +3,8 @@ import { SiteLayout, PageHero } from "@/components/site/SiteLayout";
 import { SectionTitle } from "@/components/site/SectionTitle";
 import { ScrollReveal } from "@/components/site/ScrollReveal";
 import { WorldMap } from "@/components/site/WorldMap";
+import { useLanguage } from "@/hooks/useLanguage";
+import { t } from "@/translations";
 import { Globe2, Users, Building2, MapPin } from "lucide-react";
 
 export const Route = createFileRoute("/global-network")({
@@ -22,21 +24,18 @@ export const Route = createFileRoute("/global-network")({
   component: NetworkPage,
 });
 
-const regions = {
-  Europe: ["Germany", "France", "UK", "Italy", "Spain", "Netherlands", "Poland"],
-  "Asia Pacific": ["China", "Japan", "India", "South Korea", "Vietnam", "Thailand", "Australia"],
-  "Middle East": ["UAE", "Saudi Arabia", "Qatar", "Turkey", "Egypt"],
-  Americas: ["USA", "Canada", "Mexico", "Brazil", "Argentina"],
-  Africa: ["South Africa", "Nigeria", "Kenya", "Morocco"],
-};
+const statIcons = [Globe2, Users, Building2];
 
 function NetworkPage() {
+  const { lang } = useLanguage();
+  const tx = t(lang).globalNetwork;
+
   return (
     <SiteLayout>
       <PageHero
-        eyebrow="Worldwide"
-        title="Our Global Network"
-        subtitle="Local expertise in every major trading region, ensuring targeted and relevant connections."
+        eyebrow={tx.hero.eyebrow}
+        title={tx.hero.title}
+        subtitle={tx.hero.subtitle}
       />
 
       {/* ─── 3-COLUMN NETWORK LAYOUT ─── */}
@@ -45,9 +44,9 @@ function NetworkPage() {
           <ScrollReveal>
             <div className="mb-16">
               <SectionTitle
-                eyebrow="Coverage"
-                title="Global Presence"
-                description="Our proprietary database spans 40+ countries across every major continent, enabling unmatched access to localized decision-makers."
+                eyebrow={tx.coverage.eyebrow}
+                title={tx.coverage.title}
+                description={tx.coverage.description}
               />
             </div>
           </ScrollReveal>
@@ -69,21 +68,20 @@ function NetworkPage() {
               </ScrollReveal>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {[
-                  { icon: Globe2, t: "40+", d: "Countries" },
-                  { icon: Users, t: "3,000+", d: "Verified Buyers" },
-                  { icon: Building2, t: "150+", d: "Exhibitions" },
-                ].map((c, i) => (
-                  <ScrollReveal key={c.t} delay={i * 120} direction="up">
-                    <div className="card-elevated text-center h-full p-6 border-transparent hover:border-accent/30 transition-all duration-300">
-                      <div className="w-12 h-12 rounded-[12px] bg-accent/15 text-accent grid place-items-center mx-auto mb-4 transition-transform duration-300 hover:-translate-y-1">
-                        <c.icon size={22} />
+                {tx.stats.map((c, i) => {
+                  const Icon = statIcons[i];
+                  return (
+                    <ScrollReveal key={c.t} delay={i * 120} direction="up">
+                      <div className="card-elevated text-center h-full p-6 border-transparent hover:border-accent/30 transition-all duration-300">
+                        <div className="w-12 h-12 rounded-[12px] bg-accent/15 text-accent grid place-items-center mx-auto mb-4 transition-transform duration-300 hover:-translate-y-1">
+                          <Icon size={22} />
+                        </div>
+                        <h3 className="text-[32px] font-display font-extrabold text-primary leading-none">{c.t}</h3>
+                        <p className="mt-2 text-[13px] font-bold uppercase tracking-[0.1em] text-muted-foreground">{c.d}</p>
                       </div>
-                      <h3 className="text-[32px] font-display font-extrabold text-primary leading-none">{c.t}</h3>
-                      <p className="mt-2 text-[13px] font-bold uppercase tracking-[0.1em] text-muted-foreground">{c.d}</p>
-                    </div>
-                  </ScrollReveal>
-                ))}
+                    </ScrollReveal>
+                  );
+                })}
               </div>
             </div>
 
@@ -102,17 +100,17 @@ function NetworkPage() {
                     <div className="w-10 h-10 rounded-full bg-white/10 grid place-items-center">
                       <MapPin className="text-accent" size={20} />
                     </div>
-                    Active Regions
+                    {tx.activeRegions}
                   </h3>
 
                   <div className="space-y-8 relative z-10">
-                    {Object.entries(regions).map(([region, countries], i) => (
+                    {Object.entries(tx.regions).map(([region, countries]) => (
                       <div key={region} className="group">
                         <h4 className="font-bold text-white text-[15px] mb-4 uppercase tracking-widest border-b border-white/20 pb-2 flex items-center justify-between">
                           {region}
                         </h4>
                         <ul className="grid grid-cols-2 gap-y-3 text-[14px] text-white/75 font-medium">
-                          {countries.map((c) => (
+                          {(countries as readonly string[]).map((c) => (
                             <li key={c} className="flex items-center gap-2 group-hover:text-white transition-colors duration-200">
                               <span className="w-1.5 h-1.5 rounded-full bg-accent shrink-0" /> {c}
                             </li>
@@ -125,6 +123,33 @@ function NetworkPage() {
               </ScrollReveal>
             </div>
 
+          </div>
+        </div>
+      </section>
+
+      {/* ─── WORKING MODEL ─── */}
+      <section className="section-pad bg-[#FAFAFA]">
+        <div className="container-x">
+          <ScrollReveal>
+            <SectionTitle
+              eyebrow={tx.model.eyebrow}
+              title={tx.model.title}
+              description={tx.model.description}
+            />
+          </ScrollReveal>
+          <div className="mt-12 max-w-2xl mx-auto">
+            <ol className="space-y-4">
+              {tx.model.steps.map((step, i) => (
+                <ScrollReveal key={step} delay={i * 80} direction="up">
+                  <li className="flex items-center gap-4 bg-white p-5 rounded-xl border border-border shadow-sm">
+                    <div className="w-9 h-9 rounded-full bg-accent/15 grid place-items-center shrink-0 font-bold text-accent text-[15px]">
+                      {i + 1}
+                    </div>
+                    <span className="text-[15px] font-medium text-foreground">{step}</span>
+                  </li>
+                </ScrollReveal>
+              ))}
+            </ol>
           </div>
         </div>
       </section>

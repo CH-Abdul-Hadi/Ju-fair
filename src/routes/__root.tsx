@@ -9,9 +9,15 @@ import {
 } from "@tanstack/react-router";
 import { useEffect, useLayoutEffect, type ReactNode } from "react";
 import { useRouterState } from "@tanstack/react-router";
+import { z } from "zod";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { useLanguage } from "../hooks/useLanguage";
+
+const searchSchema = z.object({
+  lang: z.enum(["en", "cn"]).optional(),
+});
 
 function NotFoundComponent() {
   return (
@@ -74,6 +80,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
+  validateSearch: searchSchema,
   head: () => ({
     meta: [
       { charSet: "utf-8" },
@@ -122,6 +129,17 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+/** Sync the <html lang> attribute with the active language. */
+function LangSync() {
+  const { lang } = useLanguage();
+  useEffect(() => {
+    if (typeof document !== "undefined") {
+      document.documentElement.lang = lang === "cn" ? "zh" : "en";
+    }
+  }, [lang]);
+  return null;
+}
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
@@ -149,6 +167,7 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <LangSync />
       {/* Key on pathname so React fully unmounts/remounts content on navigation */}
       <div
         key={pathname}

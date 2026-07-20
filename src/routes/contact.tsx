@@ -2,6 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { SiteLayout, PageHero } from "@/components/site/SiteLayout";
 import { ScrollReveal } from "@/components/site/ScrollReveal";
+import { useLanguage } from "@/hooks/useLanguage";
+import { t } from "@/translations";
 import {
   Mail,
   Phone,
@@ -33,21 +35,24 @@ export const Route = createFileRoute("/contact")({
 
 function ContactPage() {
   const [sent, setSent] = useState(false);
+  const { lang } = useLanguage();
+  const tx = t(lang).contact;
+
   return (
     <SiteLayout>
       <PageHero
-        eyebrow="Get In Touch"
-        title="Contact Us"
-        subtitle="We respond to all partnership and recruitment inquiries within one business day."
+        eyebrow={tx.hero.eyebrow}
+        title={tx.hero.title}
+        subtitle={tx.hero.subtitle}
       />
 
       <section className="section-pad bg-[#FAFAFA]">
         <div className="container-x">
           <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-start">
-            
+
             {/* ─── 70% LEFT COLUMN (FORM + MAP) ─── */}
             <div className="lg:col-span-8 space-y-8">
-              
+
               {/* Form Card */}
               <ScrollReveal direction="left">
                 <div className="card-elevated bg-white border-none shadow-[0_12px_40px_rgba(0,0,0,0.05)] p-8 md:p-12">
@@ -56,25 +61,24 @@ function ContactPage() {
                       <div className="w-20 h-20 bg-accent/15 text-accent rounded-full grid place-items-center mx-auto mb-6 border border-accent/20">
                         <CheckCircle2 size={40} className="animate-bounce" />
                       </div>
-                      <h3 className="text-[28px] font-bold text-primary mb-3">Message Sent!</h3>
+                      <h3 className="text-[28px] font-bold text-primary mb-3">{tx.form.success.title}</h3>
                       <p className="text-[16px] text-muted-foreground leading-[1.6] mb-8">
-                        Thank you for contacting JU Fair Global. Our international trade team will review
-                        your message and get back to you within one business day.
+                        {tx.form.success.desc}
                       </p>
                       <div className="flex justify-center gap-4">
-                        <Link to="/services" className="btn-outline">
-                          Our Services
+                        <Link to="/services" search={(p) => ({ ...p })} className="btn-outline">
+                          {tx.form.success.btnServices}
                         </Link>
-                        <Link to="/" className="btn-primary">
-                          Back Home
+                        <Link to="/" search={(p) => ({ ...p })} className="btn-primary">
+                          {tx.form.success.btnHome}
                         </Link>
                       </div>
                     </div>
                   ) : (
                     <>
-                      <h2 className="text-[32px] font-bold text-primary mb-2">Send us a message</h2>
-                      <p className="text-muted-foreground mb-8 text-[16px]">Fill out the form below and our partnership team will reach out to you.</p>
-                      
+                      <h2 className="text-[32px] font-bold text-primary mb-2">{tx.form.title}</h2>
+                      <p className="text-muted-foreground mb-8 text-[16px]">{tx.form.subtitle}</p>
+
                       <form
                         onSubmit={(e) => {
                           e.preventDefault();
@@ -82,14 +86,39 @@ function ContactPage() {
                         }}
                         className="grid gap-6 md:grid-cols-2"
                       >
-                        <Field label="Full Name"    name="name"    required />
-                        <Field label="Business Email"   name="email"   type="email" required />
-                        <Field label="Company Name" name="company" />
-                        <Field label="Phone Number"   name="phone" />
-                        
+                        <Field label={tx.form.fields.name} name="name" required />
+                        <Field label={tx.form.fields.company} name="company" required />
+                        <Field label={tx.form.fields.country} name="country" required />
+                        <Field label={tx.form.fields.email} name="email" type="email" required />
+                        <Field label={tx.form.fields.phone} name="phone" />
+
+                        {/* Interested Service Dropdown */}
+                        <div>
+                          <label htmlFor="service" className="block text-[14px] font-bold text-primary mb-2">
+                            {tx.form.services.label}
+                          </label>
+                          <select
+                            id="service"
+                            name="service"
+                            className="w-full h-[52px] rounded-[12px] border-2 border-border/80 bg-background px-4 text-[15px] focus:outline-none focus:border-accent focus:ring-4 focus:ring-accent/10 transition-all appearance-none cursor-pointer"
+                            style={{
+                              backgroundImage: `url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230B3D91' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e")`,
+                              backgroundRepeat: "no-repeat",
+                              backgroundPosition: "right 16px center",
+                              backgroundSize: "16px",
+                            }}
+                          >
+                            {tx.form.services.options.map((opt) => (
+                              <option key={opt} value={opt}>
+                                {opt}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+
                         <div className="md:col-span-2 mt-2">
                           <label htmlFor="message" className="block text-[14px] font-bold text-primary mb-2">
-                            How can we help? <span className="text-accent">*</span>
+                            {tx.form.fields.message} <span className="text-accent">*</span>
                           </label>
                           <textarea
                             id="message"
@@ -97,14 +126,14 @@ function ContactPage() {
                             required
                             rows={5}
                             className="w-full rounded-[12px] border-2 border-border/80 bg-background px-4 py-3 text-[15px] focus:outline-none focus:border-accent focus:ring-4 focus:ring-accent/10 transition-all resize-none"
-                            placeholder="Tell us about your exhibition or buyer recruitment needs..."
+                            placeholder={tx.form.fields.messagePlaceholder}
                           />
                         </div>
-                        
+
                         <div className="md:col-span-2 mt-4">
                           <button type="submit" className="btn-primary w-full md:w-auto !h-14 !px-10 !text-[16px] cursor-pointer group">
-                            <Send size={18} className="transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" /> 
-                            Send Message
+                            <Send size={18} className="transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" />
+                            {tx.form.submit}
                           </button>
                         </div>
                       </form>
@@ -118,7 +147,7 @@ function ContactPage() {
                 <div className="card-elevated p-2 overflow-hidden bg-white border-none shadow-[0_12px_40px_rgba(0,0,0,0.05)]">
                   <iframe
                     title="Office location"
-                    src="https://www.openstreetmap.org/export/embed.html?bbox=-74.02%2C40.70%2C-73.96%2C40.75&layer=mapnik"
+                    src="https://www.openstreetmap.org/export/embed.html?bbox=121.3%2C31.1%2C121.6%2C31.3&layer=mapnik"
                     className="w-full h-80 rounded-[12px] border-0"
                     loading="lazy"
                   />
@@ -128,22 +157,22 @@ function ContactPage() {
 
             {/* ─── 30% RIGHT COLUMN (STICKY SIDEBAR) ─── */}
             <div className="lg:col-span-4 lg:sticky lg:top-28 space-y-6">
-              
+
               <ScrollReveal direction="right" delay={100}>
                 <div className="card-elevated bg-primary text-white border-none shadow-[0_12px_30px_rgba(11,61,145,0.15)] p-8 relative overflow-hidden">
-                  <div 
+                  <div
                     className="absolute inset-0 opacity-[0.05]"
                     style={{ backgroundImage: "radial-gradient(#ffffff 1px, transparent 1px)", backgroundSize: "16px 16px" }}
                   />
-                  <h3 className="font-bold text-[20px] text-white mb-6 relative z-10">Contact Info</h3>
+                  <h3 className="font-bold text-[20px] text-white mb-6 relative z-10">{tx.sidebar.contactInfo}</h3>
                   <ul className="space-y-6 text-[15px] text-white/80 relative z-10">
                     <li className="flex gap-4">
                       <div className="w-10 h-10 rounded-full bg-white/10 grid place-items-center shrink-0">
                         <MapPin size={18} className="text-accent" />
                       </div>
                       <div>
-                        <div className="font-semibold text-white mb-1">Global Headquarters</div>
-                        1234 Trade Ave, Business City, 10001
+                        <div className="font-semibold text-white mb-1">{tx.sidebar.hq}</div>
+                        {tx.sidebar.address}
                       </div>
                     </li>
                     <li className="flex gap-4">
@@ -151,8 +180,8 @@ function ContactPage() {
                         <Phone size={18} className="text-accent" />
                       </div>
                       <div>
-                        <div className="font-semibold text-white mb-1">Phone</div>
-                        +1 (555) 123-4567
+                        <div className="font-semibold text-white mb-1">{tx.sidebar.phone}</div>
+                        {tx.sidebar.phoneValue}
                       </div>
                     </li>
                     <li className="flex gap-4">
@@ -160,8 +189,8 @@ function ContactPage() {
                         <Mail size={18} className="text-accent" />
                       </div>
                       <div>
-                        <div className="font-semibold text-white mb-1">Email Support</div>
-                        info@jufairglobal.com
+                        <div className="font-semibold text-white mb-1">{tx.sidebar.emailSupport}</div>
+                        {tx.sidebar.emailValue}
                       </div>
                     </li>
                   </ul>
@@ -170,7 +199,7 @@ function ContactPage() {
 
               <ScrollReveal direction="right" delay={200}>
                 <div className="card-elevated bg-white border-none shadow-sm p-8 text-center">
-                  <h3 className="font-bold text-[18px] text-primary mb-5">Connect With Us</h3>
+                  <h3 className="font-bold text-[18px] text-primary mb-5">{tx.sidebar.connectWith}</h3>
                   <div className="flex justify-center gap-4">
                     {[
                       { icon: Facebook, href: "https://www.facebook.com/share/1BdSxmw4wg/" },

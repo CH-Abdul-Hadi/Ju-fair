@@ -1,7 +1,12 @@
 import { Link } from "@tanstack/react-router";
 import { Facebook, Linkedin, Instagram, MessageCircle, Mail, Phone, MapPin } from "lucide-react";
+import { useLanguage } from "@/hooks/useLanguage";
+import { t } from "@/translations";
 
 export function Footer() {
+  const { lang } = useLanguage();
+  const tx = t(lang).footer;
+
   const socials = [
     { icon: Facebook, href: "https://www.facebook.com/share/1BdSxmw4wg/" },
     { icon: Instagram, href: "https://www.instagram.com/jufair_global?igsh=cmhnNHV1Y3RtajZm" },
@@ -21,8 +26,7 @@ export function Footer() {
             />
           </div>
           <p className="text-sm text-white/80 leading-relaxed">
-            Connecting global buyers with real trade opportunities through world-class exhibitions
-            and matchmaking services.
+            {tx.tagline}
           </p>
           <div className="flex gap-4 mt-7">
             {socials.map((s, i) => (
@@ -42,27 +46,27 @@ export function Footer() {
 
         <div>
           <h4 className="text-accent font-display font-semibold mb-4 text-sm uppercase tracking-wider">
-            Company
+            {tx.company}
           </h4>
           <ul className="space-y-2 text-sm text-white/80">
             <li>
-              <Link to="/about" className="hover:text-accent transition-colors">
-                About Us
+              <Link to="/about" search={(p) => ({ ...p })} className="hover:text-accent transition-colors">
+                {tx.links.about}
               </Link>
             </li>
             <li>
-              <Link to="/services" className="hover:text-accent transition-colors">
-                Services
+              <Link to="/services" search={(p) => ({ ...p })} className="hover:text-accent transition-colors">
+                {tx.links.services}
               </Link>
             </li>
             <li>
-              <Link to="/experience" className="hover:text-accent transition-colors">
-                Experience
+              <Link to="/experience" search={(p) => ({ ...p })} className="hover:text-accent transition-colors">
+                {tx.links.experience}
               </Link>
             </li>
             <li>
-              <Link to="/partner" className="hover:text-accent transition-colors">
-                Partner
+              <Link to="/partner" search={(p) => ({ ...p })} className="hover:text-accent transition-colors">
+                {tx.links.partner}
               </Link>
             </li>
           </ul>
@@ -70,27 +74,27 @@ export function Footer() {
 
         <div>
           <h4 className="text-accent font-display font-semibold mb-4 text-sm uppercase tracking-wider">
-            Support
+            {tx.support}
           </h4>
           <ul className="space-y-2 text-sm text-white/80">
             <li>
-              <Link to="/contact" className="hover:text-accent transition-colors">
-                Contact
+              <Link to="/contact" search={(p) => ({ ...p })} className="hover:text-accent transition-colors">
+                {tx.links.contact}
               </Link>
             </li>
             <li>
               <a href="#" className="hover:text-accent transition-colors">
-                FAQs
+                {tx.links.faqs}
               </a>
             </li>
             <li>
               <a href="#" className="hover:text-accent transition-colors">
-                Privacy Policy
+                {tx.links.privacy}
               </a>
             </li>
             <li>
               <a href="#" className="hover:text-accent transition-colors">
-                Terms of Service
+                {tx.links.terms}
               </a>
             </li>
           </ul>
@@ -98,26 +102,25 @@ export function Footer() {
 
         <div>
           <h4 className="text-accent font-display font-semibold mb-4 text-sm uppercase tracking-wider">
-            Contact Info
+            {tx.contactInfo}
           </h4>
           <ul className="space-y-3 text-sm text-white/80">
             <li className="flex gap-2">
-              <MapPin size={16} className="shrink-0 mt-0.5 text-accent" /> 1234 Trade Ave, Business
-              City
+              <MapPin size={16} className="shrink-0 mt-0.5 text-accent" /> {tx.address}
             </li>
             <li className="flex gap-2">
-              <Phone size={16} className="shrink-0 mt-0.5 text-accent" /> +1 (555) 123-4567
+              <Phone size={16} className="shrink-0 mt-0.5 text-accent" /> {tx.phone}
             </li>
             <li className="flex gap-2">
-              <Mail size={16} className="shrink-0 mt-0.5 text-accent" /> info@jufairglobal.com
+              <Mail size={16} className="shrink-0 mt-0.5 text-accent" /> {tx.email}
             </li>
           </ul>
         </div>
       </div>
       <div className="border-t border-white/10">
         <div className="container-x py-5 text-xs text-white/60 flex flex-col md:flex-row justify-between gap-2">
-          <span>© {new Date().getFullYear()} JU Fair Global. All rights reserved.</span>
-          <span>Crafted with precision for international business.</span>
+          <span>© {new Date().getFullYear()} {tx.copyright}</span>
+          <span>{tx.crafted}</span>
         </div>
       </div>
     </footer>
