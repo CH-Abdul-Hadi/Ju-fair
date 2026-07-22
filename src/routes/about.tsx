@@ -56,7 +56,7 @@ function AboutPage() {
                   </div>
                 )}
               </div>
-              <ul className="mt-10 grid grid-cols-2 gap-4">
+              <ul className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {tx.story.highlights.map((item) => (
                   <li key={item} className="flex items-center gap-3">
                     <CheckCircle2 size={18} className="text-accent" />

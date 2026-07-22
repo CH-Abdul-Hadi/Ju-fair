@@ -88,7 +88,7 @@ function PartnerPage() {
           <div className="mt-16 max-w-4xl mx-auto space-y-6">
             {tx.benefits.items.map((b, i) => (
               <ScrollReveal key={b.t} delay={i * 100} direction="up">
-                <div className="card-elevated p-8 md:p-10 flex flex-col md:flex-row gap-8 items-start md:items-center bg-white border-none shadow-sm">
+                <div className="card-elevated p-6 md:p-10 flex flex-col md:flex-row gap-6 md:gap-8 items-start md:items-center bg-white border-none shadow-sm">
                   <div className="md:w-1/3 shrink-0">
                     <h3 className="text-[22px] font-bold text-primary leading-tight">{b.t}</h3>
                   </div>

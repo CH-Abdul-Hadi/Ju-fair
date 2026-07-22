@@ -30,11 +30,11 @@ export function PageHero({
             "radial-gradient(circle at 20% 30%, rgba(245,166,35,0.4) 0, transparent 40%), radial-gradient(circle at 80% 70%, rgba(255,255,255,0.15) 0, transparent 40%)",
         }}
       />
-      <div className="container-x relative py-24 md:py-32 text-center">
+      <div className="container-x relative py-16 sm:py-24 md:py-32 text-center">
         {eyebrow && (
           <p className="eyebrow inline-block">{eyebrow}</p>
         )}
-        <h1 className="text-white text-[40px] md:text-[48px] font-extrabold max-w-3xl mx-auto leading-[1.1]">
+        <h1 className="text-white text-[28px] sm:text-[36px] md:text-[48px] font-extrabold max-w-3xl mx-auto leading-[1.1]">
           {title}
         </h1>
         {subtitle && (

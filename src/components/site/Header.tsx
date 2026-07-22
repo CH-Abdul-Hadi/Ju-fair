@@ -38,14 +38,14 @@ export function Header() {
           : "h-[72px] bg-white/95 backdrop-blur-md shadow-[0_4px_24px_rgba(0,0,0,0.06)] border-b border-slate-200/60",
       ].join(" ")}
     >
-      <div className="w-full max-w-[1400px] mx-auto px-6 md:px-10 xl:px-14 flex items-center justify-between h-full">
+      <div className="w-full max-w-[1400px] mx-auto px-4 sm:px-6 md:px-10 xl:px-14 flex items-center justify-between h-full">
 
         {/* ── Logo ── */}
         <Link
           to="/"
           search={(p) => ({ ...p })}
           className="relative flex items-center shrink-0"
-          style={{ width: "160px", height: "48px" }}
+          style={{ width: "140px", height: "48px" }}
         >
           {/* logo_white.png — shown on transparent/hero state */}
           <img

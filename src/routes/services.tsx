@@ -88,7 +88,7 @@ function ServicesPage() {
                       src={serviceImages[i]}
                       alt={s.title}
                       loading="lazy"
-                      className="relative rounded-[20px] shadow-[0_20px_50px_rgba(11,61,145,0.12)] object-cover w-full h-[400px] md:h-[500px]"
+                      className="relative rounded-[20px] shadow-[0_20px_50px_rgba(11,61,145,0.12)] object-cover w-full h-[240px] sm:h-[340px] md:h-[500px]"
                     />
 
                     {/* Floating Info Card */}

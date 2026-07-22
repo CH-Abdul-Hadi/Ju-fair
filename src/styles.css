@@ -259,6 +259,26 @@
   padding-inline: 1.25rem;
 }
 
+/* ─── Mobile Responsive Overrides ───────────────────────────────────── */
+@media (max-width: 767px) {
+  :root {
+    --text-hero:    32px;
+    --text-h2:      26px;
+    --text-h3:      18px;
+    --text-body:    16px;
+  }
+
+  .section-pad {
+    padding-top: 60px;
+    padding-bottom: 60px;
+  }
+
+  .section-pad-lg {
+    padding-top: 72px;
+    padding-bottom: 72px;
+  }
+}
+
 /* ─── Reduced Motion Safety Net ──────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   *,

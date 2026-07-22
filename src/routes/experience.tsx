@@ -97,7 +97,7 @@ function ExperiencePage() {
               <div className="mt-5 h-1 w-12 rounded-full bg-accent mx-auto" />
             </div>
           </ScrollReveal>
-          <div className="grid gap-8 md:grid-cols-4 mt-16">
+          <div className="grid gap-6 md:gap-8 md:grid-cols-4 mt-16">
             {tx.results.stats.map((s, i) => (
               <ResultStat
                 key={s.label}
