@@ -75,69 +75,7 @@ function ContactPage() {
                       </div>
                     </div>
                   ) : (
-                    <>
-                      <h2 className="text-[32px] font-bold text-primary mb-2">{tx.form.title}</h2>
-                      <p className="text-muted-foreground mb-8 text-[16px]">{tx.form.subtitle}</p>
-
-                      <form
-                        onSubmit={(e) => {
-                          e.preventDefault();
-                          setSent(true);
-                        }}
-                        className="grid gap-6 md:grid-cols-2"
-                      >
-                        <Field label={tx.form.fields.name} name="name" required />
-                        <Field label={tx.form.fields.company} name="company" required />
-                        <Field label={tx.form.fields.country} name="country" required />
-                        <Field label={tx.form.fields.email} name="email" type="email" required />
-                        <Field label={tx.form.fields.phone} name="phone" />
-
-                        {/* Interested Service Dropdown */}
-                        <div>
-                          <label htmlFor="service" className="block text-[14px] font-bold text-primary mb-2">
-                            {tx.form.services.label}
-                          </label>
-                          <select
-                            id="service"
-                            name="service"
-                            className="w-full h-[52px] rounded-[12px] border-2 border-border/80 bg-background px-4 text-[15px] focus:outline-none focus:border-accent focus:ring-4 focus:ring-accent/10 transition-all appearance-none cursor-pointer"
-                            style={{
-                              backgroundImage: `url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230B3D91' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e")`,
-                              backgroundRepeat: "no-repeat",
-                              backgroundPosition: "right 16px center",
-                              backgroundSize: "16px",
-                            }}
-                          >
-                            {tx.form.services.options.map((opt) => (
-                              <option key={opt} value={opt}>
-                                {opt}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-
-                        <div className="md:col-span-2 mt-2">
-                          <label htmlFor="message" className="block text-[14px] font-bold text-primary mb-2">
-                            {tx.form.fields.message} <span className="text-accent">*</span>
-                          </label>
-                          <textarea
-                            id="message"
-                            name="message"
-                            required
-                            rows={5}
-                            className="w-full rounded-[12px] border-2 border-border/80 bg-background px-4 py-3 text-[15px] focus:outline-none focus:border-accent focus:ring-4 focus:ring-accent/10 transition-all resize-none"
-                            placeholder={tx.form.fields.messagePlaceholder}
-                          />
-                        </div>
-
-                        <div className="md:col-span-2 mt-4">
-                          <button type="submit" className="btn-primary w-full md:w-auto !h-14 !px-10 !text-[16px] cursor-pointer group">
-                            <Send size={18} className="transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" />
-                            {tx.form.submit}
-                          </button>
-                        </div>
-                      </form>
-                    </>
+                    <ContactForm tx={tx} onSuccess={() => setSent(true)} />
                   )}
                 </div>
               </ScrollReveal>
@@ -202,9 +140,9 @@ function ContactPage() {
                   <h3 className="font-bold text-[18px] text-primary mb-5">{tx.sidebar.connectWith}</h3>
                   <div className="flex justify-center gap-4">
                     {[
-                      { icon: Facebook, href: "https://www.facebook.com/share/1BdSxmw4wg/" },
-                      { icon: Instagram, href: "https://www.instagram.com/jufair_global?igsh=cmhnNHV1Y3RtajZm" },
-                      { icon: Linkedin, href: "https://www.linkedin.com/company/ju-global-private-limited/" },
+                      { icon: Facebook,       href: "https://www.facebook.com/share/1BdSxmw4wg/" },
+                      { icon: Instagram,      href: "https://www.instagram.com/jufair_global?igsh=cmhnNHV1Y3RtajZm" },
+                      { icon: Linkedin,       href: "https://www.linkedin.com/company/ju-global-private-limited/" },
                       { icon: MessageCircle, href: "https://wa.me/8618916909892" },
                     ].map((s, i) => (
                       <a
@@ -227,6 +165,133 @@ function ContactPage() {
         </div>
       </section>
     </SiteLayout>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   ContactForm — sends data to Web3Forms API
+   API key is read from VITE_WEB3FORMS_KEY in the .env file.
+───────────────────────────────────────────────────────────────── */
+function ContactForm({
+  tx,
+  onSuccess,
+}: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  tx: any;
+  onSuccess: () => void;
+}) {
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setSubmitting(true);
+    setError(null);
+
+    const formData = new FormData(e.currentTarget);
+
+    // API key from .env (VITE_ prefix makes it available in the browser bundle)
+    formData.append("access_key", import.meta.env.VITE_WEB3FORMS_KEY ?? "");
+
+    // Makes emails easy to identify in Gmail
+    formData.append("from_name", "JU Fair Global — Contact Form");
+    formData.append("subject",   "New Inquiry via JU Fair Website");
+
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        body: formData,
+      });
+
+      const json = await response.json();
+
+      if (json.success) {
+        onSuccess();
+      } else {
+        setError(json.message ?? "Submission failed. Please try again.");
+      }
+    } catch {
+      setError("Network error — please check your connection and try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  return (
+    <>
+      <h2 className="text-[32px] font-bold text-primary mb-2">{tx.form.title}</h2>
+      <p className="text-muted-foreground mb-8 text-[16px]">{tx.form.subtitle}</p>
+
+      <form onSubmit={handleSubmit} className="grid gap-6 md:grid-cols-2">
+        {/* Honeypot field — Web3Forms uses this to silently reject bot submissions */}
+        <input type="checkbox" name="botcheck" className="hidden" aria-hidden="true" />
+
+        <Field label={tx.form.fields.name}    name="name"    required />
+        <Field label={tx.form.fields.company} name="company" required />
+        <Field label={tx.form.fields.country} name="country" required />
+        <Field label={tx.form.fields.email}   name="email"   type="email" required />
+        <Field label={tx.form.fields.phone}   name="phone" />
+
+        {/* Interested Service Dropdown */}
+        <div>
+          <label htmlFor="service" className="block text-[14px] font-bold text-primary mb-2">
+            {tx.form.services.label}
+          </label>
+          <select
+            id="service"
+            name="service"
+            className="w-full h-[52px] rounded-[12px] border-2 border-border/80 bg-background px-4 text-[15px] focus:outline-none focus:border-accent focus:ring-4 focus:ring-accent/10 transition-all appearance-none cursor-pointer"
+            style={{
+              backgroundImage: `url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230B3D91' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e")`,
+              backgroundRepeat: "no-repeat",
+              backgroundPosition: "right 16px center",
+              backgroundSize: "16px",
+            }}
+          >
+            {tx.form.services.options.map((opt: string) => (
+              <option key={opt} value={opt}>
+                {opt}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="md:col-span-2 mt-2">
+          <label htmlFor="message" className="block text-[14px] font-bold text-primary mb-2">
+            {tx.form.fields.message} <span className="text-accent">*</span>
+          </label>
+          <textarea
+            id="message"
+            name="message"
+            required
+            rows={5}
+            className="w-full rounded-[12px] border-2 border-border/80 bg-background px-4 py-3 text-[15px] focus:outline-none focus:border-accent focus:ring-4 focus:ring-accent/10 transition-all resize-none"
+            placeholder={tx.form.fields.messagePlaceholder}
+          />
+        </div>
+
+        {/* Inline error message */}
+        {error && (
+          <p className="md:col-span-2 text-red-600 text-[14px] font-medium bg-red-50 border border-red-200 rounded-[10px] px-4 py-3">
+            ⚠️ {error}
+          </p>
+        )}
+
+        <div className="md:col-span-2 mt-4">
+          <button
+            type="submit"
+            disabled={submitting}
+            className="btn-primary w-full md:w-auto !h-14 !px-10 !text-[16px] cursor-pointer group disabled:opacity-60 disabled:cursor-not-allowed"
+          >
+            <Send
+              size={18}
+              className="transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
+            />
+            {submitting ? "Sending…" : tx.form.submit}
+          </button>
+        </div>
+      </form>
+    </>
   );
 }
 
