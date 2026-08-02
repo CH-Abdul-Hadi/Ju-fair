@@ -6,15 +6,14 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { t } from "@/translations";
 import {
   Mail,
-  Phone,
   MapPin,
   Send,
   Facebook,
   Linkedin,
   Instagram,
-  MessageCircle,
   CheckCircle2,
 } from "lucide-react";
+import { WhatsAppIcon, getWhatsAppLink } from "@/components/site/WhatsAppIcon";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -113,14 +112,22 @@ function ContactPage() {
                         {tx.sidebar.address}
                       </div>
                     </li>
-                    <li className="flex gap-4">
-                      <div className="w-10 h-10 rounded-full bg-white/10 grid place-items-center shrink-0">
-                        <Phone size={18} className="text-accent" />
-                      </div>
-                      <div>
-                        <div className="font-semibold text-white mb-1">{tx.sidebar.phone}</div>
-                        {tx.sidebar.phoneValue}
-                      </div>
+                    <li>
+                      <a
+                        href={getWhatsAppLink()}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="flex gap-4 group hover:opacity-90 transition-opacity cursor-pointer"
+                        title="Chat with us on WhatsApp"
+                      >
+                        <div className="w-10 h-10 rounded-full bg-white/10 grid place-items-center shrink-0 group-hover:bg-accent group-hover:text-white transition-colors duration-300">
+                          <WhatsAppIcon size={18} className="text-accent group-hover:text-white transition-colors" />
+                        </div>
+                        <div>
+                          <div className="font-semibold text-white mb-1 group-hover:text-accent transition-colors">{tx.sidebar.phone}</div>
+                          <span className="text-white/80 group-hover:text-white underline decoration-white/30 underline-offset-4 group-hover:decoration-accent transition-colors">{tx.sidebar.phoneValue}</span>
+                        </div>
+                      </a>
                     </li>
                     <li className="flex gap-4">
                       <div className="w-10 h-10 rounded-full bg-white/10 grid place-items-center shrink-0">
@@ -143,7 +150,7 @@ function ContactPage() {
                       { icon: Facebook,       href: "https://www.facebook.com/share/1BdSxmw4wg/" },
                       { icon: Instagram,      href: "https://www.instagram.com/jufair_global?igsh=cmhnNHV1Y3RtajZm" },
                       { icon: Linkedin,       href: "https://www.linkedin.com/company/ju-global-private-limited/" },
-                      { icon: MessageCircle, href: "https://wa.me/8618916909892" },
+                      { icon: WhatsAppIcon,   href: getWhatsAppLink() },
                     ].map((s, i) => (
                       <a
                         key={i}

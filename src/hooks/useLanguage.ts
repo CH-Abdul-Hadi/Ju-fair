@@ -27,7 +27,7 @@ export function useLanguage() {
       if (typeof localStorage !== "undefined") {
         localStorage.setItem(STORAGE_KEY, next);
       }
-      navigate({
+      (navigate as any)({
         search: (prev: Record<string, unknown>) => ({ ...prev, lang: next }),
         replace: true,
       });

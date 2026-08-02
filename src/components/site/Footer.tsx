@@ -1,7 +1,8 @@
 import { Link } from "@tanstack/react-router";
-import { Facebook, Linkedin, Instagram, MessageCircle, Mail, Phone, MapPin } from "lucide-react";
+import { Facebook, Linkedin, Instagram, Mail, MapPin } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { t } from "@/translations";
+import { WhatsAppIcon, getWhatsAppLink } from "@/components/site/WhatsAppIcon";
 
 export function Footer() {
   const { lang } = useLanguage();
@@ -11,7 +12,7 @@ export function Footer() {
     { icon: Facebook, href: "https://www.facebook.com/share/1BdSxmw4wg/" },
     { icon: Instagram, href: "https://www.instagram.com/jufair_global?igsh=cmhnNHV1Y3RtajZm" },
     { icon: Linkedin, href: "https://www.linkedin.com/company/ju-global-private-limited/" },
-    { icon: MessageCircle, href: "https://wa.me/8618916909892" },
+    { icon: WhatsAppIcon, href: getWhatsAppLink() },
   ];
 
   return (
@@ -109,7 +110,16 @@ export function Footer() {
               <MapPin size={16} className="shrink-0 mt-0.5 text-accent" /> {tx.address}
             </li>
             <li className="flex gap-2">
-              <Phone size={16} className="shrink-0 mt-0.5 text-accent" /> {tx.phone}
+              <a
+                href={getWhatsAppLink()}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 hover:text-accent transition-colors cursor-pointer group"
+                title="Chat with us on WhatsApp"
+              >
+                <WhatsAppIcon size={16} className="shrink-0 text-accent group-hover:scale-110 transition-transform" />
+                <span>{tx.phone}</span>
+              </a>
             </li>
             <li className="flex gap-2">
               <Mail size={16} className="shrink-0 mt-0.5 text-accent" /> {tx.email}

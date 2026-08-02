@@ -1,11 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 import { SiteLayout, PageHero } from "@/components/site/SiteLayout";
 import { SectionTitle } from "@/components/site/SectionTitle";
 import { ScrollReveal } from "@/components/site/ScrollReveal";
-import { WorldMap } from "@/components/site/WorldMap";
+import { WorldMap, GLOBAL_HUBS, HubMarker } from "@/components/site/WorldMap";
 import { useLanguage } from "@/hooks/useLanguage";
 import { t } from "@/translations";
-import { Globe2, Users, Building2, MapPin } from "lucide-react";
+import { Globe2, Users, Building2, MapPin, Radio, Sparkles } from "lucide-react";
 
 export const Route = createFileRoute("/global-network")({
   head: () => ({
@@ -29,6 +30,7 @@ const statIcons = [Globe2, Users, Building2];
 function NetworkPage() {
   const { lang } = useLanguage();
   const tx = t(lang).globalNetwork;
+  const [selectedHub, setSelectedHub] = useState<HubMarker | null>(null);
 
   return (
     <SiteLayout>
@@ -52,21 +54,83 @@ function NetworkPage() {
           </ScrollReveal>
 
           <div className="grid lg:grid-cols-3 gap-8">
-
-            {/* Left 2 Columns: World Map & Stats */}
+            {/* Left 2 Columns: Redesigned Interactive World Map & Stats */}
             <div className="lg:col-span-2 space-y-8 flex flex-col">
               <ScrollReveal direction="left" className="flex-1">
-                <div className="card-elevated bg-[#F7F8FA] border border-border text-primary p-4 md:p-8 h-full min-h-[400px] flex items-center justify-center relative overflow-hidden group">
-                  <WorldMap highlighted className="w-full absolute opacity-30 transition-transform duration-700 group-hover:scale-105 group-hover:opacity-50" />
+                <div className="card-elevated bg-gradient-to-br from-[#0B1D3A] via-[#0B3D91] to-[#041226] text-white border border-primary/30 p-6 md:p-8 h-full min-h-[480px] flex flex-col justify-between relative overflow-hidden rounded-[24px] shadow-[0_20px_50px_rgba(11,61,145,0.25)]">
+                  
+                  {/* Map Header Overlay */}
+                  <div className="relative z-10 flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-white/10">
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 rounded-full bg-accent animate-ping" />
+                      <span className="text-[12px] font-extrabold tracking-widest text-accent uppercase flex items-center gap-1.5">
+                        <Radio size={14} className="animate-pulse" /> Live Global Trade Corridor
+                      </span>
+                    </div>
 
-                  {/* Decorative map pin over Europe */}
-                  <div className="absolute top-1/3 left-1/2 w-4 h-4 bg-accent rounded-full animate-bounce shadow-[0_0_20px_rgba(245,166,35,0.8)]" />
-                  {/* Decorative map pin over Asia */}
-                  <div className="absolute top-[40%] right-[20%] w-3 h-3 bg-accent rounded-full animate-pulse shadow-[0_0_15px_rgba(245,166,35,0.8)]" />
+                    {/* Interactive Hub Filter Chips */}
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <button
+                        onClick={() => setSelectedHub(null)}
+                        className={`px-3 py-1 rounded-full text-[11px] font-bold tracking-wider uppercase transition-all duration-200 cursor-pointer ${
+                          !selectedHub
+                            ? "bg-accent text-white shadow-md"
+                            : "bg-white/10 text-white/70 hover:bg-white/20 hover:text-white"
+                        }`}
+                      >
+                        All Hubs
+                      </button>
+                      {GLOBAL_HUBS.map((hub) => (
+                        <button
+                          key={hub.id}
+                          onClick={() => setSelectedHub(hub)}
+                          className={`px-2.5 py-1 rounded-full text-[11px] font-bold transition-all duration-200 cursor-pointer ${
+                            selectedHub?.id === hub.id
+                              ? "bg-accent text-white shadow-md"
+                              : "bg-white/10 text-white/70 hover:bg-white/20 hover:text-white"
+                          }`}
+                        >
+                          {hub.isHQ ? "⭐ HQ" : hub.region}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
 
+                  {/* Interactive Vector Network Map */}
+                  <div className="relative z-10 my-4 flex-1 flex items-center justify-center">
+                    <WorldMap
+                      highlighted
+                      activeHubId={selectedHub?.id}
+                      onSelectHub={(hub) => setSelectedHub(hub)}
+                      className="w-full text-white/40"
+                    />
+                  </div>
+
+                  {/* Map Footer Info / Legend */}
+                  <div className="relative z-10 pt-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between text-[12px] text-white/70 gap-3">
+                    <div className="flex items-center gap-6">
+                      <span className="flex items-center gap-2">
+                        <span className="w-3 h-3 rounded-full bg-[#FFD700] ring-4 ring-[#FFD700]/30" />
+                        <strong className="text-white">Shanghai HQ</strong>
+                      </span>
+                      <span className="flex items-center gap-2">
+                        <span className="w-2.5 h-2.5 rounded-full bg-accent" />
+                        Regional Hub
+                      </span>
+                      <span className="flex items-center gap-2">
+                        <span className="w-6 h-0.5 bg-gradient-to-r from-accent to-blue-400 rounded-full" />
+                        Trade Corridor
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-1.5 text-accent font-semibold">
+                      <Sparkles size={14} /> Hover node for hub insights
+                    </div>
+                  </div>
                 </div>
               </ScrollReveal>
 
+              {/* Stats Cards */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {tx.stats.map((c, i) => {
                   const Icon = statIcons[i];
@@ -89,7 +153,6 @@ function NetworkPage() {
             <div className="lg:col-span-1">
               <ScrollReveal direction="right" className="h-full">
                 <div className="card-elevated h-full bg-primary text-white border-none shadow-[0_20px_50px_rgba(11,61,145,0.2)] p-8 relative overflow-hidden">
-
                   {/* Faint background texture */}
                   <div
                     className="absolute inset-0 opacity-[0.03]"
@@ -122,7 +185,6 @@ function NetworkPage() {
                 </div>
               </ScrollReveal>
             </div>
-
           </div>
         </div>
       </section>

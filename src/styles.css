@@ -133,15 +133,30 @@
   animation: hero-entrance 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-/* ─── World Map Marker Pulse ─────────────────────────────────────────── */
+/* ─── World Map Marker Pulse & Arc Flow ────────────────────────────────── */
 @keyframes map-pulse {
   0%, 100% {
     opacity: 0.2;
     transform: scale(1);
   }
   50% {
-    opacity: 0.5;
-    transform: scale(1.6);
+    opacity: 0.7;
+    transform: scale(1.7);
+  }
+}
+
+@keyframes flowDash {
+  to {
+    stroke-dashoffset: -40;
+  }
+}
+
+@keyframes radarRotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
   }
 }
 
@@ -153,6 +168,17 @@
 .map-marker-pulse:nth-child(3n + 1) { animation-delay: 0s; }
 .map-marker-pulse:nth-child(3n + 2) { animation-delay: 0.8s; }
 .map-marker-pulse:nth-child(3n + 3) { animation-delay: 1.6s; }
+
+.map-arc-flow {
+  stroke-dasharray: 6 12;
+  animation: flowDash 2s linear infinite;
+}
+
+.map-radar-spin {
+  animation: radarRotate 20s linear infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
 
 /* ─── Utilities ──────────────────────────────────────────────────────── */
 @utility btn-primary {
