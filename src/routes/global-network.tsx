@@ -151,8 +151,8 @@ function NetworkPage() {
 
             {/* Right 1 Column: Region List */}
             <div className="lg:col-span-1">
-              <ScrollReveal direction="right" className="h-full">
-                <div className="card-elevated h-full bg-primary text-white border-none shadow-[0_20px_50px_rgba(11,61,145,0.2)] p-8 relative overflow-hidden">
+              <ScrollReveal direction="right">
+                <div className="card-elevated bg-primary text-white border-none shadow-[0_20px_50px_rgba(11,61,145,0.2)] p-8 relative overflow-hidden">
                   {/* Faint background texture */}
                   <div
                     className="absolute inset-0 opacity-[0.03]"
@@ -172,10 +172,11 @@ function NetworkPage() {
                         <h4 className="font-bold text-white text-[15px] mb-4 uppercase tracking-widest border-b border-white/20 pb-2 flex items-center justify-between">
                           {region}
                         </h4>
-                        <ul className="grid grid-cols-2 gap-y-3 text-[14px] text-white/75 font-medium">
+                        <ul className="grid grid-cols-2 gap-x-3 gap-y-3 text-[14px] text-white/75 font-medium">
                           {(countries as readonly string[]).map((c) => (
-                            <li key={c} className="flex items-center gap-2 group-hover:text-white transition-colors duration-200">
-                              <span className="w-1.5 h-1.5 rounded-full bg-accent shrink-0" /> {c}
+                            <li key={c} className="flex items-start gap-2 min-w-0 group-hover:text-white transition-colors duration-200">
+                              <span className="w-1.5 h-1.5 rounded-full bg-accent shrink-0 mt-1.5" />
+                              <span className="min-w-0 break-words leading-snug">{c}</span>
                             </li>
                           ))}
                         </ul>
