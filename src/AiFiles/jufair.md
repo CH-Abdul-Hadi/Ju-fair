@@ -140,10 +140,10 @@ Become a trusted global exhibition platform and partner of choice for trade fair
 
 ## 11. Major Exhibitions Worked With
 
-* China International Import Expo (CIIE)
+* China Yiwu International Commodities Fair
 * Canton Fair
-* Yiwu Commodities Fair
 * Yiwu Innovation Expo
+
 * ShanghaiTex
 * China Medical Equipment Fair
 * Rubber Technology Exhibition

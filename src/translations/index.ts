@@ -337,9 +337,8 @@ const translations = {
         description:
           "Trusted by leading trade shows and organizers across multiple industry verticals.",
         names: [
-          "China International Import Expo (CIIE)",
-          "Canton Fair",
           "China Yiwu International Commodities Fair",
+          "Canton Fair",
           "Yiwu Innovation Expo",
           "ShanghaiTex",
           "China Medical Equipment Fair",
@@ -364,7 +363,7 @@ const translations = {
             label: "Deals Closed",
           },
           {
-            title: "CIIE Buyer Support",
+            title: "Yiwu Commodities Fair Support",
             desc: "Provided full buyer support services — invitations, visas, hotel, transport — ensuring top international attendance.",
             stat: "$1M+",
             label: "Largest Order",
@@ -888,9 +887,8 @@ const translations = {
         title: "我们服务的展会",
         description: "受到多个行业领先展会及组织者的信赖与认可。",
         names: [
-          "中国国际进口博览会 (CIIE)",
+          "中国义乌国际小商品博览会",
           "广交会",
-          "义乌商品博览会",
           "义乌创新博览会",
           "上海国际纺织工业展 (ShanghaiTex)",
           "中国国际医疗器械博览会",
@@ -915,7 +913,7 @@ const translations = {
             label: "签约合同",
           },
           {
-            title: "CIIE 买家接待支持",
+            title: "义乌博览会买家接待支持",
             desc: "提供全程买家支持服务——邀请函、签证、酒店、交通，确保顶级国际买家顺利出席。",
             stat: "$1M+",
             label: "最大单笔订单",
