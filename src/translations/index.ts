@@ -410,7 +410,7 @@ const translations = {
       },
       stats: [
         { t: "40+", d: "Countries" },
-        { t: "3,000+", d: "Verified Buyers" },
+        { t: "5,000+", d: "Verified Buyers" },
         { t: "150+", d: "Exhibitions" },
       ],
       activeRegions: "Active Regions",
