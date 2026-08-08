@@ -28,11 +28,10 @@ export const Route = createFileRoute("/experience")({
 });
 
 const gallery = [
-  "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=600&q=70",
-  "https://images.unsplash.com/photo-1591115765373-5207764f72e7?auto=format&fit=crop&w=600&h=800&q=70",
-  "https://images.unsplash.com/photo-1531058020387-3be344556be6?auto=format&fit=crop&w=600&h=400&q=70",
-  "https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?auto=format&fit=crop&w=600&h=900&q=70",
-  "https://images.unsplash.com/photo-1515169067868-5387ec356754?auto=format&fit=crop&w=600&q=70",
+  "/Expo/expo1.jpeg",
+  "/Expo/expo2.jpeg",
+  "/Expo/expo3.jpeg",
+  "/Expo/expo4.jpeg",
 ];
 
 const statIcons = [Users, Globe2, Award, TrendingUp];

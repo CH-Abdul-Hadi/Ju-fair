@@ -14,6 +14,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { WhatsAppIcon, getWhatsAppLink } from "@/components/site/WhatsAppIcon";
+import { ContactMap } from "@/components/site/ContactMap";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -79,15 +80,10 @@ function ContactPage() {
                 </div>
               </ScrollReveal>
 
-              {/* Map Card */}
+              {/* Map Card — Dynamic Map Provider (AMap if API key available, Google Maps as fallback) */}
               <ScrollReveal direction="up" delay={200}>
                 <div className="card-elevated p-2 overflow-hidden bg-white border-none shadow-[0_12px_40px_rgba(0,0,0,0.05)]">
-                  <iframe
-                    title="Office location"
-                    src="https://www.openstreetmap.org/export/embed.html?bbox=121.3%2C31.1%2C121.6%2C31.3&layer=mapnik"
-                    className="w-full h-80 rounded-[12px] border-0"
-                    loading="lazy"
-                  />
+                  <ContactMap latitude={31.23} longitude={121.47} locationName="JU Fair Global" zoom={15} />
                 </div>
               </ScrollReveal>
             </div>

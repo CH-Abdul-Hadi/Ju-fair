@@ -47,8 +47,8 @@ const translations = {
         btnExplore: "Request Buyer Recruitment",
         stats: [
           { value: "3,000+", label: "Qualified Buyers" },
-          { value: "40+", label: "Countries" },
-          { value: "15+", label: "Exhibitions" },
+          { value: "50+", label: "Countries" },
+          { value: "10+", label: "Exhibitions" },
         ],
       },
       services: {
@@ -228,22 +228,22 @@ const translations = {
         subtitle: "A legacy of bridging international markets.",
         events: [
           {
-            year: "2022",
+            year: "2023",
             t: "Founded",
             d: "Established as the exhibition services division of JU Global.",
           },
           {
-            year: "2023",
+            year: "2024",
             t: "First Events",
             d: "Successfully ran 3 matchmaking events and recruited 3,000+ buyers.",
           },
           {
-            year: "2024",
+            year: "2025",
             t: "Global Expansion",
             d: "Expanded network across Europe, Middle East, South Asia and North America.",
           },
           {
-            year: "2025",
+            year: "2026",
             t: "Record Results",
             d: "Facilitated USD 1 Million+ largest single order through our platform.",
           },
@@ -409,9 +409,9 @@ const translations = {
           "Our network spans key regions across Europe, Middle East, South Asia and North America, enabling unmatched access to localized decision-makers.",
       },
       stats: [
-        { t: "40+", d: "Countries" },
+        { t: "50+", d: "Countries" },
         { t: "5,000+", d: "Verified Buyers" },
-        { t: "150+", d: "Exhibitions" },
+        { t: "15+", d: "Exhibitions" },
       ],
       activeRegions: "Active Regions",
       regions: {
@@ -603,8 +603,8 @@ const translations = {
         btnExplore: "申请买家招募",
         stats: [
           { value: "3,000+", label: "合格买家" },
-          { value: "40+", label: "覆盖国家" },
-          { value: "150+", label: "合作展会" },
+          { value: "50+", label: "覆盖国家" },
+          { value: "10+", label: "合作展会" },
         ],
       },
       services: {
@@ -781,22 +781,22 @@ const translations = {
         subtitle: "架构国际市场桥梁的传承之路。",
         events: [
           {
-            year: "2022",
+            year: "2023",
             t: "公司成立",
             d: "作为JU Global旗下的展览服务部门正式成立。",
           },
           {
-            year: "2023",
+            year: "2024",
             t: "首批活动",
             d: "成功举办3场商务配对活动，累计招募3,000多名买家。",
           },
           {
-            year: "2024",
+            year: "2025",
             t: "全球扩张",
             d: "网络拓展至欧洲、中东、南亚和北美地区。",
           },
           {
-            year: "2025",
+            year: "2026",
             t: "创纪录成果",
             d: "通过平台促成单笔最高订单超过100万美元。",
           },
@@ -958,7 +958,7 @@ const translations = {
       stats: [
         { t: "40+", d: "覆盖国家" },
         { t: "3,000+", d: "认证买家" },
-        { t: "150+", d: "合作展会" },
+        { t: "15+", d: "合作展会" },
       ],
       activeRegions: "活跃区域",
       regions: {
