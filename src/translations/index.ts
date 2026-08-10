@@ -411,7 +411,7 @@ const translations = {
       stats: [
         { t: "50+", d: "Countries" },
         { t: "5,000+", d: "Verified Buyers" },
-        { t: "15+", d: "Exhibitions" },
+        { t: "10+", d: "Exhibitions" },
       ],
       activeRegions: "Active Regions",
       regions: {
@@ -956,9 +956,9 @@ const translations = {
           "我们的网络覆盖欧洲、中东、南亚和北美的核心区域，实现对本地决策者的无与伦比的精准触达。",
       },
       stats: [
-        { t: "40+", d: "覆盖国家" },
-        { t: "3,000+", d: "认证买家" },
-        { t: "15+", d: "合作展会" },
+        { t: "50+", d: "覆盖国家" },
+        { t: "5,000+", d: "认证买家" },
+        { t: "10+", d: "合作展会" },
       ],
       activeRegions: "活跃区域",
       regions: {
