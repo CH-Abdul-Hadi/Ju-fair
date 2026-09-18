@@ -40,7 +40,7 @@
 
 export const VERIFICATION = {
   /** `google-site-verification` */
-  google: "",
+  google: "5grCIcwIwt0dwDKDfoWcC3ixlzOpkP2wutI3dOvw9q0",
   /** `msvalidate.01` */
   bing: "",
   /** `baidu-site-verification` */
