@@ -9,6 +9,11 @@ export const getRouter = () => {
     routeTree,
     context: { queryClient },
     scrollRestoration: true,
+    // Warm the target route's chunk as soon as a link is hovered or focused.
+    // On a seven-page marketing site this makes every navigation feel instant,
+    // which matters most on a slow expo-venue connection.
+    defaultPreload: "intent",
+    defaultPreloadDelay: 50,
     defaultPreloadStaleTime: 0,
   });
 

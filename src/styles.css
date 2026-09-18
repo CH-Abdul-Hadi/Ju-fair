@@ -2,6 +2,193 @@
 @source "../src";
 @import "tw-animate-css";
 
+/* ── Self-hosted webfonts ───────────────────────────────────────────────
+   These replaced a render-blocking <link> to fonts.googleapis.com.
+
+   Two reasons, and the second one is the important one:
+
+   1. A third-party stylesheet in <head> blocks first render on a DNS lookup,
+      a TLS handshake and a round trip to another origin before a single
+      glyph is requested.
+
+   2. **fonts.googleapis.com is not reachable from mainland China.** Half of
+      this site is Simplified Chinese and aimed at exactly that audience, so
+      every Chinese visitor was waiting on a request that could only time
+      out. That is not a micro-optimisation, it is the difference between a
+      usable page and a blank one for the primary market of /cn/*.
+
+   `font-display: swap` renders immediately in the fallback and swaps when the
+   face arrives, so text is never invisible.
+
+   Subsets and unicode-ranges are the ones Google Fonts itself serves — taken
+   from the live stylesheet, not guessed. The browser fetches latin-ext only
+   if a page actually contains one of those characters.
+
+   Only upright weights are shipped: nothing in this design uses italics.
+   ──────────────────────────────────────────────────────────────────────── */
+
+@font-face {
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/poppins-latin-400-normal.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/poppins-latin-500-normal.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/poppins-latin-600-normal.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/poppins-latin-700-normal.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url("/fonts/poppins-latin-800-normal.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/poppins-latin-ext-400-normal.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/poppins-latin-ext-500-normal.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/poppins-latin-ext-600-normal.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/poppins-latin-ext-700-normal.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url("/fonts/poppins-latin-ext-800-normal.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "Open Sans";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/open-sans-latin-400-normal.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Open Sans";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/open-sans-latin-500-normal.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Open Sans";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/open-sans-latin-600-normal.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Open Sans";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/open-sans-latin-700-normal.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Open Sans";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/open-sans-latin-ext-400-normal.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "Open Sans";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/open-sans-latin-ext-500-normal.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "Open Sans";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/open-sans-latin-ext-600-normal.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "Open Sans";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/open-sans-latin-ext-700-normal.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -27,19 +214,68 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent-hover: var(--accent-hover);
+  --color-accent-text: var(--accent-text);
+  --color-accent-ink: var(--accent-ink);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
   --color-surface: var(--surface);
+  --color-surface-sunken: var(--surface-sunken);
   --color-surface-alt: var(--surface-alt);
   --font-display: "Poppins", "Montserrat", sans-serif;
   --font-sans: "Open Sans", system-ui, sans-serif;
-  --shadow-card: 0 10px 30px rgba(0,0,0,.06);
-  --shadow-card-hover: 0 20px 48px rgba(0,0,0,.12);
-  --shadow-btn: 0 4px 14px rgba(245,166,35,.4);
-  --shadow-btn-hover: 0 8px 24px rgba(245,166,35,.55);
+  /* ── Elevation ──────────────────────────────────────────────────────
+     Two-layer shadows (a tight contact shadow + a soft ambient one) read as
+     real depth; a single large blur reads as a grey smudge. Tinted with the
+     brand navy rather than pure black, so shadows sit in the palette instead
+     of greying it down. */
+  --shadow-xs: 0 1px 2px rgba(11, 29, 58, 0.06);
+  --shadow-card:
+    0 1px 2px rgba(11, 29, 58, 0.05),
+    0 10px 28px rgba(11, 29, 58, 0.07);
+  --shadow-card-hover:
+    0 2px 6px rgba(11, 29, 58, 0.08),
+    0 20px 48px rgba(11, 29, 58, 0.14);
+  --shadow-panel:
+    0 2px 8px rgba(11, 29, 58, 0.06),
+    0 24px 60px rgba(11, 29, 58, 0.12);
+  --shadow-btn: 0 4px 14px rgba(245, 166, 35, 0.38);
+  --shadow-btn-hover: 0 10px 26px rgba(245, 166, 35, 0.5);
+
+  /* ── Fluid type scale ───────────────────────────────────────────────
+     Each step interpolates smoothly between a 375px and a 1440px viewport,
+     so headings flow instead of snapping at breakpoints — and, critically,
+     they actually shrink on phones. The previous scale lived in :root, was
+     never referenced by anything, and left `text-[38px]` section headings
+     rendering at a full 38px on a 375px screen.
+
+     Deliberately namespaced (hero/display/section/title/stat/heading/lede)
+     so none of these collide with Tailwind's own --text-sm/base/lg, which
+     the shadcn/ui primitives still rely on. */
+  --text-hero: clamp(1.875rem, 1.3rem + 2.44vw, 3.5rem);        /* 30 → 56 */
+  --text-hero--line-height: 1.08;
+  --text-display: clamp(1.75rem, 1.31rem + 1.88vw, 3rem);       /* 28 → 48 */
+  --text-display--line-height: 1.1;
+  --text-section: clamp(1.75rem, 1.4rem + 1.5vw, 2.75rem);      /* 28 → 44 */
+  --text-section--line-height: 1.15;
+  --text-title: clamp(1.625rem, 1.36rem + 1.13vw, 2.375rem);    /* 26 → 38 */
+  --text-title--line-height: 1.2;
+  --text-stat: clamp(1.75rem, 1.49rem + 1.13vw, 2.5rem);        /* 28 → 40 */
+  --text-stat--line-height: 1;
+  --text-heading: clamp(1.375rem, 1.24rem + 0.56vw, 1.75rem);   /* 22 → 28 */
+  --text-heading--line-height: 1.25;
+  --text-lede: clamp(1rem, 0.96rem + 0.19vw, 1.125rem);         /* 16 → 18 */
+  --text-lede--line-height: 1.6;
+
+  /* ── Motion ─────────────────────────────────────────────────────────
+     Three curves cover the whole site: entrances decelerate hard (expo),
+     interactive feedback overshoots slightly (spring), everything else
+     uses the soft curve. Exposed as Tailwind `ease-*` utilities. */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 :root {
@@ -57,17 +293,35 @@
   --secondary-foreground: oklch(0.36 0.16 260);
   --muted: oklch(0.96 0.005 250);
   --muted-foreground: oklch(0.5 0.02 250);
-  /* Gold/Orange #F5A623 */
+  /* Gold/Orange #F5A623 — brand accent. Used for FILLS, borders, icons and
+     any text sitting on a dark (primary) surface, where it measures 4.96:1. */
   --accent: oklch(0.77 0.15 70);
   --accent-foreground: oklch(1 0 0);
   --accent-hover: oklch(0.72 0.16 65);
+  /* Accessibility pair for the SAME gold hue — the brand palette is unchanged,
+     these are derived shades so gold can be used as text without failing WCAG.
+       --accent-text (#aa6000): gold text on LIGHT surfaces      → 4.81:1 on white ✓ AA
+       --accent-ink  (#091a36): text/icons sitting ON gold fills → 8.16:1 on gold  ✓ AAA
+     Raw --accent on white is only 2.13:1 and must never carry text. */
+  --accent-text: oklch(0.56 0.14 66);
+  --accent-ink: oklch(0.22 0.06 260);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(1 0 0);
   --border: oklch(0.92 0.01 250);
   --input: oklch(0.92 0.01 250);
   --ring: oklch(0.36 0.16 260);
-  --surface: oklch(0.98 0.008 250);
-  --surface-alt: oklch(0.96 0.015 250);
+  /* ── Surface hierarchy ──────────────────────────────────────────────
+     The site previously alternated #FFFFFF / #FAFAFA / #F7F8FA — three tones
+     within 3% of each other, so the section rhythm was invisible AND a pure
+     white `card-elevated` sat on a pure white section with only a 4% border
+     to separate them. Cards effectively disappeared on half the pages.
+
+     The rule now: PAGE surfaces are tinted, CARDS are pure white. That gives
+     every card natural elevation without needing heavy borders, and the two
+     page tones are far enough apart (~3.5% L) to actually read as bands. */
+  --surface: oklch(0.985 0.004 250); /* default light section */
+  --surface-sunken: oklch(0.955 0.009 255); /* alternating deeper band */
+  --surface-alt: oklch(0.955 0.009 255); /* legacy alias */
 
   /* Spacing — 8-point grid */
   --space-1:  8px;
@@ -81,14 +335,15 @@
   --space-12: 96px;
   --space-15: 120px;
 
-  /* Typography */
-  --text-hero:    56px;
-  --text-h2:      38px;
-  --text-h3:      22px;
-  --text-body:    18px;
-  --text-sm:      15px;
-  --text-eyebrow: 12px;
-  --leading:      1.6;
+  /* Motion durations — consumed by the @utility rules below. Components use
+     Tailwind's numeric duration-* classes, which already match these steps. */
+  --dur-fast: 150ms;
+  --dur-base: 250ms;
+  --dur-slow: 500ms;
+  /* One clock for every header state change — surface opacity, height, link
+     colour, logo cross-fade and the CTA all use this, so nothing can drift
+     out of step and expose unreadable text mid-transition. */
+  --dur-nav: 280ms;
 }
 
 @layer base {
@@ -104,6 +359,16 @@
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
   }
+  /* Headings INHERIT their colour — they must not hard-set it.
+     This rule used to declare `color: var(--color-primary)` directly on every
+     heading. Because that lands on the element itself, a dark panel's
+     `text-white` could never reach it through inheritance, so any heading
+     placed on a navy surface without an explicit override rendered navy on
+     navy and vanished. That is exactly what happened to the "Ready to Partner
+     With Us?" CTA.
+     Every heading in this codebase already states its own colour, so
+     inheriting is both safe and the only version of this rule that cannot
+     silently hide text on a dark background. */
   h1,
   h2,
   h3,
@@ -113,7 +378,28 @@
     font-family: var(--font-display);
     font-weight: 700;
     letter-spacing: -0.01em;
-    color: var(--color-primary);
+    color: inherit;
+    text-wrap: balance;
+  }
+
+  /* ── Keyboard focus ──────────────────────────────────────────────────
+     A single visible focus style for every interactive element. The gold
+     ring reads on light surfaces; the white outer ring keeps it visible on
+     the navy sections (hero, footer, PageHero, timeline) where gold alone
+     would sit too close to the background. :focus-visible means mouse users
+     never see it — only keyboard and assistive-tech users do. */
+  :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+    box-shadow: 0 0 0 4px rgb(255 255 255 / 0.55);
+  }
+
+  /* Native buttons default to the arrow cursor; every button here is a
+     real affordance, so make that consistent site-wide. */
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]) {
+    cursor: pointer;
   }
 }
 
@@ -130,7 +416,64 @@
 }
 
 .hero-animate {
-  animation: hero-entrance 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: hero-entrance 0.8s var(--ease-out-soft) both;
+}
+
+/* ─── Form validation ─────────────────────────────────────────────────
+   :user-invalid fires only AFTER the visitor has interacted with a field, so
+   a pristine empty form is never painted red — unlike :invalid, which would
+   flag every required field on first paint. The browser supplies the message
+   text itself, already localised, so this needs no translation keys. */
+.field-input:user-invalid {
+  border-color: var(--color-destructive);
+  background-color: color-mix(in oklab, var(--color-destructive) 4%, transparent);
+}
+.field-input:user-invalid:focus {
+  border-color: var(--color-destructive);
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--color-destructive) 12%, transparent);
+}
+/* The matching hint is hidden until the field is actually in an invalid state. */
+.field-input:user-invalid ~ .field-error {
+  display: block;
+}
+
+/* ─── Success checkmark ───────────────────────────────────────────────
+   Stroke draw-on. The path sets pathLength="1" so the dash maths stay
+   resolution-independent. */
+@keyframes check-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.check-draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: check-draw 0.6s var(--ease-out-expo) 0.15s forwards;
+}
+
+/* ─── Partner Logo Marquee ─────────────────────────────────────────────
+   Lifted out of an inline <style> tag in routes/index.tsx, which re-injected
+   these rules into the document on every render of the home page. */
+@keyframes logo-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.logo-track {
+  display: flex;
+  width: max-content;
+  animation: logo-scroll 30s linear infinite;
+}
+.logo-track:hover {
+  animation-play-state: paused;
 }
 
 /* ─── World Map Marker Pulse & Arc Flow ────────────────────────────────── */
@@ -145,9 +488,11 @@
   }
 }
 
+/* The corridor SVG uses viewBox="0 0 100 100", so dash lengths here are in
+   user units (~1% of the map), not pixels. -16 advances four dash cycles. */
 @keyframes flowDash {
   to {
-    stroke-dashoffset: -40;
+    stroke-dashoffset: -16;
   }
 }
 
@@ -170,8 +515,8 @@
 .map-marker-pulse:nth-child(3n + 3) { animation-delay: 1.6s; }
 
 .map-arc-flow {
-  stroke-dasharray: 6 12;
-  animation: flowDash 2s linear infinite;
+  stroke-dasharray: 1.5 2.5;
+  animation: flowDash 2.4s linear infinite;
 }
 
 .map-radar-spin {
@@ -190,19 +535,40 @@
   padding: 0 28px;
   border-radius: 10px;
   background-color: var(--color-accent);
-  color: #fff;
+  /* Navy ink rather than white: 8.16:1 vs the 2.13:1 white previously gave,
+     and the gold/navy pairing reads more premium than gold/white. */
+  color: var(--color-accent-ink);
   font-weight: 700;
   font-size: 15px;
   letter-spacing: 0.01em;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  transition:
+    transform var(--dur-fast) var(--ease-spring),
+    box-shadow var(--dur-fast) var(--ease-out-soft),
+    background-color var(--dur-fast) var(--ease-out-soft);
   box-shadow: var(--shadow-btn);
+  /* --px/--py are published by an enclosing <MagneticArea> and inherit down to
+     here. Folding them into the transform (rather than letting JS write an
+     inline transform on the button) is what lets the magnetic drift, the hover
+     lift and the active press all compose instead of overwriting each other.
+     With no MagneticArea above, the var() fallbacks resolve to 0. */
+  transform: translate3d(calc(var(--px, 0) * var(--magnet, 6px)), calc(var(--py, 0) * var(--magnet, 6px)), 0);
   &:hover {
     background-color: var(--color-accent-hover);
-    transform: translateY(-2px) scale(1.015);
+    transform: translate3d(
+        calc(var(--px, 0) * var(--magnet, 6px)),
+        calc(var(--py, 0) * var(--magnet, 6px) - 2px),
+        0
+      )
+      scale(1.015);
     box-shadow: var(--shadow-btn-hover);
   }
   &:active {
-    transform: translateY(0) scale(0.99);
+    transform: translate3d(
+        calc(var(--px, 0) * var(--magnet, 6px)),
+        calc(var(--py, 0) * var(--magnet, 6px)),
+        0
+      )
+      scale(0.99);
   }
 }
 
@@ -239,23 +605,154 @@
   background-color: transparent;
   font-weight: 600;
   font-size: 14px;
-  transition: background-color 0.15s ease, color 0.15s ease;
+  transition:
+    background-color var(--dur-fast) var(--ease-out-soft),
+    color var(--dur-fast) var(--ease-out-soft);
   &:hover {
     background-color: rgba(11, 61, 145, 0.06);
   }
 }
 
 @utility card-elevated {
+  position: relative;
+  background: var(--color-card);
+  border-radius: 18px;
+  /* Fluid padding. A fixed 28/32px left only ~286px of content width on a
+     390px phone once the container gutter was taken out. */
+  padding: clamp(1.25rem, 0.9rem + 1.5vw, 2rem);
+  box-shadow: var(--shadow-card);
+  /* A real hairline, not a 4%-black hint. Cards must stay legible even when
+     a section background is close to white. */
+  border: 1px solid oklch(0.91 0.012 255 / 0.9);
+  transition:
+    transform var(--dur-base) var(--ease-out-expo),
+    box-shadow var(--dur-base) var(--ease-out-expo),
+    border-color var(--dur-base) var(--ease-out-expo);
+
+  /* Lit top edge — a 1px highlight that makes the card read as a physical
+     surface catching light rather than a flat rectangle. */
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 1px;
+    border-radius: 18px 18px 0 0;
+    background: linear-gradient(90deg, transparent, oklch(1 0 0 / 0.95), transparent);
+    pointer-events: none;
+  }
+
+  /* Accent rail that wipes in from the left on hover. This is the card's
+     "prominence" cue: it draws the eye to whichever card is under the
+     cursor without needing a heavier resting state. */
+  /* Inset and fully rounded, so it sits correctly on any card radius — some
+     cards use 18px, the network panel uses 24px, and a rail with a hard-coded
+     corner radius would poke out of the larger ones. */
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0 14px auto 14px;
+    height: 3px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--color-accent), var(--color-accent-hover));
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform var(--dur-slow) var(--ease-out-expo);
+    pointer-events: none;
+  }
+
+  &:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-card-hover);
+    border-color: oklch(0.77 0.15 70 / 0.45);
+  }
+  &:hover::after {
+    transform: scaleX(1);
+  }
+  /* Tilt wraps cards in a .group; mirror the rail there so the hover target
+     is the whole tilted surface, not just the inner box. */
+  .group:hover &::after {
+    transform: scaleX(1);
+  }
+}
+
+/* ─── Icon chips ──────────────────────────────────────────────────────
+   Icons were drawn in raw gold on a 12%-gold tint — roughly 2.1:1, so they
+   read as pale smudges rather than deliberate marks. These give every icon a
+   defined container: a soft gold gradient, a hairline, an inner highlight for
+   a lit edge, and the darker accent for the glyph itself so it is actually
+   legible. Hover fills the chip and lifts it.
+
+   Put `group` on an ancestor to get the hover state. */
+@utility icon-chip {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+  border-radius: 14px;
+  color: var(--color-accent-text);
+  background: linear-gradient(
+    145deg,
+    oklch(0.77 0.15 70 / 0.2),
+    oklch(0.77 0.15 70 / 0.07)
+  );
+  border: 1px solid oklch(0.77 0.15 70 / 0.24);
+  box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.7);
+  transition:
+    transform var(--dur-base) var(--ease-out-expo),
+    background var(--dur-base) var(--ease-out-expo),
+    color var(--dur-base) var(--ease-out-expo),
+    box-shadow var(--dur-base) var(--ease-out-expo);
+  .group:hover & {
+    transform: translateY(-3px);
+    background: var(--color-accent);
+    color: var(--color-accent-ink);
+    box-shadow: 0 10px 24px oklch(0.77 0.15 70 / 0.4);
+  }
+}
+
+/* The same chip on a navy surface, where the full-brightness gold is both
+   on-brand and already accessible (4.96:1). */
+@utility icon-chip-invert {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+  border-radius: 14px;
+  color: var(--color-accent);
+  background: oklch(1 0 0 / 0.08);
+  border: 1px solid oklch(1 0 0 / 0.14);
+  box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.1);
+  transition:
+    transform var(--dur-base) var(--ease-out-expo),
+    background var(--dur-base) var(--ease-out-expo),
+    color var(--dur-base) var(--ease-out-expo),
+    box-shadow var(--dur-base) var(--ease-out-expo);
+  .group:hover & {
+    transform: translateY(-3px);
+    background: var(--color-accent);
+    color: var(--color-accent-ink);
+    box-shadow: 0 10px 24px oklch(0.77 0.15 70 / 0.35);
+  }
+}
+
+/* A card that must read against a LIGHT section without relying on its own
+   whiteness — used where a white card would otherwise vanish. */
+@utility card-outlined {
   background: var(--color-card);
   border-radius: 18px;
   padding: 28px 32px;
-  box-shadow: var(--shadow-card);
-  border: 1px solid rgba(0, 0, 0, 0.04);
-  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  border: 1px solid oklch(0.89 0.014 255);
+  box-shadow: var(--shadow-xs);
+  transition:
+    transform var(--dur-base) var(--ease-out-expo),
+    box-shadow var(--dur-base) var(--ease-out-expo),
+    border-color var(--dur-base) var(--ease-out-expo);
   &:hover {
-    transform: translateY(-8px);
+    transform: translateY(-6px);
     box-shadow: var(--shadow-card-hover);
-    border-color: rgba(245, 166, 35, 0.25);
+    border-color: oklch(0.77 0.15 70 / 0.5);
   }
 }
 
@@ -269,7 +766,20 @@
   padding-bottom: 120px;
 }
 
+/* Eyebrow label on a LIGHT surface — uses the darkened gold so 12px text
+   clears WCAG AA (4.81:1). */
 @utility eyebrow {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-accent-text);
+  margin-bottom: 12px;
+}
+
+/* Eyebrow on a DARK (primary navy) surface — full-brightness brand gold,
+   which already measures 4.96:1 against the navy. */
+@utility eyebrow-light {
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.2em;
@@ -285,15 +795,10 @@
   padding-inline: 1.25rem;
 }
 
-/* ─── Mobile Responsive Overrides ───────────────────────────────────── */
+/* ─── Mobile Responsive Overrides ─────────────────────────────────────
+   Type no longer needs a breakpoint override — the clamp() scale in
+   @theme handles it continuously. Only vertical rhythm changes here. */
 @media (max-width: 767px) {
-  :root {
-    --text-hero:    32px;
-    --text-h2:      26px;
-    --text-h3:      18px;
-    --text-body:    16px;
-  }
-
   .section-pad {
     padding-top: 60px;
     padding-bottom: 60px;

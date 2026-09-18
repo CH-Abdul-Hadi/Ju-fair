@@ -24,7 +24,6 @@ export function useScrollReveal<T extends HTMLElement = HTMLDivElement>(
     const el = ref.current;
     if (!el) return;
 
-    let frameId: number;
     let obs: IntersectionObserver | null = null;
 
     // Defer observer creation by one animation frame.
@@ -35,7 +34,7 @@ export function useScrollReveal<T extends HTMLElement = HTMLDivElement>(
     // the viewport. Waiting one rAF (the next paint opportunity) guarantees
     // the scroll position is fully settled at 0 before we start observing,
     // preventing observers from firing during the browser's scroll reset.
-    frameId = requestAnimationFrame(() => {
+    const frameId = requestAnimationFrame(() => {
       const currentEl = ref.current;
       if (!currentEl) return; // element unmounted during the frame — bail safely
 

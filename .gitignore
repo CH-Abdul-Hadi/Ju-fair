@@ -35,3 +35,11 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Internal working documents — kept local, never pushed.
+# Agent guides, the architecture reference, the SEO record and prompt notes.
+# These describe how the work was done rather than being part of the product.
+CLAUDE.md
+context.md
+SEO.md
+prompt.md
