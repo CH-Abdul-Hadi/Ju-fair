@@ -70,6 +70,8 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.32.0",
+    "@fontsource/open-sans": "^5.3.0",
+    "@fontsource/poppins": "^5.3.0",
     "@lovable.dev/vite-tanstack-config": "^2.7.3",
     "@types/node": "^22.16.5",
     "@types/react": "^19.2.0",
