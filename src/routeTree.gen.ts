@@ -9,17 +9,57 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as YiwuCommoditiesFairBuyerSupportRouteImport } from './routes/yiwu-commodities-fair-buyer-support'
+import { Route as TermsRouteImport } from './routes/terms'
+import { Route as ShanghaitexMatchmakingRouteImport } from './routes/shanghaitex-matchmaking'
 import { Route as ServicesRouteImport } from './routes/services'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PartnerRouteImport } from './routes/partner'
 import { Route as GlobalNetworkRouteImport } from './routes/global-network'
+import { Route as FaqsRouteImport } from './routes/faqs'
 import { Route as ExperienceRouteImport } from './routes/experience'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as CantonFairBuyerRecruitmentRouteImport } from './routes/canton-fair-buyer-recruitment'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CnIndexRouteImport } from './routes/cn.index'
+import { Route as CnYiwuCommoditiesFairBuyerSupportRouteImport } from './routes/cn.yiwu-commodities-fair-buyer-support'
+import { Route as CnTermsRouteImport } from './routes/cn.terms'
+import { Route as CnShanghaitexMatchmakingRouteImport } from './routes/cn.shanghaitex-matchmaking'
+import { Route as CnServicesRouteImport } from './routes/cn.services'
+import { Route as CnPrivacyRouteImport } from './routes/cn.privacy'
+import { Route as CnPartnerRouteImport } from './routes/cn.partner'
+import { Route as CnGlobalNetworkRouteImport } from './routes/cn.global-network'
+import { Route as CnFaqsRouteImport } from './routes/cn.faqs'
+import { Route as CnExperienceRouteImport } from './routes/cn.experience'
+import { Route as CnContactRouteImport } from './routes/cn.contact'
+import { Route as CnCantonFairBuyerRecruitmentRouteImport } from './routes/cn.canton-fair-buyer-recruitment'
+import { Route as CnAboutRouteImport } from './routes/cn.about'
 
+const YiwuCommoditiesFairBuyerSupportRoute =
+  YiwuCommoditiesFairBuyerSupportRouteImport.update({
+    id: '/yiwu-commodities-fair-buyer-support',
+    path: '/yiwu-commodities-fair-buyer-support',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ShanghaitexMatchmakingRoute = ShanghaitexMatchmakingRouteImport.update({
+  id: '/shanghaitex-matchmaking',
+  path: '/shanghaitex-matchmaking',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ServicesRoute = ServicesRouteImport.update({
   id: '/services',
   path: '/services',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PartnerRoute = PartnerRouteImport.update({
@@ -32,6 +72,11 @@ const GlobalNetworkRoute = GlobalNetworkRouteImport.update({
   path: '/global-network',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FaqsRoute = FaqsRouteImport.update({
+  id: '/faqs',
+  path: '/faqs',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ExperienceRoute = ExperienceRouteImport.update({
   id: '/experience',
   path: '/experience',
@@ -42,6 +87,12 @@ const ContactRoute = ContactRouteImport.update({
   path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CantonFairBuyerRecruitmentRoute =
+  CantonFairBuyerRecruitmentRouteImport.update({
+    id: '/canton-fair-buyer-recruitment',
+    path: '/canton-fair-buyer-recruitment',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
@@ -52,82 +103,311 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CnIndexRoute = CnIndexRouteImport.update({
+  id: '/cn/',
+  path: '/cn/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CnYiwuCommoditiesFairBuyerSupportRoute =
+  CnYiwuCommoditiesFairBuyerSupportRouteImport.update({
+    id: '/cn/yiwu-commodities-fair-buyer-support',
+    path: '/cn/yiwu-commodities-fair-buyer-support',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const CnTermsRoute = CnTermsRouteImport.update({
+  id: '/cn/terms',
+  path: '/cn/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CnShanghaitexMatchmakingRoute =
+  CnShanghaitexMatchmakingRouteImport.update({
+    id: '/cn/shanghaitex-matchmaking',
+    path: '/cn/shanghaitex-matchmaking',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const CnServicesRoute = CnServicesRouteImport.update({
+  id: '/cn/services',
+  path: '/cn/services',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CnPrivacyRoute = CnPrivacyRouteImport.update({
+  id: '/cn/privacy',
+  path: '/cn/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CnPartnerRoute = CnPartnerRouteImport.update({
+  id: '/cn/partner',
+  path: '/cn/partner',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CnGlobalNetworkRoute = CnGlobalNetworkRouteImport.update({
+  id: '/cn/global-network',
+  path: '/cn/global-network',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CnFaqsRoute = CnFaqsRouteImport.update({
+  id: '/cn/faqs',
+  path: '/cn/faqs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CnExperienceRoute = CnExperienceRouteImport.update({
+  id: '/cn/experience',
+  path: '/cn/experience',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CnContactRoute = CnContactRouteImport.update({
+  id: '/cn/contact',
+  path: '/cn/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CnCantonFairBuyerRecruitmentRoute =
+  CnCantonFairBuyerRecruitmentRouteImport.update({
+    id: '/cn/canton-fair-buyer-recruitment',
+    path: '/cn/canton-fair-buyer-recruitment',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const CnAboutRoute = CnAboutRouteImport.update({
+  id: '/cn/about',
+  path: '/cn/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/canton-fair-buyer-recruitment': typeof CantonFairBuyerRecruitmentRoute
   '/contact': typeof ContactRoute
   '/experience': typeof ExperienceRoute
+  '/faqs': typeof FaqsRoute
   '/global-network': typeof GlobalNetworkRoute
   '/partner': typeof PartnerRoute
+  '/privacy': typeof PrivacyRoute
   '/services': typeof ServicesRoute
+  '/shanghaitex-matchmaking': typeof ShanghaitexMatchmakingRoute
+  '/terms': typeof TermsRoute
+  '/yiwu-commodities-fair-buyer-support': typeof YiwuCommoditiesFairBuyerSupportRoute
+  '/cn/about': typeof CnAboutRoute
+  '/cn/canton-fair-buyer-recruitment': typeof CnCantonFairBuyerRecruitmentRoute
+  '/cn/contact': typeof CnContactRoute
+  '/cn/experience': typeof CnExperienceRoute
+  '/cn/faqs': typeof CnFaqsRoute
+  '/cn/global-network': typeof CnGlobalNetworkRoute
+  '/cn/partner': typeof CnPartnerRoute
+  '/cn/privacy': typeof CnPrivacyRoute
+  '/cn/services': typeof CnServicesRoute
+  '/cn/shanghaitex-matchmaking': typeof CnShanghaitexMatchmakingRoute
+  '/cn/terms': typeof CnTermsRoute
+  '/cn/yiwu-commodities-fair-buyer-support': typeof CnYiwuCommoditiesFairBuyerSupportRoute
+  '/cn/': typeof CnIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/canton-fair-buyer-recruitment': typeof CantonFairBuyerRecruitmentRoute
   '/contact': typeof ContactRoute
   '/experience': typeof ExperienceRoute
+  '/faqs': typeof FaqsRoute
   '/global-network': typeof GlobalNetworkRoute
   '/partner': typeof PartnerRoute
+  '/privacy': typeof PrivacyRoute
   '/services': typeof ServicesRoute
+  '/shanghaitex-matchmaking': typeof ShanghaitexMatchmakingRoute
+  '/terms': typeof TermsRoute
+  '/yiwu-commodities-fair-buyer-support': typeof YiwuCommoditiesFairBuyerSupportRoute
+  '/cn/about': typeof CnAboutRoute
+  '/cn/canton-fair-buyer-recruitment': typeof CnCantonFairBuyerRecruitmentRoute
+  '/cn/contact': typeof CnContactRoute
+  '/cn/experience': typeof CnExperienceRoute
+  '/cn/faqs': typeof CnFaqsRoute
+  '/cn/global-network': typeof CnGlobalNetworkRoute
+  '/cn/partner': typeof CnPartnerRoute
+  '/cn/privacy': typeof CnPrivacyRoute
+  '/cn/services': typeof CnServicesRoute
+  '/cn/shanghaitex-matchmaking': typeof CnShanghaitexMatchmakingRoute
+  '/cn/terms': typeof CnTermsRoute
+  '/cn/yiwu-commodities-fair-buyer-support': typeof CnYiwuCommoditiesFairBuyerSupportRoute
+  '/cn': typeof CnIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/canton-fair-buyer-recruitment': typeof CantonFairBuyerRecruitmentRoute
   '/contact': typeof ContactRoute
   '/experience': typeof ExperienceRoute
+  '/faqs': typeof FaqsRoute
   '/global-network': typeof GlobalNetworkRoute
   '/partner': typeof PartnerRoute
+  '/privacy': typeof PrivacyRoute
   '/services': typeof ServicesRoute
+  '/shanghaitex-matchmaking': typeof ShanghaitexMatchmakingRoute
+  '/terms': typeof TermsRoute
+  '/yiwu-commodities-fair-buyer-support': typeof YiwuCommoditiesFairBuyerSupportRoute
+  '/cn/about': typeof CnAboutRoute
+  '/cn/canton-fair-buyer-recruitment': typeof CnCantonFairBuyerRecruitmentRoute
+  '/cn/contact': typeof CnContactRoute
+  '/cn/experience': typeof CnExperienceRoute
+  '/cn/faqs': typeof CnFaqsRoute
+  '/cn/global-network': typeof CnGlobalNetworkRoute
+  '/cn/partner': typeof CnPartnerRoute
+  '/cn/privacy': typeof CnPrivacyRoute
+  '/cn/services': typeof CnServicesRoute
+  '/cn/shanghaitex-matchmaking': typeof CnShanghaitexMatchmakingRoute
+  '/cn/terms': typeof CnTermsRoute
+  '/cn/yiwu-commodities-fair-buyer-support': typeof CnYiwuCommoditiesFairBuyerSupportRoute
+  '/cn/': typeof CnIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/about'
+    | '/canton-fair-buyer-recruitment'
     | '/contact'
     | '/experience'
+    | '/faqs'
     | '/global-network'
     | '/partner'
+    | '/privacy'
     | '/services'
+    | '/shanghaitex-matchmaking'
+    | '/terms'
+    | '/yiwu-commodities-fair-buyer-support'
+    | '/cn/about'
+    | '/cn/canton-fair-buyer-recruitment'
+    | '/cn/contact'
+    | '/cn/experience'
+    | '/cn/faqs'
+    | '/cn/global-network'
+    | '/cn/partner'
+    | '/cn/privacy'
+    | '/cn/services'
+    | '/cn/shanghaitex-matchmaking'
+    | '/cn/terms'
+    | '/cn/yiwu-commodities-fair-buyer-support'
+    | '/cn/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
+    | '/canton-fair-buyer-recruitment'
     | '/contact'
     | '/experience'
+    | '/faqs'
     | '/global-network'
     | '/partner'
+    | '/privacy'
     | '/services'
+    | '/shanghaitex-matchmaking'
+    | '/terms'
+    | '/yiwu-commodities-fair-buyer-support'
+    | '/cn/about'
+    | '/cn/canton-fair-buyer-recruitment'
+    | '/cn/contact'
+    | '/cn/experience'
+    | '/cn/faqs'
+    | '/cn/global-network'
+    | '/cn/partner'
+    | '/cn/privacy'
+    | '/cn/services'
+    | '/cn/shanghaitex-matchmaking'
+    | '/cn/terms'
+    | '/cn/yiwu-commodities-fair-buyer-support'
+    | '/cn'
   id:
     | '__root__'
     | '/'
     | '/about'
+    | '/canton-fair-buyer-recruitment'
     | '/contact'
     | '/experience'
+    | '/faqs'
     | '/global-network'
     | '/partner'
+    | '/privacy'
     | '/services'
+    | '/shanghaitex-matchmaking'
+    | '/terms'
+    | '/yiwu-commodities-fair-buyer-support'
+    | '/cn/about'
+    | '/cn/canton-fair-buyer-recruitment'
+    | '/cn/contact'
+    | '/cn/experience'
+    | '/cn/faqs'
+    | '/cn/global-network'
+    | '/cn/partner'
+    | '/cn/privacy'
+    | '/cn/services'
+    | '/cn/shanghaitex-matchmaking'
+    | '/cn/terms'
+    | '/cn/yiwu-commodities-fair-buyer-support'
+    | '/cn/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  CantonFairBuyerRecruitmentRoute: typeof CantonFairBuyerRecruitmentRoute
   ContactRoute: typeof ContactRoute
   ExperienceRoute: typeof ExperienceRoute
+  FaqsRoute: typeof FaqsRoute
   GlobalNetworkRoute: typeof GlobalNetworkRoute
   PartnerRoute: typeof PartnerRoute
+  PrivacyRoute: typeof PrivacyRoute
   ServicesRoute: typeof ServicesRoute
+  ShanghaitexMatchmakingRoute: typeof ShanghaitexMatchmakingRoute
+  TermsRoute: typeof TermsRoute
+  YiwuCommoditiesFairBuyerSupportRoute: typeof YiwuCommoditiesFairBuyerSupportRoute
+  CnAboutRoute: typeof CnAboutRoute
+  CnCantonFairBuyerRecruitmentRoute: typeof CnCantonFairBuyerRecruitmentRoute
+  CnContactRoute: typeof CnContactRoute
+  CnExperienceRoute: typeof CnExperienceRoute
+  CnFaqsRoute: typeof CnFaqsRoute
+  CnGlobalNetworkRoute: typeof CnGlobalNetworkRoute
+  CnPartnerRoute: typeof CnPartnerRoute
+  CnPrivacyRoute: typeof CnPrivacyRoute
+  CnServicesRoute: typeof CnServicesRoute
+  CnShanghaitexMatchmakingRoute: typeof CnShanghaitexMatchmakingRoute
+  CnTermsRoute: typeof CnTermsRoute
+  CnYiwuCommoditiesFairBuyerSupportRoute: typeof CnYiwuCommoditiesFairBuyerSupportRoute
+  CnIndexRoute: typeof CnIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/yiwu-commodities-fair-buyer-support': {
+      id: '/yiwu-commodities-fair-buyer-support'
+      path: '/yiwu-commodities-fair-buyer-support'
+      fullPath: '/yiwu-commodities-fair-buyer-support'
+      preLoaderRoute: typeof YiwuCommoditiesFairBuyerSupportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/shanghaitex-matchmaking': {
+      id: '/shanghaitex-matchmaking'
+      path: '/shanghaitex-matchmaking'
+      fullPath: '/shanghaitex-matchmaking'
+      preLoaderRoute: typeof ShanghaitexMatchmakingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/services': {
       id: '/services'
       path: '/services'
       fullPath: '/services'
       preLoaderRoute: typeof ServicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/partner': {
@@ -144,6 +424,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GlobalNetworkRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/faqs': {
+      id: '/faqs'
+      path: '/faqs'
+      fullPath: '/faqs'
+      preLoaderRoute: typeof FaqsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/experience': {
       id: '/experience'
       path: '/experience'
@@ -156,6 +443,13 @@ declare module '@tanstack/react-router' {
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/canton-fair-buyer-recruitment': {
+      id: '/canton-fair-buyer-recruitment'
+      path: '/canton-fair-buyer-recruitment'
+      fullPath: '/canton-fair-buyer-recruitment'
+      preLoaderRoute: typeof CantonFairBuyerRecruitmentRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -172,17 +466,128 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/cn/': {
+      id: '/cn/'
+      path: '/cn'
+      fullPath: '/cn/'
+      preLoaderRoute: typeof CnIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cn/yiwu-commodities-fair-buyer-support': {
+      id: '/cn/yiwu-commodities-fair-buyer-support'
+      path: '/cn/yiwu-commodities-fair-buyer-support'
+      fullPath: '/cn/yiwu-commodities-fair-buyer-support'
+      preLoaderRoute: typeof CnYiwuCommoditiesFairBuyerSupportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cn/terms': {
+      id: '/cn/terms'
+      path: '/cn/terms'
+      fullPath: '/cn/terms'
+      preLoaderRoute: typeof CnTermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cn/shanghaitex-matchmaking': {
+      id: '/cn/shanghaitex-matchmaking'
+      path: '/cn/shanghaitex-matchmaking'
+      fullPath: '/cn/shanghaitex-matchmaking'
+      preLoaderRoute: typeof CnShanghaitexMatchmakingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cn/services': {
+      id: '/cn/services'
+      path: '/cn/services'
+      fullPath: '/cn/services'
+      preLoaderRoute: typeof CnServicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cn/privacy': {
+      id: '/cn/privacy'
+      path: '/cn/privacy'
+      fullPath: '/cn/privacy'
+      preLoaderRoute: typeof CnPrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cn/partner': {
+      id: '/cn/partner'
+      path: '/cn/partner'
+      fullPath: '/cn/partner'
+      preLoaderRoute: typeof CnPartnerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cn/global-network': {
+      id: '/cn/global-network'
+      path: '/cn/global-network'
+      fullPath: '/cn/global-network'
+      preLoaderRoute: typeof CnGlobalNetworkRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cn/faqs': {
+      id: '/cn/faqs'
+      path: '/cn/faqs'
+      fullPath: '/cn/faqs'
+      preLoaderRoute: typeof CnFaqsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cn/experience': {
+      id: '/cn/experience'
+      path: '/cn/experience'
+      fullPath: '/cn/experience'
+      preLoaderRoute: typeof CnExperienceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cn/contact': {
+      id: '/cn/contact'
+      path: '/cn/contact'
+      fullPath: '/cn/contact'
+      preLoaderRoute: typeof CnContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cn/canton-fair-buyer-recruitment': {
+      id: '/cn/canton-fair-buyer-recruitment'
+      path: '/cn/canton-fair-buyer-recruitment'
+      fullPath: '/cn/canton-fair-buyer-recruitment'
+      preLoaderRoute: typeof CnCantonFairBuyerRecruitmentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cn/about': {
+      id: '/cn/about'
+      path: '/cn/about'
+      fullPath: '/cn/about'
+      preLoaderRoute: typeof CnAboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  CantonFairBuyerRecruitmentRoute: CantonFairBuyerRecruitmentRoute,
   ContactRoute: ContactRoute,
   ExperienceRoute: ExperienceRoute,
+  FaqsRoute: FaqsRoute,
   GlobalNetworkRoute: GlobalNetworkRoute,
   PartnerRoute: PartnerRoute,
+  PrivacyRoute: PrivacyRoute,
   ServicesRoute: ServicesRoute,
+  ShanghaitexMatchmakingRoute: ShanghaitexMatchmakingRoute,
+  TermsRoute: TermsRoute,
+  YiwuCommoditiesFairBuyerSupportRoute: YiwuCommoditiesFairBuyerSupportRoute,
+  CnAboutRoute: CnAboutRoute,
+  CnCantonFairBuyerRecruitmentRoute: CnCantonFairBuyerRecruitmentRoute,
+  CnContactRoute: CnContactRoute,
+  CnExperienceRoute: CnExperienceRoute,
+  CnFaqsRoute: CnFaqsRoute,
+  CnGlobalNetworkRoute: CnGlobalNetworkRoute,
+  CnPartnerRoute: CnPartnerRoute,
+  CnPrivacyRoute: CnPrivacyRoute,
+  CnServicesRoute: CnServicesRoute,
+  CnShanghaitexMatchmakingRoute: CnShanghaitexMatchmakingRoute,
+  CnTermsRoute: CnTermsRoute,
+  CnYiwuCommoditiesFairBuyerSupportRoute:
+    CnYiwuCommoditiesFairBuyerSupportRoute,
+  CnIndexRoute: CnIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

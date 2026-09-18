@@ -1,0 +1,32 @@
+# robots.txt — JU Fair Global
+# Everything on this site is public marketing content and should be indexed.
+
+User-agent: *
+Allow: /
+
+# Baidu is the dominant engine for the Chinese-language half of this site
+# (/cn/*). A named group REPLACES the wildcard group for that crawler, so it is
+# spelled out in full rather than inheriting anything from above.
+User-agent: Baiduspider
+Allow: /
+
+Sitemap: https://www.jufairglobal.com/sitemap.xml
+
+# ── Notes, so the next person does not re-break this ──────────────────────
+#
+# Nothing is disallowed, deliberately.
+#
+# 1. There is no private area, no login and no user content — every route is
+#    marketing copy we want indexed.
+#
+# 2. `Disallow: /assets/` was here and was WRONG. The production build emits
+#    every JavaScript chunk into /assets/, and Google's guidelines are explicit
+#    that blocking CSS or JS stops it rendering the page and evaluating mobile
+#    usability. The site is server-rendered so the text was still readable, but
+#    the crawler was being denied the resources it needs to see the page the
+#    way a visitor does.
+#
+# 3. Legacy `?lang=` URLs are NOT blocked either. They now answer with a 301 to
+#    the path-based equivalent (/cn/about), and a crawler has to be able to
+#    fetch them to see that redirect and consolidate the old URL onto the new
+#    one. Blocking them would freeze the old URLs in the index forever.

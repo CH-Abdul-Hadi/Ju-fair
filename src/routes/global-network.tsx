@@ -3,31 +3,24 @@ import { useState } from "react";
 import { SiteLayout, PageHero } from "@/components/site/SiteLayout";
 import { SectionTitle } from "@/components/site/SectionTitle";
 import { ScrollReveal } from "@/components/site/ScrollReveal";
-import { WorldMap, GLOBAL_HUBS, HubMarker } from "@/components/site/WorldMap";
+import { HeroGlobe } from "@/components/site/HeroGlobe";
+import { GLOBAL_HUBS, type HubMarker } from "@/lib/hubs";
 import { useLanguage } from "@/hooks/useLanguage";
 import { t } from "@/translations";
+import { seoHead } from "@/lib/seo";
+import { redirectLegacyLang } from "@/lib/langRedirect";
 import { Globe2, Users, Building2, MapPin, Radio, Sparkles } from "lucide-react";
 
 export const Route = createFileRoute("/global-network")({
-  head: () => ({
-    meta: [
-      { title: "Global Network — JU Fair Global" },
-      {
-        name: "description",
-        content: "Our worldwide presence spanning 40+ countries across every region.",
-      },
-      { property: "og:title", content: "Global Network — JU Fair Global" },
-      { property: "og:description", content: "Presence in 40+ countries." },
-      { property: "og:url", content: "/global-network" },
-    ],
-    links: [{ rel: "canonical", href: "/global-network" }],
-  }),
+  // Language is the path now, so this route is unconditionally English.
+  beforeLoad: ({ search }) => redirectLegacyLang("/global-network", search),
+  head: () => seoHead("/global-network", "en"),
   component: NetworkPage,
 });
 
 const statIcons = [Globe2, Users, Building2];
 
-function NetworkPage() {
+export function NetworkPage() {
   const { lang } = useLanguage();
   const tx = t(lang).globalNetwork;
   const [selectedHub, setSelectedHub] = useState<HubMarker | null>(null);
@@ -41,11 +34,12 @@ function NetworkPage() {
       />
 
       {/* ─── 3-COLUMN NETWORK LAYOUT ─── */}
-      <section className="section-pad bg-white">
+      <section className="section-pad bg-surface">
         <div className="container-x">
           <ScrollReveal>
             <div className="mb-16">
               <SectionTitle
+                variant="split"
                 eyebrow={tx.coverage.eyebrow}
                 title={tx.coverage.title}
                 description={tx.coverage.description}
@@ -62,9 +56,9 @@ function NetworkPage() {
                   {/* Map Header Overlay */}
                   <div className="relative z-10 flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-white/10">
                     <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 rounded-full bg-accent animate-ping" />
+                      <div className="w-3 h-3 rounded-full bg-accent motion-safe:animate-ping" />
                       <span className="text-[12px] font-extrabold tracking-widest text-accent uppercase flex items-center gap-1.5">
-                        <Radio size={14} className="animate-pulse" /> Live Global Trade Corridor
+                        <Radio size={14} className="motion-safe:animate-pulse" /> {tx.map.liveCorridor}
                       </span>
                     </div>
 
@@ -72,38 +66,65 @@ function NetworkPage() {
                     <div className="flex flex-wrap items-center gap-1.5">
                       <button
                         onClick={() => setSelectedHub(null)}
+                        aria-pressed={!selectedHub}
                         className={`px-3 py-1 rounded-full text-[11px] font-bold tracking-wider uppercase transition-all duration-200 cursor-pointer ${
                           !selectedHub
-                            ? "bg-accent text-white shadow-md"
+                            ? "bg-accent text-accent-ink shadow-md"
                             : "bg-white/10 text-white/70 hover:bg-white/20 hover:text-white"
                         }`}
                       >
-                        All Hubs
+                        {tx.map.allHubs}
                       </button>
                       {GLOBAL_HUBS.map((hub) => (
                         <button
                           key={hub.id}
                           onClick={() => setSelectedHub(hub)}
+                          aria-pressed={selectedHub?.id === hub.id}
                           className={`px-2.5 py-1 rounded-full text-[11px] font-bold transition-all duration-200 cursor-pointer ${
                             selectedHub?.id === hub.id
-                              ? "bg-accent text-white shadow-md"
+                              ? "bg-accent text-accent-ink shadow-md"
                               : "bg-white/10 text-white/70 hover:bg-white/20 hover:text-white"
                           }`}
                         >
-                          {hub.isHQ ? "⭐ HQ" : hub.region}
+                          {hub.isHQ ? `⭐ ${tx.map.hq}` : tx.hubs[hub.id].region}
                         </button>
                       ))}
                     </div>
                   </div>
 
-                  {/* Interactive Vector Network Map */}
-                  <div className="relative z-10 my-4 flex-1 flex items-center justify-center">
-                    <WorldMap
-                      highlighted
-                      activeHubId={selectedHub?.id}
-                      onSelectHub={(hub) => setSelectedHub(hub)}
-                      className="w-full text-white/40"
+                  {/* Interactive globe. Selecting a chip flies the globe to
+                      that hub and holds it; "All Hubs" releases it back to a
+                      slow drift. It can also be dragged directly. */}
+                  <div className="relative z-10 my-4 flex-1 flex flex-col items-center justify-center gap-4">
+                    <HeroGlobe
+                      focusHubId={selectedHub?.id ?? null}
+                      className="max-w-[360px]"
                     />
+
+                    {/* Active-hub detail. This used to live inside WorldMap;
+                        with the raster map retired it belongs to the page that
+                        owns the selection state. */}
+                    {selectedHub && (
+                      <div className="animate-in fade-in slide-in-from-bottom-2 duration-300 rounded-2xl border border-accent/40 bg-[#0B1D3A]/95 px-5 py-3 text-center shadow-2xl backdrop-blur-md">
+                        <div className="mb-1 flex items-center justify-center gap-2">
+                          <span
+                            aria-hidden="true"
+                            className="h-2.5 w-2.5 rounded-full bg-accent motion-safe:animate-ping"
+                          />
+                          <span className="text-[11px] font-extrabold uppercase tracking-widest text-accent">
+                            {selectedHub.isHQ
+                              ? `⭐ ${tx.map.globalHq}`
+                              : tx.hubs[selectedHub.id].region}
+                          </span>
+                        </div>
+                        <div className="text-[15px] font-bold text-white">
+                          {tx.hubs[selectedHub.id].label}
+                        </div>
+                        <div className="mt-1 text-[13px] text-white/80">
+                          {tx.hubs[selectedHub.id].buyers}
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   {/* Map Footer Info / Legend */}
@@ -111,20 +132,20 @@ function NetworkPage() {
                     <div className="flex items-center gap-6">
                       <span className="flex items-center gap-2">
                         <span className="w-3 h-3 rounded-full bg-[#FFD700] ring-4 ring-[#FFD700]/30" />
-                        <strong className="text-white">Shanghai HQ</strong>
+                        <strong className="text-white">{tx.map.hq}</strong>
                       </span>
                       <span className="flex items-center gap-2">
                         <span className="w-2.5 h-2.5 rounded-full bg-accent" />
-                        Regional Hub
+                        {tx.map.regionalHub}
                       </span>
                       <span className="flex items-center gap-2">
                         <span className="w-6 h-0.5 bg-gradient-to-r from-accent to-blue-400 rounded-full" />
-                        Trade Corridor
+                        {tx.map.tradeCorridor}
                       </span>
                     </div>
 
                     <div className="flex items-center gap-1.5 text-accent font-semibold">
-                      <Sparkles size={14} /> Hover node for hub insights
+                      <Sparkles size={14} /> {tx.map.hint}
                     </div>
                   </div>
                 </div>
@@ -137,10 +158,10 @@ function NetworkPage() {
                   return (
                     <ScrollReveal key={c.t} delay={i * 120} direction="up">
                       <div className="card-elevated text-center h-full p-6 border-transparent hover:border-accent/30 transition-all duration-300">
-                        <div className="w-12 h-12 rounded-[12px] bg-accent/15 text-accent grid place-items-center mx-auto mb-4 transition-transform duration-300 hover:-translate-y-1">
+                        <div className="icon-chip mx-auto mb-4 !h-12 !w-12">
                           <Icon size={22} />
                         </div>
-                        <h3 className="text-[32px] font-display font-extrabold text-primary leading-none">{c.t}</h3>
+                        <h3 className="text-stat font-display font-extrabold text-primary">{c.t}</h3>
                         <p className="mt-2 text-[13px] font-bold uppercase tracking-[0.1em] text-muted-foreground">{c.d}</p>
                       </div>
                     </ScrollReveal>
@@ -191,7 +212,7 @@ function NetworkPage() {
       </section>
 
       {/* ─── WORKING MODEL ─── */}
-      <section className="section-pad bg-[#FAFAFA]">
+      <section className="section-pad bg-surface-sunken">
         <div className="container-x">
           <ScrollReveal>
             <SectionTitle
