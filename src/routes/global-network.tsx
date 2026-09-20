@@ -3,7 +3,7 @@ import { useState } from "react";
 import { SiteLayout, PageHero } from "@/components/site/SiteLayout";
 import { SectionTitle } from "@/components/site/SectionTitle";
 import { ScrollReveal } from "@/components/site/ScrollReveal";
-import { HeroGlobe } from "@/components/site/HeroGlobe";
+import { WorldMap } from "@/components/site/WorldMap";
 import { GLOBAL_HUBS, type HubMarker } from "@/lib/hubs";
 import { useLanguage } from "@/hooks/useLanguage";
 import { t } from "@/translations";
@@ -52,7 +52,7 @@ export function NetworkPage() {
             <div className="lg:col-span-2 space-y-8 flex flex-col">
               <ScrollReveal direction="left" className="flex-1">
                 <div className="card-elevated bg-gradient-to-br from-[#0B1D3A] via-[#0B3D91] to-[#041226] text-white border border-primary/30 p-6 md:p-8 h-full min-h-[480px] flex flex-col justify-between relative overflow-hidden rounded-[24px] shadow-[0_20px_50px_rgba(11,61,145,0.25)]">
-                  
+
                   {/* Map Header Overlay */}
                   <div className="relative z-10 flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-white/10">
                     <div className="flex items-center gap-2">
@@ -67,24 +67,22 @@ export function NetworkPage() {
                       <button
                         onClick={() => setSelectedHub(null)}
                         aria-pressed={!selectedHub}
-                        className={`px-3 py-1 rounded-full text-[11px] font-bold tracking-wider uppercase transition-all duration-200 cursor-pointer ${
-                          !selectedHub
-                            ? "bg-accent text-accent-ink shadow-md"
+                        className={`px-3 py-1 rounded-full text-[11px] font-bold tracking-wider uppercase transition-all duration-200 cursor-pointer ${!selectedHub
+                            ? "bg-accent text-white shadow-md"
                             : "bg-white/10 text-white/70 hover:bg-white/20 hover:text-white"
-                        }`}
+                          }`}
                       >
                         {tx.map.allHubs}
                       </button>
                       {GLOBAL_HUBS.map((hub) => (
                         <button
                           key={hub.id}
-                          onClick={() => setSelectedHub(hub)}
+                          onClick={() => setSelectedHub(selectedHub?.id === hub.id ? null : hub)}
                           aria-pressed={selectedHub?.id === hub.id}
-                          className={`px-2.5 py-1 rounded-full text-[11px] font-bold transition-all duration-200 cursor-pointer ${
-                            selectedHub?.id === hub.id
-                              ? "bg-accent text-accent-ink shadow-md"
+                          className={`px-2.5 py-1 rounded-full text-[11px] font-bold transition-all duration-200 cursor-pointer ${selectedHub?.id === hub.id
+                              ? "bg-accent text-white shadow-md"
                               : "bg-white/10 text-white/70 hover:bg-white/20 hover:text-white"
-                          }`}
+                            }`}
                         >
                           {hub.isHQ ? `⭐ ${tx.map.hq}` : tx.hubs[hub.id].region}
                         </button>
@@ -92,39 +90,14 @@ export function NetworkPage() {
                     </div>
                   </div>
 
-                  {/* Interactive globe. Selecting a chip flies the globe to
-                      that hub and holds it; "All Hubs" releases it back to a
-                      slow drift. It can also be dragged directly. */}
-                  <div className="relative z-10 my-4 flex-1 flex flex-col items-center justify-center gap-4">
-                    <HeroGlobe
-                      focusHubId={selectedHub?.id ?? null}
-                      className="max-w-[360px]"
+                  {/* Interactive Vector Network Map */}
+                  <div className="relative z-10 my-4 flex-1 flex items-center justify-center">
+                    <WorldMap
+                      highlighted
+                      activeHubId={selectedHub?.id}
+                      onSelectHub={(hub) => setSelectedHub(hub)}
+                      className="w-full text-white/40"
                     />
-
-                    {/* Active-hub detail. This used to live inside WorldMap;
-                        with the raster map retired it belongs to the page that
-                        owns the selection state. */}
-                    {selectedHub && (
-                      <div className="animate-in fade-in slide-in-from-bottom-2 duration-300 rounded-2xl border border-accent/40 bg-[#0B1D3A]/95 px-5 py-3 text-center shadow-2xl backdrop-blur-md">
-                        <div className="mb-1 flex items-center justify-center gap-2">
-                          <span
-                            aria-hidden="true"
-                            className="h-2.5 w-2.5 rounded-full bg-accent motion-safe:animate-ping"
-                          />
-                          <span className="text-[11px] font-extrabold uppercase tracking-widest text-accent">
-                            {selectedHub.isHQ
-                              ? `⭐ ${tx.map.globalHq}`
-                              : tx.hubs[selectedHub.id].region}
-                          </span>
-                        </div>
-                        <div className="text-[15px] font-bold text-white">
-                          {tx.hubs[selectedHub.id].label}
-                        </div>
-                        <div className="mt-1 text-[13px] text-white/80">
-                          {tx.hubs[selectedHub.id].buyers}
-                        </div>
-                      </div>
-                    )}
                   </div>
 
                   {/* Map Footer Info / Legend */}

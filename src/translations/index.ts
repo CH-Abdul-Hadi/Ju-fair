@@ -454,7 +454,7 @@ const translations = {
         globalHq: "Global HQ",
         regionalHub: "Regional Hub",
         tradeCorridor: "Trade Corridor",
-        hint: "Drag the globe, or pick a hub",
+        hint: "Hover node for hub insights",
         selectHub: "View hub details",
       },
       hubs: {
@@ -1384,7 +1384,7 @@ const translations = {
         globalHq: "全球总部",
         regionalHub: "区域枢纽",
         tradeCorridor: "贸易通道",
-        hint: "拖动地球，或选择枢纽",
+        hint: "悬停节点查看枢纽详情",
         selectHub: "查看枢纽详情",
       },
       hubs: {

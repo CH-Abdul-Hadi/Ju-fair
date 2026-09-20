@@ -43,3 +43,8 @@ CLAUDE.md
 context.md
 SEO.md
 prompt.md
+*.md
+!AGENTS.md
+!README.md
+!src/AiFiles/jufair.md
+!src/routes/README.md

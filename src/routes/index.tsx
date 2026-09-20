@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { LocalizedLink } from "@/components/site/LocalizedLink";
 import { SiteLayout } from "@/components/site/SiteLayout";
-import { HeroNetworkPanel } from "@/components/site/HeroNetworkPanel";
 import { SectionTitle } from "@/components/site/SectionTitle";
 import { ScrollReveal } from "@/components/site/ScrollReveal";
 import { RevealGroup, RevealItem } from "@/components/site/RevealGroup";
@@ -164,10 +163,6 @@ export function Home() {
               ))}
             </div>
           </div>
-
-          {/* RIGHT: Live network panel — fills the 45% column this grid has
-              always declared but never populated. */}
-          <HeroNetworkPanel />
         </div>
 
         {/* Bottom wave separator */}
