@@ -45,6 +45,8 @@
   cache-control: public, max-age=2592000
 /favicon.png
   cache-control: public, max-age=2592000
+/favicon.svg
+  cache-control: public, max-age=2592000
 
 # ── Crawler files: short, so a fix propagates quickly ──────────────────────
 /robots.txt

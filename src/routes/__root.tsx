@@ -115,17 +115,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
     links: [
       { rel: "stylesheet", href: appCss },
-      // favicon.svg is deliberately NOT linked. It is a 622 KB auto-traced
-      // vector, and browsers prefer an SVG icon over a PNG when both are
-      // offered — so every page load was fetching 622 KB for a 16px tab icon.
-      { rel: "icon", href: "/icon-192.png", type: "image/png", sizes: "192x192" },
-      { rel: "icon", href: "/icon-512.png", type: "image/png", sizes: "512x512" },
-      // Browsers request /favicon.ico at the root whether or not it is linked,
-      // so its absence was a 404 on visits from clients that do. It now exists
-      // as a multi-size 16/32/48 ICO generated from icon-512.png.
-      { rel: "icon", href: "/favicon.ico", sizes: "any" },
-      // 180×180 is Apple's actual spec; this was a 1024×1024, 303 KB file.
-      { rel: "apple-touch-icon", href: "/apple-touch-icon.png", sizes: "180x180" },
+      { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
+      { rel: "icon", href: "/favicon.png", type: "image/png", sizes: "512x512" },
+      { rel: "shortcut icon", href: "/favicon.ico" },
+      { rel: "apple-touch-icon", href: "/apple-touch-icon.png", sizes: "512x512" },
       // Fonts are self-hosted — see the @font-face block at the top of
       // styles.css for why. No preconnect to fonts.googleapis.com is needed
       // any more, and no third-party stylesheet blocks first render.
