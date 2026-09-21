@@ -1,7 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   Outlet,
-  Link,
   createRootRouteWithContext,
   useRouter,
   HeadContent,
@@ -11,30 +10,38 @@ import { useEffect, useLayoutEffect, type ReactNode } from "react";
 import { useRouterState } from "@tanstack/react-router";
 import { z } from "zod";
 
+import { LocalizedLink } from "@/components/site/LocalizedLink";
+import { langFromPathname } from "@/lib/paths";
+import { verificationMeta } from "@/lib/verification";
+import { analyticsScripts } from "@/lib/analytics";
+
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { useLanguage } from "../hooks/useLanguage";
+import { t } from "../translations";
 
 const searchSchema = z.object({
   lang: z.enum(["en", "cn"]).optional(),
 });
 
 function NotFoundComponent() {
+  const { lang } = useLanguage();
+  const tx = t(lang).notFound;
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
         <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          The page you're looking for doesn't exist or has been moved.
-        </p>
+        <h2 className="mt-4 text-xl font-semibold text-foreground">{tx.title}</h2>
+        <p className="mt-2 text-sm text-muted-foreground">{tx.desc}</p>
         <div className="mt-6">
-          <Link
+          <LocalizedLink
             to="/"
+           
             className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
-            Go home
-          </Link>
+            {tx.goHome}
+          </LocalizedLink>
         </div>
       </div>
     </div>
@@ -94,20 +101,59 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:site_name", content: "JU Fair Global" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      // Explicit indexing directive. `max-image-preview:large` is the part
+      // that matters commercially — it lets Google show a full-size image
+      // thumbnail beside the result instead of a thumbnail or none, which
+      // measurably lifts click-through.
+      {
+        name: "robots",
+        content: "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1",
+      },
+      // Search-console ownership tags. Emits nothing until a token is filled
+      // in — see src/lib/verification.ts for where each one comes from.
+      ...verificationMeta(),
     ],
     links: [
       { rel: "stylesheet", href: appCss },
-      { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
-      { rel: "icon", href: "/favicon.png", type: "image/png", sizes: "512x512" },
-      { rel: "shortcut icon", href: "/favicon.ico" },
-      { rel: "apple-touch-icon", href: "/apple-touch-icon.png", sizes: "512x512" },
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      // favicon.svg is deliberately NOT linked. It is a 622 KB auto-traced
+      // vector, and browsers prefer an SVG icon over a PNG when both are
+      // offered — so every page load was fetching 622 KB for a 16px tab icon.
+      { rel: "icon", href: "/icon-192.png", type: "image/png", sizes: "192x192" },
+      { rel: "icon", href: "/icon-512.png", type: "image/png", sizes: "512x512" },
+      // Browsers request /favicon.ico at the root whether or not it is linked,
+      // so its absence was a 404 on visits from clients that do. It now exists
+      // as a multi-size 16/32/48 ICO generated from icon-512.png.
+      { rel: "icon", href: "/favicon.ico", sizes: "any" },
+      // 180×180 is Apple's actual spec; this was a 1024×1024, 303 KB file.
+      { rel: "apple-touch-icon", href: "/apple-touch-icon.png", sizes: "180x180" },
+      // Fonts are self-hosted — see the @font-face block at the top of
+      // styles.css for why. No preconnect to fonts.googleapis.com is needed
+      // any more, and no third-party stylesheet blocks first render.
+      //
+      // Only the two faces used above the fold are preloaded: Open Sans 400
+      // is the body text and Poppins 800 is every hero and section heading.
+      // Preloading all nine would compete with the LCP image for bandwidth,
+      // which is the usual way a "performance" change makes things worse.
+      // `crossOrigin` is required even same-origin, or the preload is fetched
+      // in a different CORS mode than the font and downloaded twice.
       {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Open+Sans:wght@400;500;600;700&display=swap",
+        rel: "preload",
+        href: "/fonts/open-sans-latin-400-normal.woff2",
+        as: "font",
+        type: "font/woff2",
+        crossOrigin: "anonymous",
+      },
+      {
+        rel: "preload",
+        href: "/fonts/poppins-latin-800-normal.woff2",
+        as: "font",
+        type: "font/woff2",
+        crossOrigin: "anonymous",
       },
     ],
+    // Empty until a provider is configured in src/lib/analytics.ts — the site
+    // ships with no tracker, no cookies and no third-party analytics request.
+    scripts: analyticsScripts(),
   }),
   shellComponent: RootShell,
   component: RootComponent,
@@ -116,8 +162,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 });
 
 function RootShell({ children }: { children: ReactNode }) {
+  // Resolve the language during SSR from the request PATH, so the server emits
+  // the correct <html lang> instead of always shipping "en" and having LangSync
+  // correct it after hydration. A screen reader would otherwise announce the
+  // first paint of the Chinese site with English pronunciation rules.
+  //
+  // This reads the path rather than the old `?lang` search param: since Phase 5
+  // the path is the only thing that determines language, and a `?lang` that
+  // disagreed with the path would put the wrong value here.
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+
   return (
-    <html lang="en">
+    <html lang={langFromPathname(pathname) === "cn" ? "zh-Hans" : "en"}>
       <head>
         <HeadContent />
       </head>
@@ -129,12 +185,18 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
-/** Sync the <html lang> attribute with the active language. */
+/**
+ * Sync the <html lang> attribute after a client-side navigation.
+ *
+ * RootShell sets it correctly for the first paint, but the shell does not
+ * re-render on an in-app navigation, so crossing from /about to /cn/about would
+ * otherwise leave `lang="en"` on Chinese content.
+ */
 function LangSync() {
   const { lang } = useLanguage();
   useEffect(() => {
     if (typeof document !== "undefined") {
-      document.documentElement.lang = lang === "cn" ? "zh" : "en";
+      document.documentElement.lang = lang === "cn" ? "zh-Hans" : "en";
     }
   }, [lang]);
   return null;

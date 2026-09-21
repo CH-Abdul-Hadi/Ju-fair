@@ -8,27 +8,9 @@
  */
 
 import { useState, useMemo } from "react";
-
-/* ── Hub marker definition ────────────────────────────────────────── */
-export interface HubMarker {
-  id: string;
-  location: [number, number]; // [lat, lng]
-  size: number;
-  label: string;
-  region: string;
-  buyers: string;
-  isHQ?: boolean;
-}
-
-export const GLOBAL_HUBS: HubMarker[] = [
-  { id: "shanghai",  location: [31.2304,  121.4737], size: 0.10, label: "JU FAIR HQ (Shanghai)",        region: "East Asia",     buyers: "1,200+ Global Partners", isHQ: true },
-  { id: "frankfurt", location: [50.1109,    8.6821], size: 0.07, label: "Europe Hub (Frankfurt)",        region: "Europe",        buyers: "850+ Verified Buyers" },
-  { id: "dubai",     location: [25.2048,   55.2708], size: 0.07, label: "Middle East Hub (Dubai)",       region: "Middle East",   buyers: "600+ Verified Buyers" },
-  { id: "newyork",   location: [40.7128,  -74.0060], size: 0.07, label: "North America Hub (New York)",  region: "North America", buyers: "750+ Verified Buyers" },
-  { id: "saopaulo",  location: [-23.5505, -46.6333], size: 0.06, label: "South America Hub (São Paulo)", region: "Latin America", buyers: "400+ Verified Buyers" },
-  { id: "nairobi",   location: [-1.2921,   36.8219], size: 0.06, label: "Africa Hub (Nairobi)",          region: "Africa",        buyers: "350+ Verified Buyers" },
-  { id: "sydney",    location: [-33.8688, 151.2093], size: 0.07, label: "Asia-Pacific Hub (Sydney)",     region: "Oceania",       buyers: "500+ Verified Buyers" },
-];
+import { GLOBAL_HUBS, type HubMarker } from "@/lib/hubs";
+import { useLanguage } from "@/hooks/useLanguage";
+import { t } from "@/translations";
 
 /* ── Convert [lat, lng] to percentage coordinates on map ────────────── */
 function latLngToPercent([lat, lng]: [number, number]): { x: number; y: number } {
@@ -56,6 +38,8 @@ export function WorldMap({
   onSelectHub,
   mapImageSrc = "/world-map.png",
 }: WorldMapProps) {
+  const { lang } = useLanguage();
+  const tx = t(lang).globalNetwork;
   const [hoveredHub, setHoveredHub] = useState<HubMarker | null>(null);
 
   const activeHub = useMemo(
@@ -70,10 +54,10 @@ export function WorldMap({
 
   return (
     <div className={`relative w-full flex flex-col items-center justify-center select-none ${className}`}>
-      
+
       {/* Container for Real-World Map & Overlay SVG */}
       <div className="relative w-full rounded-2xl overflow-hidden shadow-2xl border border-white/15 bg-[#07172B] group">
-        
+
         {/* Real-World Map Image */}
         <img
           src={mapImageSrc}
@@ -126,6 +110,7 @@ export function WorldMap({
           const { x, y } = latLngToPercent(hub.location);
           const isSelected = activeHubId === hub.id;
           const isHovered = hoveredHub?.id === hub.id;
+          const hubTx = tx.hubs[hub.id];
 
           return (
             <div
@@ -138,33 +123,30 @@ export function WorldMap({
             >
               {/* Outer Pulse Ring */}
               <div
-                className={`absolute inset-0 -m-2 rounded-full transition-transform duration-300 ${
-                  hub.isHQ ? "bg-[#FFD700]/40" : "bg-[#F5A623]/30"
-                } ${isSelected ? "animate-ping scale-150" : "animate-pulse"}`}
+                className={`absolute inset-0 -m-2 rounded-full transition-transform duration-300 ${hub.isHQ ? "bg-[#FFD700]/40" : "bg-[#F5A623]/30"
+                  } ${isSelected ? "animate-ping scale-150" : "animate-pulse"}`}
               />
 
               {/* Marker Pin */}
               <div
-                className={`relative rounded-full flex items-center justify-center border-2 transition-all duration-300 shadow-lg ${
-                  hub.isHQ
-                    ? "w-5 h-5 bg-[#FFD700] border-white text-black font-extrabold text-[10px]"
-                    : isSelected
+                className={`relative rounded-full flex items-center justify-center border-2 transition-all duration-300 shadow-lg ${hub.isHQ
+                  ? "w-5 h-5 bg-[#FFD700] border-white text-black font-extrabold text-[10px]"
+                  : isSelected
                     ? "w-4.5 h-4.5 bg-accent border-white scale-125"
                     : "w-3.5 h-3.5 bg-accent/90 border-white/80 hover:scale-125"
-                }`}
+                  }`}
               >
                 {hub.isHQ && "★"}
               </div>
 
               {/* Marker Label */}
               <div
-                className={`absolute top-full left-1/2 -translate-x-1/2 mt-1 px-2 py-0.5 rounded-md text-[10px] font-bold whitespace-nowrap backdrop-blur-md shadow-md border transition-all duration-200 pointer-events-none ${
-                  isSelected || isHovered
-                    ? "bg-accent text-white border-accent scale-105 z-30"
-                    : "bg-black/75 text-white/90 border-white/20 opacity-80"
-                }`}
+                className={`absolute top-full left-1/2 -translate-x-1/2 mt-1 px-2 py-0.5 rounded-md text-[10px] font-bold whitespace-nowrap backdrop-blur-md shadow-md border transition-all duration-200 pointer-events-none ${isSelected || isHovered
+                  ? "bg-accent text-white border-accent scale-105 z-30"
+                  : "bg-black/75 text-white/90 border-white/20 opacity-80"
+                  }`}
               >
-                {hub.isHQ ? "⭐ Shanghai HQ" : hub.region}
+                {hub.isHQ ? `⭐ ${tx.map.hq}` : (hubTx ? hubTx.region : hub.id)}
               </div>
             </div>
           );
@@ -177,11 +159,11 @@ export function WorldMap({
           <div className="flex items-center justify-center gap-2 mb-1">
             <span className="w-2.5 h-2.5 rounded-full bg-accent animate-ping" />
             <span className="text-[11px] uppercase tracking-widest font-extrabold text-accent">
-              {activeHub.isHQ ? "⭐ Global HQ" : activeHub.region}
+              {activeHub.isHQ ? `⭐ ${tx.map.globalHq}` : tx.hubs[activeHub.id]?.region}
             </span>
           </div>
-          <div className="text-[15px] font-bold text-white">{activeHub.label}</div>
-          <div className="text-[13px] text-white/80 mt-1">{activeHub.buyers}</div>
+          <div className="text-[15px] font-bold text-white">{tx.hubs[activeHub.id]?.label}</div>
+          <div className="text-[13px] text-white/80 mt-1">{tx.hubs[activeHub.id]?.buyers}</div>
         </div>
       )}
     </div>

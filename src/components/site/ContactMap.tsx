@@ -13,6 +13,8 @@ interface ContactMapProps {
   locationName?: string;
   zoom?: number;
   className?: string;
+  /** Accessible name for the iframe, supplied translated by the caller. */
+  title?: string;
 }
 
 export function ContactMap({
@@ -21,6 +23,7 @@ export function ContactMap({
   locationName = "JU Fair Global",
   zoom = 15,
   className = "w-full h-80 rounded-[12px] border-0",
+  title,
 }: ContactMapProps) {
   // 1. Detect whether AMap API key is present and non-empty
   const amapKey = import.meta.env.VITE_AMAP_KEY;
@@ -56,7 +59,7 @@ export function ContactMap({
 
   return (
     <iframe
-      title={`Office location on ${providerName}`}
+      title={title ?? `Office location on ${providerName}`}
       src={mapSrc}
       className={className}
       loading="lazy"

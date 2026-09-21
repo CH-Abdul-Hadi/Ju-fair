@@ -1,0 +1,69 @@
+# Cloudflare Pages response headers.
+#
+# Nitro generates a `_headers` covering /assets/* — the hashed build output.
+# Everything in public/ ships with its ORIGINAL filename, so none of it was
+# getting a cache policy: fonts, photographs, logos and icons were revalidated
+# on every repeat visit. Lighthouse flagged this as "Use efficient cache
+# lifetimes".
+#
+# If this file stops taking effect, check whether the generated
+# .output/public/_headers has replaced it rather than merged with it.
+
+# ── Fonts ──────────────────────────────────────────────────────────────────
+# Safe to freeze for a year: the filename encodes family, subset and weight, so
+# a different font is a different URL. Replacing a face means a new filename.
+/fonts/*
+  cache-control: public, max-age=31536000, immutable
+
+# ── Photography and logos ──────────────────────────────────────────────────
+# 30 days, and deliberately NOT immutable. These filenames are not
+# content-hashed, so a client swapping a photograph in place must be able to
+# see it replaced without waiting a year.
+/Expo/*
+  cache-control: public, max-age=2592000
+/images/*
+  cache-control: public, max-age=2592000
+/logos/*
+  cache-control: public, max-age=2592000
+
+# ── Root-level assets ──────────────────────────────────────────────────────
+/hero.webp
+  cache-control: public, max-age=2592000
+/hero-card.jpg
+  cache-control: public, max-age=2592000
+/logo_white.png
+  cache-control: public, max-age=2592000
+/logo_dark.png
+  cache-control: public, max-age=2592000
+/icon-192.png
+  cache-control: public, max-age=2592000
+/icon-512.png
+  cache-control: public, max-age=2592000
+/apple-touch-icon.png
+  cache-control: public, max-age=2592000
+/favicon.ico
+  cache-control: public, max-age=2592000
+/favicon.png
+  cache-control: public, max-age=2592000
+
+# ── Crawler files: short, so a fix propagates quickly ──────────────────────
+/robots.txt
+  cache-control: public, max-age=3600
+/sitemap.xml
+  cache-control: public, max-age=3600
+
+# ── Security headers, all pages ────────────────────────────────────────────
+# Modest and safe. Deliberately NO Content-Security-Policy: this site loads a
+# third-party map iframe, posts to the Web3Forms API and uses inline styles for
+# the parallax transforms, so a CSP written without testing every one of those
+# would break the site silently. That belongs in its own task with a
+# report-only rollout.
+#
+# HSTS is also absent on purpose — it is a domain-wide commitment with real
+# lock-in, and Cloudflare offers it as a dashboard toggle where it can be
+# enabled and reverted safely.
+/*
+  x-content-type-options: nosniff
+  referrer-policy: strict-origin-when-cross-origin
+  x-frame-options: SAMEORIGIN
+  permissions-policy: geolocation=(), microphone=(), camera=(), payment=(), usb=()

@@ -1,12 +1,31 @@
 import type { ReactNode } from "react";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
+import { ScrollProgress } from "./ScrollProgress";
+import { useLanguage } from "@/hooks/useLanguage";
+import { t } from "@/translations";
 
 export function SiteLayout({ children }: { children: ReactNode }) {
+  const { lang } = useLanguage();
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      {/* Skip link — the first tab stop on every page. Without it a keyboard
+          visitor has to tab through the logo, six nav items, the language
+          toggle and the CTA before reaching content, on every navigation.
+          Visually hidden until focused. */}
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[70] focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2.5 focus:text-[14px] focus:font-semibold focus:text-white focus:shadow-lg"
+      >
+        {t(lang).nav.skipToContent}
+      </a>
+
+      <ScrollProgress />
       <Header />
-      <main className="flex-1">{children}</main>
+      <main id="main" tabIndex={-1} className="flex-1 focus:outline-none">
+        {children}
+      </main>
       <Footer />
     </div>
   );
@@ -31,14 +50,12 @@ export function PageHero({
         }}
       />
       <div className="container-x relative py-16 sm:py-24 md:py-32 text-center">
-        {eyebrow && (
-          <p className="eyebrow inline-block">{eyebrow}</p>
-        )}
-        <h1 className="text-white text-[28px] sm:text-[36px] md:text-[48px] font-extrabold max-w-3xl mx-auto leading-[1.1]">
+        {eyebrow && <p className="eyebrow-light inline-block">{eyebrow}</p>}
+        <h1 className="text-white text-display font-extrabold max-w-3xl mx-auto">
           {title}
         </h1>
         {subtitle && (
-          <p className="mt-6 text-[18px] text-white/80 max-w-2xl mx-auto leading-[1.6]">
+          <p className="mt-6 text-lede text-white/80 max-w-2xl mx-auto">
             {subtitle}
           </p>
         )}

@@ -1,38 +1,38 @@
-import { useNavigate, useSearch } from "@tanstack/react-router";
+import { useNavigate, useRouterState } from "@tanstack/react-router";
 import { useCallback } from "react";
 import { type Lang } from "../translations";
-
-const STORAGE_KEY = "jufair_lang";
+import { langFromPathname, localizedPath, stripLang } from "@/lib/paths";
 
 /**
  * Returns the current language and a setter.
  *
- * The language is stored as a URL search-param `?lang=en|cn` (so it's
- * shareable/bookmarkable) and also mirrored to localStorage so the user's
- * choice is remembered on their next visit.
+ * The language is determined **entirely by the URL path**: `/about` is English,
+ * `/cn/about` is Chinese. Nothing else participates.
+ *
+ * That last part is deliberate and load-bearing. This hook used to fall back to
+ * a `localStorage` preference when no `?lang` param was present, which meant a
+ * returning Chinese visitor was served Chinese content at the *English* URL.
+ * Under path-based i18n that is a duplicate-content bug: one URL would serve
+ * two different languages depending on who asked, the canonical and `hreflang`
+ * tags would describe only one of them, and a crawler warming a page for a
+ * returning visitor could index the wrong copy. A URL must fully determine what
+ * it serves, so the stored preference is gone. Visitors switch with the header
+ * toggle, and search engines are told about both versions via `hreflang`.
  */
 export function useLanguage() {
-  // The root route validates `lang` — fall back to localStorage → "en"
-  const search = useSearch({ strict: false }) as { lang?: Lang };
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
   const navigate = useNavigate();
 
-  const lang: Lang =
-    search.lang ??
-    (typeof localStorage !== "undefined"
-      ? ((localStorage.getItem(STORAGE_KEY) as Lang | null) ?? "en")
-      : "en");
+  const lang: Lang = langFromPathname(pathname);
 
   const setLang = useCallback(
     (next: Lang) => {
-      if (typeof localStorage !== "undefined") {
-        localStorage.setItem(STORAGE_KEY, next);
-      }
-      (navigate as any)({
-        search: (prev: Record<string, unknown>) => ({ ...prev, lang: next }),
-        replace: true,
-      });
+      // Swap the prefix on the *current* page rather than going home, so the
+      // visitor stays where they were reading.
+      const target = localizedPath(stripLang(pathname), next);
+      (navigate as any)({ to: target, replace: false });
     },
-    [navigate],
+    [navigate, pathname],
   );
 
   return { lang, setLang } as const;
