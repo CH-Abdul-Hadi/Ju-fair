@@ -1,20 +1,37 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, type ElementType } from "react";
-import { SiteLayout, PageHero } from "@/components/site/SiteLayout";
+import { SiteLayout, PageHero, CtaBand } from "@/components/site/SiteLayout";
 import { SectionTitle } from "@/components/site/SectionTitle";
 import { ScrollReveal } from "@/components/site/ScrollReveal";
 import { RevealGroup, RevealItem } from "@/components/site/RevealGroup";
-import { Tilt } from "@/components/site/Tilt";
-import { SectionDivider } from "@/components/site/SectionDivider";
+import { Photo } from "@/components/site/Photo";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useCountUp } from "@/hooks/useCountUp";
 import { useLanguage } from "@/hooks/useLanguage";
 import { t } from "@/translations";
 import { seoHead } from "@/lib/seo";
 import { EXHIBITION_ROUTES } from "@/lib/paths";
+import { EXPO_PHOTOS, MEDIA } from "@/lib/media";
 import { LocalizedLink } from "@/components/site/LocalizedLink";
 import { redirectLegacyLang } from "@/lib/langRedirect";
-import { TrendingUp, Users, Award, Globe2, ArrowUpRight } from "lucide-react";
+import { cn } from "@/lib/utils";
+import {
+  TrendingUp,
+  Users,
+  Award,
+  Globe2,
+  ArrowDown,
+  ArrowRight,
+  Maximize2,
+  ShoppingBag,
+  Shirt,
+  Factory,
+  Stethoscope,
+  BrickWall,
+  FlaskConical,
+  MonitorSmartphone,
+  Cpu,
+} from "lucide-react";
 import { Lightbox } from "@/components/site/Lightbox";
 
 export const Route = createFileRoute("/experience")({
@@ -24,45 +41,37 @@ export const Route = createFileRoute("/experience")({
   component: ExperiencePage,
 });
 
-// Only the physical facts about each file live here — intrinsic dimensions so
-// the browser can reserve space before decode (no layout shift). The
-// captions are content, so they come from the translation object and stay in
-// step with the active language.
-// `base` drives the WebP srcset; `src` stays the fallback for browsers
-// without WebP, and is also what the lightbox opens at full size.
-const galleryFiles = [
-  { base: "/Expo/expo1", src: "/Expo/expo1.jpeg", w: 1038, h: 692 },
-  { base: "/Expo/expo2", src: "/Expo/expo2.jpeg", w: 1280, h: 853 },
-  { base: "/Expo/expo3", src: "/Expo/expo3.jpeg", w: 1280, h: 853 },
-  { base: "/Expo/expo4", src: "/Expo/expo4.jpeg", w: 1280, h: 853 },
+/** Bento: the first photo spans 2×2 on desktop, so it is served larger. */
+const GALLERY_SIZES = [
+  "(min-width: 768px) 50vw, 92vw",
+  "(min-width: 768px) 50vw, 92vw",
+  "(min-width: 768px) 25vw, 92vw",
+  "(min-width: 768px) 25vw, 92vw",
 ];
-
-/** Grid: four columns on desktop, two on tablet, one on mobile. */
-const GALLERY_SIZES = "(min-width: 1024px) 23vw, (min-width: 640px) 46vw, 92vw";
-
-/**
- * Which entries in `exhibitions.names` have a landing page of their own.
- *
- * Keyed by index into that array, mapping to EXHIBITION_ROUTES:
- *   0 = China Yiwu International Commodities Fair -> buyer support
- *   1 = Canton Fair                              -> buyer recruitment
- *   3 = ShanghaiTex                              -> matchmaking
- *
- * The other four are listed but not linked, because there is no documented
- * engagement behind them to build a page from.
- */
-const EXHIBITION_PAGE_BY_INDEX: Record<number, (typeof EXHIBITION_ROUTES)[number]> = {
-  0: EXHIBITION_ROUTES[2],
-  1: EXHIBITION_ROUTES[0],
-  3: EXHIBITION_ROUTES[1],
-};
+const GALLERY_LAYOUT = [
+  "md:col-span-2 md:row-span-2",
+  "md:col-span-2",
+  "md:col-span-1",
+  "md:col-span-1",
+];
 
 const statIcons = [Users, Globe2, Award, TrendingUp];
 const statTargets = [3000, 3, 5, 1];
-const statSuffixes = ["+", "", "", "M+"];
+const statSuffixes = ["+", "+", "+", "M+"];
 const statPrefixes = ["", "", "", "$"];
 
-/** Animated results stat — counts up on scroll */
+const industryIcons = [
+  ShoppingBag,
+  Shirt,
+  Factory,
+  Stethoscope,
+  BrickWall,
+  FlaskConical,
+  MonitorSmartphone,
+  Cpu,
+];
+
+/** Animated results stat — counts up once it scrolls into view. */
 function ResultStat({
   icon: Icon,
   n,
@@ -70,6 +79,7 @@ function ResultStat({
   target,
   prefix = "",
   suffix = "+",
+  className,
 }: {
   icon: ElementType;
   n: string;
@@ -77,41 +87,32 @@ function ResultStat({
   target: number;
   prefix?: string;
   suffix?: string;
+  className?: string;
 }) {
   const { ref, visible } = useScrollReveal<HTMLDivElement>({ threshold: 0.3 });
   const count = useCountUp(target, 1800, visible);
   return (
-    // Restyled for the light panel: gold icon chip that fills on hover, navy
-    // figure, muted label. The dividers only appear from md up, where the four
-    // stats actually sit in a row.
-    <div
-      ref={ref}
-      className="group relative text-center md:border-l md:border-border md:first:border-l-0"
-    >
-      <div className="mx-auto mb-4 grid h-14 w-14 place-items-center rounded-2xl bg-accent/12 text-accent-text transition-all duration-300 ease-out-expo group-hover:-translate-y-1 group-hover:bg-accent group-hover:text-accent-ink group-hover:shadow-[0_8px_20px_rgba(245,166,35,0.35)]">
-        <Icon size={26} />
+    <div ref={ref} className={cn("group px-2 py-8 md:px-8 md:py-4", className)}>
+      <div className="flex items-center gap-3">
+        <span className="icon-chip !h-10 !w-10 !rounded-xl">
+          <Icon size={18} />
+        </span>
       </div>
-      <div className="text-stat font-display font-extrabold text-primary tabular-nums">
+      <div className="mt-6 whitespace-nowrap font-display text-[clamp(2.5rem,1.9rem+2.3vw,3.875rem)] font-extrabold leading-none tracking-[-0.03em] text-primary tabular-nums">
         {visible ? `${prefix}${count.toLocaleString()}${suffix}` : n}
       </div>
-      <div className="mx-auto mt-2 max-w-[16ch] text-[12px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
-        {label}
-      </div>
+      <div className="meta mt-3 max-w-[18ch] text-muted-foreground">{label}</div>
     </div>
   );
 }
 
 export function ExperiencePage() {
   const { lang } = useLanguage();
-  const tx = t(lang).experience;
+  const all = t(lang);
+  const tx = all.experience;
   const [openPhoto, setOpenPhoto] = useState<number | null>(null);
 
-  // Zip the files against the translated captions (same positional-array
-  // convention the rest of this codebase uses for icons and targets).
-  const gallery = galleryFiles.map((file, i) => ({
-    ...file,
-    alt: tx.gallery.captions[i],
-  }));
+  const gallery = EXPO_PHOTOS.map((file, i) => ({ ...file, alt: tx.gallery.captions[i] }));
 
   return (
     <SiteLayout>
@@ -119,27 +120,25 @@ export function ExperiencePage() {
         eyebrow={tx.hero.eyebrow}
         title={tx.hero.title}
         subtitle={tx.hero.subtitle}
+        image={MEDIA.expo4}
       />
 
-      {/* ─── RESULTS / ACHIEVEMENTS ───
-          A floating panel that overlaps the hero's lower edge, rather than a
-          second navy band. The page previously stacked PageHero (navy) on top
-          of this section (also navy) with nothing between them, so the top of
-          /experience read as one undifferentiated blue slab. Lifting the
-          metrics onto an elevated white panel breaks that, gives the count-up
-          figures the emphasis they deserve, and starts the page's light/dark
-          rhythm immediately. */}
+      {/* ─── RESULTS ─── a white panel lifted over the hero's lower edge. */}
       <section className="bg-surface pb-20 md:pb-28">
         <div className="container-x">
           <ScrollReveal>
-            <div className="relative z-20 -mt-14 rounded-[26px] border border-border bg-card px-6 py-10 shadow-panel md:-mt-20 md:px-12 md:py-14">
-              <div className="text-center">
-                <p className="eyebrow">{tx.results.eyebrow}</p>
-                <h2 className="text-title font-bold text-primary">{tx.results.title}</h2>
-                <div className="mx-auto mt-5 h-1 w-12 rounded-full bg-accent" />
+            <div className="relative z-20 -mt-12 rounded-[28px] border border-border bg-card px-6 py-10 shadow-panel md:-mt-16 md:px-10 md:py-12">
+              <div className="flex flex-wrap items-end justify-between gap-4 border-b border-border pb-8">
+                <div>
+                  <p className="eyebrow">{tx.results.eyebrow}</p>
+                  <h2 className="text-title font-extrabold text-primary">{tx.results.title}</h2>
+                </div>
+                <span aria-hidden="true" className="meta text-primary/40">
+                  2022 — {new Date().getFullYear()}
+                </span>
               </div>
 
-              <div className="mt-12 grid gap-10 sm:grid-cols-2 md:mt-14 md:grid-cols-4 md:gap-6">
+              <div className="grid sm:grid-cols-2 lg:grid-cols-4">
                 {tx.results.stats.map((s, i) => (
                   <ResultStat
                     key={s.label}
@@ -149,6 +148,12 @@ export function ExperiencePage() {
                     target={statTargets[i]}
                     prefix={statPrefixes[i]}
                     suffix={statSuffixes[i]}
+                    className={cn(
+                      i > 0 && "border-t border-border",
+                      i === 1 && "sm:border-l sm:border-t-0",
+                      i === 3 && "sm:border-l",
+                      i >= 2 && "lg:border-l lg:border-t-0",
+                    )}
                   />
                 ))}
               </div>
@@ -157,209 +162,242 @@ export function ExperiencePage() {
         </div>
       </section>
 
-      {/* ─── PARTNER EXHIBITIONS ─── */}
+      {/* ─── EXHIBITIONS — departure board ─── */}
       <section className="section-pad bg-surface-sunken">
         <div className="container-x">
           <ScrollReveal>
             <SectionTitle
               variant="split"
+              index="01"
               eyebrow={tx.exhibitions.eyebrow}
               title={tx.exhibitions.title}
               description={tx.exhibitions.description}
             />
           </ScrollReveal>
-          <RevealGroup className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16">
-            {tx.exhibitions.names.map((n, i) => {
-              const href = EXHIBITION_PAGE_BY_INDEX[i];
-              const card = (
-                <div className="bg-white rounded-[16px] shadow-sm border border-border/50 group grid place-items-center h-28 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] transition-all duration-300">
-                  <span className="font-display font-bold text-[16px] text-primary group-hover:text-accent-text transition-colors duration-300 text-center px-4">
+          {/* Every exhibition gets the same row. Only three have a
+              documented engagement (and a page) — see EXHIBITION_ROUTES — so
+              linking some rows and not others made the four unlinked ones
+              look broken. The board is now a uniform record of who we work
+              with; the case studies directly below carry the links. */}
+          <RevealGroup className="mt-14">
+            <ol className="grid overflow-hidden rounded-[28px] border border-border bg-card shadow-card">
+              {tx.exhibitions.names.map((n, i) => (
+                <RevealItem
+                  key={n}
+                  as="li"
+                  index={i}
+                  step={60}
+                  className={cn(
+                    "group flex items-center gap-5 px-6 py-5 transition-colors duration-300 hover:bg-surface md:px-8 md:py-6",
+                    i > 0 && "border-t border-border",
+                  )}
+                >
+                  <span className="meta w-8 shrink-0 text-primary/40">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span className="min-w-0 flex-1 font-display text-[clamp(1.0625rem,1rem+0.5vw,1.375rem)] font-semibold text-primary">
                     {n}
                   </span>
-                </div>
-              );
-              return (
-                <RevealItem key={n} index={i} step={60} direction="up">
-                  {/* The three with a documented engagement link to their own
-                      page; the rest are plain cards. Linking all seven would
-                      mean building four pages with nothing to say on them. */}
-                  {href ? (
-                    <LocalizedLink to={href} className="block h-full">
-                      {card}
-                    </LocalizedLink>
-                  ) : (
-                    card
-                  )}
+                  {/* The same route mark on every row — decorative only. */}
+                  <svg
+                    aria-hidden="true"
+                    viewBox="0 0 80 10"
+                    fill="none"
+                    className="hidden h-2.5 w-20 shrink-0 text-accent sm:block"
+                  >
+                    <path d="M4 5 H72" stroke="currentColor" strokeOpacity="0.3" />
+                    <path
+                      d="M4 5 H72"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      className="origin-left scale-x-0 transition-transform duration-700 ease-out-expo group-hover:scale-x-100"
+                    />
+                    <circle cx="4" cy="5" r="2.5" fill="currentColor" />
+                    <circle cx="75" cy="5" r="3" stroke="currentColor" strokeWidth="1.5" />
+                  </svg>
                 </RevealItem>
-              );
-            })}
+              ))}
+            </ol>
           </RevealGroup>
+
+          <ScrollReveal className="mt-8">
+            <a href="#case-studies" className="btn-ghost">
+              {tx.caseStudies.title}
+              <ArrowDown size={16} />
+            </a>
+          </ScrollReveal>
         </div>
       </section>
 
-      <SectionDivider from="var(--color-surface-sunken)" to="var(--color-surface)" flip />
-
-      {/* ─── CASE STUDIES ─── */}
-      <section className="section-pad bg-surface">
+      {/* ─── CASE STUDIES ───
+          Same order as EXHIBITION_ROUTES, so each card links to its page. */}
+      <section id="case-studies" className="section-pad scroll-mt-24 bg-surface">
         <div className="container-x">
           <ScrollReveal>
-            <SectionTitle variant="split" eyebrow={tx.caseStudies.eyebrow} title={tx.caseStudies.title} />
+            <SectionTitle
+              variant="split"
+              index="02"
+              eyebrow={tx.caseStudies.eyebrow}
+              title={tx.caseStudies.title}
+            />
           </ScrollReveal>
-          {/* Asymmetric: the first case study is the feature — it spans the
-              left half in navy and runs full height, with the other two
-              stacked beside it. Three equal cards gave all three the same
-              weight and left the section with nothing to look at first. */}
-          <div className="mt-16 grid gap-6 lg:grid-cols-2 lg:gap-7">
-            {tx.caseStudies.items.slice(0, 1).map((c) => (
-              <ScrollReveal key={c.title} direction="left">
-                <Tilt className="group" max={3}>
-                  <article className="relative flex h-full flex-col justify-between overflow-hidden rounded-[18px] bg-gradient-to-br from-primary via-primary to-primary-dark p-8 text-white shadow-panel md:p-10">
+          <div className="mt-14 grid gap-5 lg:grid-cols-3">
+            {tx.caseStudies.items.map((c, i) => {
+              const featured = i === 0;
+              return (
+                <ScrollReveal key={c.title} delay={i * 120}>
+                  <LocalizedLink
+                    to={EXHIBITION_ROUTES[i]}
+                    className={cn(
+                      "group relative isolate flex h-full min-h-[420px] flex-col overflow-hidden rounded-[28px] p-8 transition-all duration-500 ease-out-expo hover:-translate-y-1 md:p-10",
+                      featured
+                        ? "bg-primary text-white shadow-panel"
+                        : "border border-border bg-card shadow-card hover:shadow-card-hover",
+                    )}
+                  >
+                    {featured && (
+                      <div
+                        aria-hidden="true"
+                        className="bg-dots absolute inset-0 -z-10 text-white/[0.07] [mask-image:radial-gradient(ellipse_at_100%_0%,#000,transparent_70%)]"
+                      />
+                    )}
+                    <span
+                      className={cn(
+                        "meta self-start rounded-full px-3 py-1.5 text-[11px]",
+                        featured ? "bg-white/10 text-accent" : "bg-primary/[0.06] text-primary",
+                      )}
+                    >
+                      {c.label}
+                    </span>
                     <div
-                      aria-hidden="true"
-                      className="absolute inset-0 opacity-[0.07]"
-                      style={{
-                        backgroundImage: "radial-gradient(#ffffff 1px, transparent 1px)",
-                        backgroundSize: "22px 22px",
-                      }}
-                    />
-                    <div className="relative">
-                      <span className="inline-flex items-center rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.16em] text-accent">
-                        {c.label}
-                      </span>
-                      <div className="mt-7 font-display text-[clamp(3rem,2rem+4vw,4.5rem)] font-extrabold leading-none text-white tabular-nums">
-                        {c.stat}
-                      </div>
+                      className={cn(
+                        "mt-10 font-display text-[clamp(3.5rem,2.5rem+3.5vw,5.5rem)] font-extrabold leading-none tracking-[-0.04em] tabular-nums",
+                        featured ? "text-white" : "text-primary",
+                      )}
+                    >
+                      {c.stat}
                     </div>
-                    <div className="relative mt-8">
-                      <h3 className="text-[22px] font-bold text-white">{c.title}</h3>
-                      <p className="mt-3 max-w-[46ch] text-[16px] leading-[1.65] text-white/75">
-                        {c.desc}
-                      </p>
-                    </div>
-                  </article>
-                </Tilt>
-              </ScrollReveal>
-            ))}
-
-            <div className="grid gap-6 lg:gap-7">
-              {tx.caseStudies.items.slice(1).map((c, i) => (
-                <ScrollReveal key={c.title} direction="right" delay={120 + i * 120}>
-                  <Tilt className="group" max={4}>
-                    <article className="card-elevated flex h-full flex-col justify-center">
-                      <div className="flex items-end gap-3">
-                        <div className="font-display text-stat font-extrabold text-primary tabular-nums">
-                          {c.stat}
-                        </div>
-                        <div className="pb-1 text-[13px] font-bold uppercase tracking-wide text-accent-text">
-                          {c.label}
-                        </div>
-                      </div>
-                      <h3 className="mt-4 text-[20px] font-bold text-primary">{c.title}</h3>
-                      <p className="mt-2.5 text-[15px] leading-[1.6] text-muted-foreground">
-                        {c.desc}
-                      </p>
-                    </article>
-                  </Tilt>
+                    <h3
+                      className={cn(
+                        "mt-auto pt-12 text-heading font-bold",
+                        featured ? "text-white" : "text-primary",
+                      )}
+                    >
+                      {c.title}
+                    </h3>
+                    <p
+                      className={cn(
+                        "mt-3 text-[16px] leading-[1.6]",
+                        featured ? "text-white/75" : "text-muted-foreground",
+                      )}
+                    >
+                      {c.desc}
+                    </p>
+                    <span
+                      className={cn(
+                        "mt-8 inline-flex items-center gap-2 border-t pt-6 font-display text-[14px] font-semibold",
+                        featured ? "border-white/15 text-accent" : "border-border text-primary",
+                      )}
+                    >
+                      {all.ui.caseStudy}
+                      <ArrowRight
+                        size={16}
+                        className="transition-transform duration-300 group-hover:translate-x-1"
+                      />
+                    </span>
+                  </LocalizedLink>
                 </ScrollReveal>
-              ))}
-            </div>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* ─── INDUSTRIES SERVED ─── */}
+      {/* ─── INDUSTRIES ─── */}
       <section className="section-pad bg-surface-sunken">
         <div className="container-x">
           <ScrollReveal>
             <SectionTitle
+              variant="split"
+              index="03"
               eyebrow={tx.industries.eyebrow}
               title={tx.industries.title}
               description={tx.industries.description}
             />
           </ScrollReveal>
-          <RevealGroup className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16">
-            {tx.industries.items.map((item, i) => (
-              <RevealItem key={item} index={i} step={60} direction="up">
-                <div className="bg-white rounded-[16px] shadow-sm border border-border/50 group grid place-items-center h-24 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] transition-all duration-300 px-4 text-center">
-                  <span className="font-semibold text-[15px] text-primary group-hover:text-accent-text transition-colors duration-300">
-                    {item}
-                  </span>
-                </div>
-              </RevealItem>
-            ))}
+          <RevealGroup className="mt-14">
+            <ul className="grid grid-cols-2 gap-4 md:grid-cols-4">
+              {tx.industries.items.map((item, i) => {
+                const Icon = industryIcons[i];
+                return (
+                  <RevealItem key={item} as="li" index={i} step={60}>
+                    <div className="group card-elevated flex h-full min-h-[168px] flex-col justify-between !p-6">
+                      <div className="flex items-start justify-between">
+                        <span className="icon-chip">
+                          <Icon size={20} />
+                        </span>
+                        <span aria-hidden="true" className="meta text-primary/30">
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
+                      </div>
+                      <span className="mt-8 font-display text-[16px] font-semibold leading-snug text-primary">
+                        {item}
+                      </span>
+                    </div>
+                  </RevealItem>
+                );
+              })}
+            </ul>
           </RevealGroup>
         </div>
       </section>
 
-      {/* ─── GALLERY ─── */}
-      <section className="section-pad bg-surface">
+      {/* ─── GALLERY — bento on ink ─── */}
+      <section className="section-pad relative isolate overflow-hidden bg-ink text-white">
+        <div aria-hidden="true" className="bg-dots absolute inset-0 -z-10 text-white/[0.05]" />
         <div className="container-x">
           <ScrollReveal>
             <SectionTitle
+              variant="split"
+              tone="dark"
+              index="04"
               eyebrow={tx.gallery.eyebrow}
               title={tx.gallery.title}
               description={tx.gallery.description}
             />
           </ScrollReveal>
 
-          {/* A grid, not a masonry column layout.
-
-              All four photographs are the same 3:2 ratio (1038×692 and
-              1280×853 both reduce to 1.50), and masonry exists to reconcile
-              DIFFERENT heights. With four equal-ratio images in three columns,
-              CSS columns put two in the first column and one in each of the
-              others — a tall left column beside two short ones, with a ragged
-              bottom edge.
-
-              Two further faults came with it: `space-y-6` applies margin-top to
-              every child except the first OVERALL, not the first in each
-              column, so the tops of columns two and three sat 24px lower than
-              column one; and `break-inside-avoid` sat on the <button> while the
-              column child was the ScrollReveal wrapper, one level too high to
-              take effect.
-
-              Four tiles divide evenly into 1, 2 and 4 columns — never 3, which
-              would leave one orphan on its own row. */}
-          <div className="mt-16 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-14 grid gap-4 md:h-[620px] md:grid-cols-4 md:grid-rows-2">
             {gallery.map((photo, i) => (
-              <ScrollReveal key={photo.src} delay={i * 80} direction="up">
+              <ScrollReveal
+                key={photo.src}
+                delay={i * 90}
+                className={cn("h-full", GALLERY_LAYOUT[i])}
+              >
                 <button
                   type="button"
                   onClick={() => setOpenPhoto(i)}
                   aria-label={`${tx.gallery.lightbox.dialog} — ${photo.alt}`}
-                  className="group relative block aspect-[3/2] w-full cursor-pointer overflow-hidden rounded-[16px] shadow-sm"
+                  className="group relative block aspect-[3/2] h-full w-full overflow-hidden rounded-[24px] text-left md:aspect-auto"
                 >
-                  {/* WebP with the original JPEG as the fallback source.
-                      A <picture> rather than swapping the src outright: the
-                      JPEGs have to stay anyway (they are the og:image sources,
-                      and WebP share cards are unreliable in messaging
-                      clients), so the fallback costs nothing. */}
-                  <picture>
-                    <source
-                      type="image/webp"
-                      srcSet={`${photo.base}-600.webp 600w, ${photo.base}-1200.webp 1200w`}
-                      sizes={GALLERY_SIZES}
-                    />
-                    <img
-                      src={photo.src}
-                      alt={photo.alt}
-                      width={photo.w}
-                      height={photo.h}
-                      loading="lazy"
-                      decoding="async"
-                      // h-full, not h-auto: the tile now owns the aspect ratio,
-                      // so the image fills it and every tile is identical.
-                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-                    />
-                  </picture>
-                  {/* Hover Overlay */}
-                  {/* The open affordance is back now that it opens something. */}
-                  <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-primary/90 via-primary/40 to-transparent p-5 text-left opacity-0 transition-opacity duration-300 ease-out-soft group-hover:opacity-100 group-focus-visible:opacity-100">
-                    <h3 className="translate-y-4 text-[16px] font-bold text-white transition-transform duration-300 ease-out-soft group-hover:translate-y-0 group-focus-visible:translate-y-0">
-                      {tx.gallery.overlay}
-                    </h3>
-                    <span className="mt-2 flex items-center gap-1.5 text-accent text-[14px] font-semibold opacity-0 translate-y-4 transition-all duration-300 ease-out-soft delay-100 group-hover:opacity-100 group-hover:translate-y-0 group-focus-visible:opacity-100 group-focus-visible:translate-y-0">
-                      <ArrowUpRight size={16} />
+                  <Photo
+                    file={photo}
+                    alt={photo.alt}
+                    sizes={GALLERY_SIZES[i]}
+                    className="transition-transform duration-[1200ms] ease-out-expo group-hover:scale-[1.06]"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/10 to-transparent opacity-80 transition-opacity duration-500 group-hover:opacity-100" />
+                  <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 p-5 md:p-6">
+                    <div className="min-w-0">
+                      <span className="meta text-[11px] text-accent">
+                        {String(i + 1).padStart(2, "0")} / {String(gallery.length).padStart(2, "0")}
+                      </span>
+                      <p className="mt-2 line-clamp-2 text-[14px] font-medium leading-snug text-white/90">
+                        {photo.alt}
+                      </p>
+                    </div>
+                    <span className="grid h-10 w-10 shrink-0 translate-y-2 place-items-center rounded-full bg-white/15 opacity-0 backdrop-blur-md transition-all duration-500 ease-out-expo group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100">
+                      <Maximize2 size={16} />
                     </span>
                   </div>
                 </button>
@@ -374,6 +412,13 @@ export function ExperiencePage() {
         index={openPhoto}
         onIndexChange={setOpenPhoto}
         labels={tx.gallery.lightbox}
+      />
+
+      <CtaBand
+        title={all.home.cta.title}
+        description={all.home.cta.description}
+        primary={{ to: "/partner", label: all.home.cta.btn }}
+        secondary={{ to: "/contact", label: all.nav.contact }}
       />
     </SiteLayout>
   );

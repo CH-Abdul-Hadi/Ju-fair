@@ -24,27 +24,56 @@ const searchSchema = z.object({
   lang: z.enum(["en", "cn"]).optional(),
 });
 
+/** Shared stage for the 404 and error screens: ink, dot field, gold glow. */
+function StatusStage({ children }: { children: ReactNode }) {
+  return (
+    <div className="relative isolate flex min-h-screen items-center overflow-hidden bg-ink px-4 text-white">
+      <div
+        aria-hidden="true"
+        className="bg-dots absolute inset-0 -z-10 text-white/[0.06] [mask-image:radial-gradient(ellipse_at_center,#000,transparent_70%)]"
+      />
+      <div
+        aria-hidden="true"
+        className="absolute left-1/2 top-1/2 -z-10 h-[40rem] w-[40rem] -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
+        style={{
+          background:
+            "radial-gradient(circle, color-mix(in oklab, var(--color-primary) 70%, transparent), transparent 65%)",
+        }}
+      />
+      <div className="mx-auto w-full max-w-xl text-center">
+        <img
+          src="/logo_white.png"
+          alt="JU Fair Global"
+          width={128}
+          height={44}
+          className="mx-auto h-11 w-auto"
+        />
+        {children}
+      </div>
+    </div>
+  );
+}
+
 function NotFoundComponent() {
   const { lang } = useLanguage();
   const tx = t(lang).notFound;
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">{tx.title}</h2>
-        <p className="mt-2 text-sm text-muted-foreground">{tx.desc}</p>
-        <div className="mt-6">
-          <LocalizedLink
-            to="/"
-           
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-          >
-            {tx.goHome}
-          </LocalizedLink>
-        </div>
+    <StatusStage>
+      <p
+        aria-hidden="true"
+        className="stroke-type mt-14 font-display text-mega font-extrabold text-accent"
+      >
+        404
+      </p>
+      <h1 className="mt-6 text-title font-extrabold text-white">{tx.title}</h1>
+      <p className="mx-auto mt-4 max-w-sm text-lede text-white/70">{tx.desc}</p>
+      <div className="mt-10">
+        <LocalizedLink to="/" className="btn-primary">
+          {tx.goHome}
+        </LocalizedLink>
       </div>
-    </div>
+    </StatusStage>
   );
 }
 
@@ -55,34 +84,30 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
     reportLovableError(error, { boundary: "tanstack_root_error_component" });
   }, [error]);
 
+  // Deliberately English-only: translating it would mean reading the route
+  // inside its own failure fallback.
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
-        <h1 className="text-xl font-semibold tracking-tight text-foreground">
-          This page didn't load
-        </h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Something went wrong on our end. You can try refreshing or head back home.
-        </p>
-        <div className="mt-6 flex flex-wrap justify-center gap-2">
-          <button
-            onClick={() => {
-              router.invalidate();
-              reset();
-            }}
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-          >
-            Try again
-          </button>
-          <a
-            href="/"
-            className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
-          >
-            Go home
-          </a>
-        </div>
+    <StatusStage>
+      <h1 className="mt-14 text-title font-extrabold text-white">This page didn't load</h1>
+      <p className="mx-auto mt-4 max-w-sm text-lede text-white/70">
+        Something went wrong on our end. You can try refreshing or head back home.
+      </p>
+      <div className="mt-10 flex flex-wrap justify-center gap-3">
+        <button
+          type="button"
+          onClick={() => {
+            router.invalidate();
+            reset();
+          }}
+          className="btn-primary"
+        >
+          Try again
+        </button>
+        <a href="/" className="btn-light">
+          Go home
+        </a>
       </div>
-    </div>
+    </StatusStage>
   );
 }
 

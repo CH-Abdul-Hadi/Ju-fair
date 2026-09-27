@@ -1,29 +1,44 @@
+import { useEffect, useState } from "react";
+import { useRouterState } from "@tanstack/react-router";
+import { ArrowRight, Mail } from "lucide-react";
 import { LocalizedLink } from "@/components/site/LocalizedLink";
-import { useState, useEffect } from "react";
-import { Menu, X } from "lucide-react";
+import { WhatsAppIcon, getWhatsAppLink } from "@/components/site/WhatsAppIcon";
 import { useLanguage } from "@/hooks/useLanguage";
-import { t } from "@/translations";
+import { t, type Lang } from "@/translations";
+import { cn } from "@/lib/utils";
 
+/**
+ * Header — a floating capsule.
+ *
+ * Over the dark masthead every page opens with, the bar is just type on the
+ * image. Once the visitor scrolls, a white capsule forms around it, inset from
+ * the viewport edge. Two rules carried over from the previous header, because
+ * both fixed real bugs:
+ *
+ *   1. ONE CLOCK. Surface opacity, height, padding, link colour, logo
+ *      cross-fade and CTA all run on `--dur-nav` + ease-out-expo. When they
+ *      drifted (500ms vs 200ms), text turned navy while the bar was still
+ *      transparent over the hero. The surface is its own layer whose opacity
+ *      animates, so it cannot desync from the links.
+ *   2. HYSTERESIS. Solid at 48px, transparent again only below 24px, so
+ *      resting on the threshold cannot flicker the bar.
+ */
 export function Header() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { lang, setLang } = useLanguage();
-  const tx = t(lang).nav;
+  const tx = t(lang);
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
 
-  // Nav links — "Become Our Partner" removed here; it lives as the CTA button
   const nav = [
-    { to: "/", label: tx.home },
-    { to: "/about", label: tx.about },
-    { to: "/services", label: tx.services },
-    { to: "/experience", label: tx.experience },
-    { to: "/global-network", label: tx.globalNetwork },
-    { to: "/contact", label: tx.contact },
+    { to: "/", label: tx.nav.home },
+    { to: "/about", label: tx.nav.about },
+    { to: "/services", label: tx.nav.services },
+    { to: "/experience", label: tx.nav.experience },
+    { to: "/global-network", label: tx.nav.globalNetwork },
+    { to: "/contact", label: tx.nav.contact },
   ] as const;
 
-  // Hysteresis: solidify at 48px, but don't go transparent again until 24px.
-  // A single threshold makes the bar flicker when the visitor hovers right on
-  // it — every tiny scroll re-triggers a 280ms cross-fade. The dead band
-  // between the two values removes that entirely.
   useEffect(() => {
     let frame = 0;
     const read = () => {
@@ -32,10 +47,9 @@ export function Header() {
       setScrolled((was) => (was ? y > 24 : y > 48));
     };
     const handler = () => {
-      if (frame) return;
-      frame = requestAnimationFrame(read);
+      if (!frame) frame = requestAnimationFrame(read);
     };
-    read(); // initialise on mount
+    read();
     window.addEventListener("scroll", handler, { passive: true });
     return () => {
       if (frame) cancelAnimationFrame(frame);
@@ -43,202 +57,230 @@ export function Header() {
     };
   }, []);
 
-  // Escape closes the mobile drawer — expected behaviour for any overlay menu,
-  // and the only way out for keyboard users who opened it without a pointer.
+  // Escape closes the drawer; the page behind it must not scroll.
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") setOpen(false);
     };
+    const root = document.documentElement;
+    const previous = root.style.overflow;
+    root.style.overflow = "hidden";
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    return () => {
+      root.style.overflow = previous;
+      window.removeEventListener("keydown", onKey);
+    };
   }, [open]);
 
-  const isTransparent = !scrolled && !open;
+  // Any navigation — including the language switch — closes the drawer.
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
+
+  // The capsule only shows once scrolled, and never over the (ink) drawer.
+  const solid = scrolled && !open;
 
   return (
-    <header
-      // The header's own transition is height only. The white surface is a
-      // separate layer below (see the div right after this), so its opacity
-      // and the link colours can share ONE duration and ONE curve.
-      //
-      // Before: the background faded over 500ms while link colours swapped
-      // over 200ms. Text therefore reached navy while the bar was still
-      // largely transparent over the dark hero — and went white while the bar
-      // was still white on the way back up. That mismatch was the visible
-      // "text conflict" on scroll.
-      className={[
-        "fixed top-0 inset-x-0 z-50 transition-[height] duration-[var(--dur-nav)] ease-out-expo",
-        isTransparent ? "h-[88px]" : "h-[72px]",
-      ].join(" ")}
-    >
-      {/* Solid surface layer — cross-fades in lockstep with the link colours. */}
+    <header className="fixed inset-x-0 top-0 z-50">
       <div
-        aria-hidden="true"
-        className={`absolute inset-0 border-b border-slate-200/70 bg-white/95 shadow-[0_4px_24px_rgba(11,29,58,0.07)] backdrop-blur-md transition-opacity duration-[var(--dur-nav)] ease-out-expo ${
-          isTransparent ? "opacity-0" : "opacity-100"
-        }`}
-      />
-      {/* container-x (not a wider bespoke width) so the logo and CTA line up
-          exactly with every page's content column. */}
-      <div className="container-x relative z-10 flex items-center justify-between h-full">
-
-        {/* ── Logo ── */}
-        <LocalizedLink
-          to="/"
-         
-          className="relative flex items-center shrink-0"
-          style={{ width: "140px", height: "48px" }}
-        >
-          {/* logo_white.png — shown on transparent/hero state */}
-          <img
-            src="/logo_white.png"
-            alt="JU Fair Global"
-            width={140}
-            height={48}
-            className={`absolute inset-0 h-full w-full object-contain object-left transition-all duration-[var(--dur-nav)] ease-out-expo ${
-              isTransparent
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 -translate-y-1 pointer-events-none"
-            }`}
-          />
-          {/* logo_dark.png — shown on scrolled/solid state */}
-          <img
-            src="/logo_dark.png"
-            alt="JU Fair Global"
-            width={140}
-            height={48}
-            className={`absolute inset-0 h-full w-full object-contain object-left transition-all duration-[var(--dur-nav)] ease-out-expo ${
-              !isTransparent
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 translate-y-1 pointer-events-none"
-            }`}
-          />
-        </LocalizedLink>
-
-        {/* ── Desktop Nav Links ── */}
-        <nav className="hidden lg:flex items-center gap-1" aria-label={tx.mainNav}>
-          {nav.map((n) => (
-            <LocalizedLink
-              key={n.to}
-              to={n.to}
-             
-              className={`
-                relative px-3 py-2 text-[13px] font-medium tracking-wide rounded-md
-                transition-colors duration-[var(--dur-nav)] ease-out-expo
-                after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2
-                after:h-[2px] after:w-0 after:rounded-full
-                after:transition-[width] after:duration-300
-                hover:after:w-6
-                ${
-                  isTransparent
-                    ? "text-white/85 [text-shadow:0_1px_3px_rgba(4,16,31,0.45)] hover:text-white hover:bg-white/10 after:bg-white"
-                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-100/70 after:bg-primary"
-                }
-              `}
-              activeProps={{
-                className: isTransparent
-                  ? "text-white font-semibold after:!w-6"
-                  : "text-primary font-semibold after:!w-6",
-                // The active item was styled but never announced — a screen
-                // reader had no way to know which page it was on.
-                "aria-current": "page",
-              }}
-              activeOptions={{ exact: n.to === "/" }}
-            >
-              {n.label}
-            </LocalizedLink>
-          ))}
-        </nav>
-
-        {/* ── Desktop Right: Language + CTA ── */}
-        <div className="hidden lg:flex items-center gap-4 shrink-0">
-          <LanguageToggle
-            lang={lang}
-            setLang={setLang}
-            isTransparent={isTransparent}
-            languageSelectorLabel={tx.languageSelector}
-          />
-          <LocalizedLink
-            to="/partner"
-           
-            className={`
-              inline-flex items-center justify-center
-              h-[38px] px-5 rounded-lg
-              text-[13px] font-semibold tracking-wide
-              transition-all duration-[var(--dur-nav)] ease-out-expo
-              ${
-                isTransparent
-                  ? "bg-accent text-accent-ink hover:bg-accent-hover shadow-[0_0_0_1px_rgba(255,255,255,0.15)]"
-                  : "bg-primary text-white hover:bg-primary/90 shadow-sm"
-              }
-            `}
-          >
-            {tx.becomePartner}
-          </LocalizedLink>
-        </div>
-
-        {/* ── Mobile Hamburger ── */}
-        <button
-          className={`lg:hidden relative z-10 p-2.5 rounded-lg transition-colors duration-[var(--dur-nav)] ease-out-expo ${
-            isTransparent
-              ? "text-white hover:bg-white/10"
-              : "text-slate-700 hover:bg-slate-100"
-          }`}
-          onClick={() => setOpen(!open)}
-          aria-label={tx.menuToggle}
-          aria-expanded={open}
-        >
-          {open ? <X size={22} /> : <Menu size={22} />}
-        </button>
-      </div>
-
-      {/* ── Mobile Drawer ──
-          `inert` when closed: the panel was only hidden with opacity and
-          pointer-events, so its six links and the CTA stayed in the tab order.
-          A keyboard visitor on a phone tabbed through seven invisible controls
-          after the hamburger. inert removes them from the accessibility tree
-          and from focus entirely, and React 19 supports it natively. */}
-      <div
-        inert={!open}
-        className={`lg:hidden absolute top-full left-0 w-full bg-white border-t border-slate-100 shadow-xl
-          transition-all duration-300 ease-in-out origin-top overflow-hidden
-          ${open ? "opacity-100 scale-y-100 pointer-events-auto" : "opacity-0 scale-y-95 pointer-events-none"}
-        `}
+        className={cn(
+          "container-x transition-[padding] duration-[var(--dur-nav)] ease-out-expo",
+          solid ? "pt-3" : "pt-4 md:pt-6",
+        )}
       >
-        <div className="px-4 py-4 flex flex-col gap-1">
-          {nav.map((n) => (
-            <LocalizedLink
-              key={n.to}
-              to={n.to}
-             
-              onClick={() => setOpen(false)}
-              className="py-3 px-4 text-[15px] font-medium text-slate-700 hover:text-primary hover:bg-slate-50 rounded-lg transition-colors"
-              activeProps={{
-                className: "text-primary bg-primary/5 font-semibold",
-                "aria-current": "page",
-              }}
-              activeOptions={{ exact: n.to === "/" }}
-            >
-              {n.label}
-            </LocalizedLink>
-          ))}
-          <div className="mt-3 pt-4 border-t border-slate-100 flex flex-col gap-3 px-2">
+        <div
+          className={cn(
+            "relative flex items-center justify-between gap-6 transition-[height,padding] duration-[var(--dur-nav)] ease-out-expo",
+            solid ? "h-16 px-3 sm:px-5" : "h-[68px] px-0",
+          )}
+        >
+          {/* Capsule surface — cross-fades in lockstep with the link colours. */}
+          <div
+            aria-hidden="true"
+            className={cn(
+              "absolute inset-0 rounded-[20px] border border-white/70 bg-white/[0.9] shadow-[0_1px_2px_rgba(9,26,54,0.06),0_18px_40px_-18px_rgba(9,26,54,0.28)] backdrop-blur-xl transition-opacity duration-[var(--dur-nav)] ease-out-expo",
+              solid ? "opacity-100" : "opacity-0",
+            )}
+          />
+
+          {/* ── Logo ── */}
+          <LocalizedLink to="/" className="relative z-10 block h-[54px] w-[79px] shrink-0">
+            <img
+              src="/logo_white.png"
+              alt="JU Fair Global"
+              width={79}
+              height={54}
+              className={cn(
+                "absolute inset-0 h-full w-full object-contain object-left transition-all duration-[var(--dur-nav)] ease-out-expo",
+                solid
+                  ? "pointer-events-none -translate-y-1 opacity-0"
+                  : "translate-y-0 opacity-100",
+              )}
+            />
+            <img
+              src="/logo_dark.png"
+              alt=""
+              aria-hidden="true"
+              width={79}
+              height={54}
+              className={cn(
+                "absolute inset-0 h-full w-full object-contain object-left transition-all duration-[var(--dur-nav)] ease-out-expo",
+                solid ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-1 opacity-0",
+              )}
+            />
+          </LocalizedLink>
+
+          {/* ── Desktop nav ── */}
+          <nav className="relative z-10 hidden lg:block" aria-label={tx.nav.mainNav}>
+            <ul className="flex items-center gap-0.5 xl:gap-1">
+              {nav.map((n) => (
+                <li key={n.to}>
+                  <LocalizedLink
+                    to={n.to}
+                    activeOptions={{ exact: n.to === "/" }}
+                    activeProps={{ "aria-current": "page" }}
+                    // TanStack sets data-status="active" on the current route,
+                    // so the active state is pure CSS — no class juggling.
+                    className={cn(
+                      "group relative inline-flex h-10 items-center rounded-full px-2.5 font-display text-[13.5px] font-medium transition-colors duration-[var(--dur-nav)] ease-out-expo xl:px-3.5",
+                      solid
+                        ? "text-primary/70 hover:bg-primary/[0.05] hover:text-primary data-[status=active]:text-primary"
+                        : "text-white/80 [text-shadow:0_1px_3px_rgba(4,16,31,0.4)] hover:bg-white/10 hover:text-white data-[status=active]:text-white",
+                    )}
+                  >
+                    {n.label}
+                    <span
+                      aria-hidden="true"
+                      className="absolute bottom-1 left-1/2 h-1 w-1 -translate-x-1/2 scale-0 rounded-full bg-accent transition-transform duration-300 ease-spring group-data-[status=active]:scale-100"
+                    />
+                  </LocalizedLink>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          {/* ── Desktop right ── */}
+          <div className="relative z-10 hidden items-center gap-3 lg:flex">
+            <LanguageToggle
+              lang={lang}
+              setLang={setLang}
+              dark={!solid}
+              label={tx.nav.languageSelector}
+            />
             <LocalizedLink
               to="/partner"
-             
-              onClick={() => setOpen(false)}
-              className="w-full flex items-center justify-center h-12 rounded-xl bg-primary text-white text-[15px] font-semibold transition-opacity hover:opacity-90"
+              className={cn(
+                "hidden h-10 items-center gap-2 rounded-full px-5 font-display text-[13.5px] font-semibold transition-all duration-[var(--dur-nav)] ease-out-expo xl:inline-flex",
+                "bg-accent text-accent-ink hover:bg-accent-hover hover:shadow-[var(--shadow-btn)]",
+              )}
             >
-              {tx.becomePartner}
+              {tx.nav.becomePartner}
+              <ArrowRight size={15} />
             </LocalizedLink>
-            <div className="flex justify-center pt-1">
-              <LanguageToggle
-                lang={lang}
-                setLang={setLang}
-                isTransparent={false}
-                languageSelectorLabel={tx.languageSelector}
+          </div>
+
+          {/* ── Mobile toggle ── */}
+          <button
+            type="button"
+            onClick={() => setOpen((v) => !v)}
+            aria-label={tx.nav.menuToggle}
+            aria-expanded={open}
+            aria-controls="mobile-menu"
+            className={cn(
+              "relative z-10 grid h-11 w-11 place-items-center rounded-full transition-colors duration-[var(--dur-nav)] ease-out-expo lg:hidden",
+              solid ? "text-primary hover:bg-primary/[0.06]" : "text-white hover:bg-white/10",
+            )}
+          >
+            <span aria-hidden="true" className="relative block h-3 w-5">
+              <span
+                className={cn(
+                  "absolute left-0 h-[2px] w-5 rounded-full bg-current transition-all duration-300 ease-out-expo",
+                  open ? "top-[5px] rotate-45" : "top-0",
+                )}
               />
+              <span
+                className={cn(
+                  "absolute left-0 h-[2px] rounded-full bg-current transition-all duration-300 ease-out-expo",
+                  open ? "top-[5px] w-5 -rotate-45" : "top-[10px] w-3.5",
+                )}
+              />
+            </span>
+          </button>
+        </div>
+      </div>
+
+      {/* ── Mobile drawer ──
+          Full-screen ink panel. `inert` when closed so its links are out of
+          the tab order and the accessibility tree; visibility (not just
+          opacity) so it cannot intercept taps. Enter and exit are plain CSS
+          transitions — never tw-animate's animate-out (see CLAUDE.md). */}
+      <div
+        id="mobile-menu"
+        inert={!open}
+        className={cn(
+          "fixed inset-0 -z-10 flex flex-col overflow-y-auto bg-ink text-white transition-[opacity,visibility] duration-500 ease-out-expo lg:hidden",
+          open ? "visible opacity-100" : "invisible opacity-0",
+        )}
+      >
+        <div
+          aria-hidden="true"
+          className="bg-dots pointer-events-none absolute inset-0 text-white/[0.06] [mask-image:linear-gradient(180deg,#000,transparent_70%)]"
+        />
+        <nav aria-label={tx.nav.mainNav} className="container-x relative flex-1 pt-28">
+          <ul>
+            {[...nav, { to: "/partner" as const, label: tx.nav.partner }].map((n, i) => (
+              <li
+                key={n.to}
+                className={cn(
+                  "border-b border-white/10 transition-all duration-500 ease-out-expo",
+                  open ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0",
+                )}
+                style={{ transitionDelay: open ? `${80 + i * 45}ms` : "0ms" }}
+              >
+                <LocalizedLink
+                  to={n.to}
+                  activeOptions={{ exact: n.to === "/" }}
+                  activeProps={{ "aria-current": "page" }}
+                  className="group flex items-baseline gap-4 py-4 font-display text-[26px] font-semibold text-white/90 transition-colors hover:text-accent data-[status=active]:text-accent"
+                >
+                  <span className="meta w-7 text-white/35">{String(i + 1).padStart(2, "0")}</span>
+                  {n.label}
+                </LocalizedLink>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        <div
+          className={cn(
+            "container-x relative space-y-6 pb-10 pt-8 transition-all duration-500 ease-out-expo",
+            open ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0",
+          )}
+          style={{ transitionDelay: open ? "420ms" : "0ms" }}
+        >
+          <LocalizedLink to="/partner" className="btn-primary w-full">
+            {tx.nav.becomePartner} <ArrowRight size={17} />
+          </LocalizedLink>
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <LanguageToggle lang={lang} setLang={setLang} dark label={tx.nav.languageSelector} />
+            <div className="flex gap-2">
+              <a
+                href={`mailto:${tx.footer.email}`}
+                aria-label={tx.ui.emailUs}
+                className="grid h-11 w-11 place-items-center rounded-full border border-white/15 text-accent transition-colors hover:bg-white/10"
+              >
+                <Mail size={18} />
+              </a>
+              <a
+                href={getWhatsAppLink()}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={tx.ui.whatsapp}
+                className="grid h-11 w-11 place-items-center rounded-full border border-white/15 text-accent transition-colors hover:bg-white/10"
+              >
+                <WhatsAppIcon size={18} />
+              </a>
             </div>
           </div>
         </div>
@@ -247,50 +289,63 @@ export function Header() {
   );
 }
 
+/** EN / 中文 segmented control with a sliding thumb. */
 function LanguageToggle({
   lang,
   setLang,
-  isTransparent,
-  languageSelectorLabel,
+  dark,
+  label,
 }: {
-  lang: "en" | "cn";
-  setLang: (l: "en" | "cn") => void;
-  isTransparent: boolean;
-  languageSelectorLabel: string;
+  lang: Lang;
+  setLang: (l: Lang) => void;
+  dark: boolean;
+  label: string;
 }) {
-  const containerClass = isTransparent
-    ? "border-white/20 bg-white/8"
-    : "border-slate-200 bg-slate-50/80";
-
-  const activeClass = "bg-primary text-white font-semibold shadow-sm";
-  const inactiveClass = isTransparent
-    ? "text-white/65 hover:text-white hover:bg-white/10"
-    : "text-slate-500 hover:text-slate-800 hover:bg-white";
+  const options: { id: Lang; text: string }[] = [
+    { id: "en", text: "EN" },
+    { id: "cn", text: "中文" },
+  ];
 
   return (
     <div
-      className={`flex items-center rounded-lg border overflow-hidden p-0.5 transition-colors ${containerClass}`}
       role="group"
-      aria-label={languageSelectorLabel}
+      aria-label={label}
+      className={cn(
+        "relative grid grid-cols-2 rounded-full border p-1 transition-colors duration-[var(--dur-nav)] ease-out-expo",
+        dark ? "border-white/20 bg-white/[0.06]" : "border-primary/10 bg-primary/[0.04]",
+      )}
     >
-      <button
-        onClick={() => setLang("en")}
-        className={`px-3 py-1.5 text-[11px] font-bold tracking-widest uppercase rounded-[5px] transition-all duration-200 cursor-pointer ${
-          lang === "en" ? activeClass : inactiveClass
-        }`}
-        aria-pressed={lang === "en"}
-      >
-        EN
-      </button>
-      <button
-        onClick={() => setLang("cn")}
-        className={`px-3 py-1.5 text-[11px] font-bold tracking-widest uppercase rounded-[5px] transition-all duration-200 cursor-pointer ${
-          lang === "cn" ? activeClass : inactiveClass
-        }`}
-        aria-pressed={lang === "cn"}
-      >
-        中文
-      </button>
+      <span
+        aria-hidden="true"
+        className={cn(
+          "absolute inset-y-1 left-1 w-[calc(50%-4px)] rounded-full shadow-sm transition-transform duration-300 ease-out-expo",
+          dark ? "bg-white" : "bg-primary",
+          lang === "cn" && "translate-x-full",
+        )}
+      />
+      {options.map((o) => {
+        const active = lang === o.id;
+        return (
+          <button
+            key={o.id}
+            type="button"
+            onClick={() => setLang(o.id)}
+            aria-pressed={active}
+            className={cn(
+              "relative z-10 h-8 min-w-11 rounded-full px-3 font-display text-[12px] font-semibold tracking-wide transition-colors duration-300",
+              active
+                ? dark
+                  ? "text-primary"
+                  : "text-white"
+                : dark
+                  ? "text-white/70 hover:text-white"
+                  : "text-primary/60 hover:text-primary",
+            )}
+          >
+            {o.text}
+          </button>
+        );
+      })}
     </div>
   );
 }

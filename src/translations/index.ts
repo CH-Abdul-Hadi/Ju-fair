@@ -2,6 +2,25 @@ export type Lang = "en" | "cn";
 
 const translations = {
   en: {
+    // Interface labels introduced by the "Trade Atlas" redesign. Kept in one
+    // namespace so the layout chrome never borrows strings from a page.
+    ui: {
+      est: "Est. 2022",
+      hq: "Shanghai HQ",
+      breadcrumb: "Breadcrumb",
+      scroll: "Scroll",
+      backToTop: "Back to top",
+      whatsapp: "Chat with us on WhatsApp",
+      caseStudy: "Read the case study",
+      contents: "Contents",
+      topics: "Topics",
+      servicesNav: "Jump to a service",
+      hubDirectory: "Hub directory",
+      countries: "countries",
+      questions: "questions",
+      emailUs: "Email us",
+    },
+
     nav: {
       home: "Home",
       about: "About Us",
@@ -943,6 +962,23 @@ const translations = {
   // CHINESE (CN)
   // ─────────────────────────────────────────────────────────────────
   cn: {
+    ui: {
+      est: "成立于 2022",
+      hq: "上海总部",
+      breadcrumb: "面包屑导航",
+      scroll: "向下滚动",
+      backToTop: "返回顶部",
+      whatsapp: "通过 WhatsApp 与我们沟通",
+      caseStudy: "查看案例详情",
+      contents: "目录",
+      topics: "问题分类",
+      servicesNav: "快速跳转到服务",
+      hubDirectory: "枢纽目录",
+      countries: "个国家",
+      questions: "个问题",
+      emailUs: "发送邮件",
+    },
+
     nav: {
       home: "首页",
       about: "关于我们",

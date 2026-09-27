@@ -67,17 +67,20 @@ export function RevealItem({
   step = 90,
   direction = "up",
   className = "",
+  as: Tag = "div",
 }: {
   children: ReactNode;
   index?: number;
   step?: number;
   direction?: Direction;
   className?: string;
+  /** `li` inside a list — a <div> is not a valid child of <ul>/<ol>. */
+  as?: "div" | "li";
 }) {
   const visible = useContext(GroupVisibility);
 
   return (
-    <div
+    <Tag
       className={[
         "transition-all duration-700 ease-out-expo",
         visible
@@ -92,6 +95,6 @@ export function RevealItem({
       style={visible && index ? { transitionDelay: `${index * step}ms` } : undefined}
     >
       {children}
-    </div>
+    </Tag>
   );
 }

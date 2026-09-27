@@ -1,15 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { SiteLayout, PageHero } from "@/components/site/SiteLayout";
+import { SiteLayout, PageHero, CtaBand } from "@/components/site/SiteLayout";
 import { SectionTitle } from "@/components/site/SectionTitle";
 import { ScrollReveal } from "@/components/site/ScrollReveal";
 import { RevealGroup, RevealItem, useRevealGroup } from "@/components/site/RevealGroup";
-import { Tilt } from "@/components/site/Tilt";
-import { SectionDivider } from "@/components/site/SectionDivider";
+import { Photo } from "@/components/site/Photo";
 import { useLanguage } from "@/hooks/useLanguage";
 import { t } from "@/translations";
 import { seoHead } from "@/lib/seo";
+import { HQ_COORDS, MEDIA } from "@/lib/media";
 import { redirectLegacyLang } from "@/lib/langRedirect";
-import { Target, Eye, Shield, Users, Sparkles, CheckCircle2, Globe2 } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Target, Eye, Shield, Sparkles, Globe2, Quote, MapPin } from "lucide-react";
 
 export const Route = createFileRoute("/about")({
   // Language is the path now, so this route is unconditionally English.
@@ -21,26 +22,44 @@ export const Route = createFileRoute("/about")({
 const valueIcons = [Sparkles, Shield, Globe2, Target];
 
 /**
- * The timeline's connecting rail. Scales out from the left when the enclosing
- * RevealGroup becomes visible, so the line appears to be drawn rather than
- * simply switched on. Desktop only — on mobile the events stack vertically and
- * there is no horizontal run to connect.
+ * The timeline rail. Draws from the same RevealGroup trigger that cascades the
+ * year nodes, so the line always arrives just ahead of them.
  */
 function TimelineRail() {
   const visible = useRevealGroup();
   return (
-    <div
-      aria-hidden="true"
-      className={`hidden md:block absolute top-[28px] left-[10%] right-[10%] h-[2px] origin-left border-t-2 border-dashed bg-white/20 transition-transform duration-[1200ms] ease-out-expo ${
-        visible ? "scale-x-100" : "scale-x-0"
-      }`}
-    />
+    <>
+      <div
+        aria-hidden="true"
+        className="absolute inset-x-0 top-[7px] hidden h-px bg-white/15 md:block"
+      >
+        <div
+          className={cn(
+            "h-full origin-left bg-accent transition-transform duration-[1600ms] ease-out-expo",
+            visible ? "scale-x-100" : "scale-x-0",
+          )}
+        />
+      </div>
+      <div
+        aria-hidden="true"
+        className="absolute bottom-0 left-[7px] top-2 w-px bg-white/15 md:hidden"
+      >
+        <div
+          className={cn(
+            "h-full origin-top bg-accent transition-transform duration-[1600ms] ease-out-expo",
+            visible ? "scale-y-100" : "scale-y-0",
+          )}
+        />
+      </div>
+    </>
   );
 }
 
 export function AboutPage() {
   const { lang } = useLanguage();
-  const tx = t(lang).about;
+  const all = t(lang);
+  const tx = all.about;
+  const captions = all.experience.gallery.captions;
 
   return (
     <SiteLayout>
@@ -48,84 +67,159 @@ export function AboutPage() {
         eyebrow={tx.hero.eyebrow}
         title={tx.hero.title}
         subtitle={tx.hero.subtitle}
+        image={MEDIA.expo1}
       />
 
-      {/* ─── COMPANY STORY ─── */}
-      <section className="section-pad bg-surface">
-        <div className="container-x grid gap-16 lg:grid-cols-2 items-center">
-          <ScrollReveal direction="left">
-            <div>
-              <SectionTitle
-                eyebrow={tx.story.eyebrow}
-                title={tx.story.title}
-                align="left"
-              />
-              <div className="mt-8 space-y-5 text-[17px] text-muted-foreground leading-[1.7]">
-                <p>{tx.story.p1}</p>
-                <p>{tx.story.p2}</p>
+      {/* ─── COMPANY STORY ───
+          Editorial spread: the mission statement is the headline of the
+          section, set as a pull quote; the two paragraphs and four facts
+          support it from the wider column. */}
+      <section className="section-pad-lg bg-surface">
+        <div className="container-x">
+          <div className="grid gap-14 lg:grid-cols-12 lg:gap-12">
+            <ScrollReveal className="lg:col-span-5">
+              <div className="lg:sticky lg:top-32">
+                <SectionTitle
+                  align="left"
+                  index="01"
+                  eyebrow={tx.story.eyebrow}
+                  title={tx.story.title}
+                />
                 {tx.story.missionStatement && (
-                  <div className="mt-6 border-l-4 border-accent pl-4 py-2 italic bg-surface/50 rounded-r-lg font-medium text-primary">
-                    "{tx.story.missionStatement}"
-                  </div>
+                  <figure className="relative mt-12 rounded-[24px] bg-primary p-8 text-white shadow-panel">
+                    <Quote aria-hidden="true" size={36} className="text-accent" />
+                    <blockquote className="mt-5 font-display text-[clamp(1.25rem,1.05rem+0.8vw,1.625rem)] font-semibold leading-[1.35]">
+                      {tx.story.missionStatement}
+                    </blockquote>
+                    <figcaption className="meta mt-6 text-white/55">JU FAIR GLOBAL</figcaption>
+                  </figure>
                 )}
               </div>
-              <ul className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {tx.story.highlights.map((item) => (
-                  <li key={item} className="flex items-center gap-3">
-                    <CheckCircle2 size={18} className="text-accent-text" />
-                    <span className="font-semibold text-primary text-[15px]">{item}</span>
-                  </li>
+            </ScrollReveal>
+
+            <div className="lg:col-span-7">
+              <ScrollReveal delay={120}>
+                <p className="font-display text-[clamp(1.25rem,1.1rem+0.6vw,1.625rem)] font-medium leading-[1.5] text-primary">
+                  {tx.story.p1}
+                </p>
+                <p className="mt-6 text-lede text-muted-foreground">{tx.story.p2}</p>
+              </ScrollReveal>
+
+              <ul className="mt-12 grid overflow-hidden rounded-[24px] border border-border bg-card sm:grid-cols-2">
+                {tx.story.highlights.map((item, i) => (
+                  <ScrollReveal
+                    key={item}
+                    as="li"
+                    delay={i * 80}
+                    className={cn(
+                      "flex items-center gap-4 p-6",
+                      i > 0 && "border-t border-border",
+                      i === 1 && "sm:border-t-0",
+                      i % 2 === 1 && "sm:border-l",
+                    )}
+                  >
+                    <span className="font-display text-[13px] font-bold tabular-nums text-accent-text">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <span className="font-display text-[17px] font-semibold text-primary">
+                      {item}
+                    </span>
+                  </ScrollReveal>
                 ))}
               </ul>
             </div>
-          </ScrollReveal>
-          <ScrollReveal direction="right" delay={150}>
-            <div className="relative">
-              {/* Decorative background shape */}
-              <div className="absolute -inset-4 bg-primary/5 rounded-[24px] transform -rotate-3 transition-transform duration-500 hover:rotate-0" />
-              <img
-                src="/Expo/expo2.jpeg"
-                alt="JU Fair Global team hosting international delegates at a trade exhibition"
-                width={900}
-                height={450}
-                loading="lazy"
-                decoding="async"
-                className="relative rounded-[18px] shadow-[0_20px_50px_rgba(11,61,145,0.15)] object-cover w-full h-[450px]"
-              />
+          </div>
+
+          {/* Wide photograph that opens up as it arrives. */}
+          <ScrollReveal className="mt-20 lg:mt-28">
+            <div className="sd-unveil relative aspect-[4/3] overflow-hidden rounded-[28px] shadow-panel sm:aspect-[21/9]">
+              <div className="sd-drift h-full w-full">
+                <Photo
+                  file={MEDIA.expo2}
+                  alt={captions[1]}
+                  sizes="(min-width: 1280px) 1200px, 100vw"
+                />
+              </div>
+              <div className="glass-dark absolute bottom-5 left-5 flex items-center gap-3 rounded-2xl px-5 py-4 text-white sm:bottom-8 sm:left-8">
+                <MapPin size={18} className="text-accent" />
+                <div>
+                  <div className="font-display text-[15px] font-semibold">{all.ui.hq}</div>
+                  <div className="meta mt-0.5 text-[11px] text-white/60">{HQ_COORDS}</div>
+                </div>
+              </div>
             </div>
           </ScrollReveal>
         </div>
       </section>
 
-      <SectionDivider from="var(--color-surface)" to="var(--color-surface-sunken)" />
-
-      {/* ─── MISSION & VISION ─── */}
+      {/* ─── MISSION & VISION ─── two opposed panels, navy and white. */}
       <section className="section-pad bg-surface-sunken">
         <div className="container-x">
           <ScrollReveal>
             <SectionTitle
+              variant="split"
+              index="02"
               eyebrow={tx.mission.eyebrow}
               title={tx.mission.title}
               description={tx.mission.description}
             />
           </ScrollReveal>
-          <div className="grid gap-8 md:grid-cols-2 mt-16">
+          <div className="mt-14 grid gap-5 md:grid-cols-2">
             {tx.mission.cards.map((card, i) => {
               const Icon = i === 0 ? Target : Eye;
+              const dark = i === 0;
               return (
-                <ScrollReveal key={card.title} delay={i * 150} direction="up">
-                  <div className="card-elevated group p-10 h-full bg-white relative overflow-hidden">
-                    {/* Decorative faint icon in background */}
-                    <Icon size={160} className="absolute -bottom-10 -right-10 text-primary/[0.03] transition-transform duration-500 group-hover:scale-110 group-hover:text-primary/[0.05]" />
-
-                    <div className="relative z-10">
-                      <div className="icon-chip mb-6">
-                        <Icon size={24} />
+                <ScrollReveal key={card.title} delay={i * 140}>
+                  <article
+                    className={cn(
+                      "group relative flex h-full min-h-[340px] flex-col justify-between overflow-hidden rounded-[28px] p-8 md:p-12",
+                      dark
+                        ? "bg-primary text-white shadow-panel"
+                        : "card-elevated !rounded-[28px] md:!p-12",
+                    )}
+                  >
+                    <Icon
+                      aria-hidden="true"
+                      size={220}
+                      strokeWidth={1}
+                      className={cn(
+                        "absolute -bottom-12 -right-12 transition-transform duration-700 ease-out-expo group-hover:-rotate-6 group-hover:scale-105",
+                        dark ? "text-white/[0.06]" : "text-primary/[0.05]",
+                      )}
+                    />
+                    <div className="relative flex items-center justify-between">
+                      <div className={dark ? "icon-chip-invert" : "icon-chip"}>
+                        <Icon size={22} />
                       </div>
-                      <h3 className="text-[24px] font-bold text-primary">{card.title}</h3>
-                      <p className="mt-4 text-[16px] text-muted-foreground leading-[1.7]">{card.desc}</p>
+                      <span
+                        aria-hidden="true"
+                        className={cn(
+                          "font-display text-[64px] font-extrabold leading-none stroke-type",
+                          dark ? "text-white/25" : "text-primary/20",
+                        )}
+                      >
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
                     </div>
-                  </div>
+                    <div className="relative mt-16">
+                      <h3
+                        className={cn(
+                          "text-title font-extrabold",
+                          dark ? "text-white" : "text-primary",
+                        )}
+                      >
+                        {card.title}
+                      </h3>
+                      <p
+                        className={cn(
+                          "mt-5 max-w-[40ch] text-lede",
+                          dark ? "text-white/75" : "text-muted-foreground",
+                        )}
+                      >
+                        {card.desc}
+                      </p>
+                    </div>
+                  </article>
                 </ScrollReveal>
               );
             })}
@@ -133,71 +227,119 @@ export function AboutPage() {
         </div>
       </section>
 
-      {/* ─── CORE VALUES ─── */}
+      {/* ─── CORE VALUES ─── one ruled panel; each cell floods navy on hover. */}
       <section className="section-pad bg-surface">
         <div className="container-x">
           <ScrollReveal>
-            <SectionTitle variant="split" eyebrow={tx.values.eyebrow} title={tx.values.title} />
+            <SectionTitle
+              variant="split"
+              index="03"
+              eyebrow={tx.values.eyebrow}
+              title={tx.values.title}
+            />
           </ScrollReveal>
-          <RevealGroup className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mt-16">
-            {tx.values.items.map((v, i) => {
-              const Icon = valueIcons[i];
-              return (
-                <RevealItem key={v.title} index={i} step={100} direction="up">
-                  <Tilt className="group">
-                  <div className="card-elevated text-center p-10 h-full border-transparent hover:border-accent/30">
-                    <div className="icon-chip mx-auto mb-6 !rounded-full">
-                      <Icon size={24} />
+          <RevealGroup className="mt-14">
+            <ul className="grid overflow-hidden rounded-[28px] border border-border bg-card shadow-card sm:grid-cols-2 lg:grid-cols-4">
+              {tx.values.items.map((v, i) => {
+                const Icon = valueIcons[i];
+                return (
+                  <RevealItem
+                    key={v.title}
+                    as="li"
+                    index={i}
+                    step={100}
+                    className={cn(
+                      "group relative flex min-h-[300px] flex-col justify-between p-8 transition-colors duration-500 ease-out-expo hover:bg-primary",
+                      i > 0 && "border-t border-border sm:border-t-0",
+                      i === 2 && "sm:border-t lg:border-t-0",
+                      i === 3 && "sm:border-t lg:border-t-0",
+                      i % 2 === 1 && "sm:border-l",
+                      i === 2 && "lg:border-l",
+                    )}
+                  >
+                    <div className="flex items-start justify-between">
+                      <div className="icon-chip">
+                        <Icon size={22} />
+                      </div>
+                      <span
+                        aria-hidden="true"
+                        className="meta text-primary/35 transition-colors duration-500 group-hover:text-white/45"
+                      >
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
                     </div>
-                    <h3 className="text-[20px] font-bold text-primary">{v.title}</h3>
-                    <p className="mt-3 text-[15px] text-muted-foreground leading-[1.6]">{v.desc}</p>
-                  </div>
-                  </Tilt>
-                </RevealItem>
-              );
-            })}
+                    <div className="mt-12">
+                      <h3 className="text-heading font-bold text-primary transition-colors duration-500 group-hover:text-white">
+                        {v.title}
+                      </h3>
+                      <p className="mt-3 text-[15.5px] leading-[1.6] text-muted-foreground transition-colors duration-500 group-hover:text-white/75">
+                        {v.desc}
+                      </p>
+                    </div>
+                  </RevealItem>
+                );
+              })}
+            </ul>
           </RevealGroup>
         </div>
       </section>
 
-      {/* ─── HORIZONTAL TIMELINE ─── */}
-      <section className="section-pad bg-primary text-white overflow-hidden relative">
+      {/* ─── TIMELINE ─── */}
+      <section className="section-pad-lg relative isolate overflow-hidden bg-ink text-white">
+        <div aria-hidden="true" className="bg-dots absolute inset-0 -z-10 text-white/[0.05]" />
         <div
-          className="absolute inset-0 opacity-[0.05]"
-          style={{ backgroundImage: "radial-gradient(#ffffff 1px, transparent 1px)", backgroundSize: "24px 24px" }}
+          aria-hidden="true"
+          className="absolute -left-40 top-0 -z-10 h-[34rem] w-[34rem] rounded-full blur-3xl"
+          style={{
+            background:
+              "radial-gradient(circle, color-mix(in oklab, var(--color-primary) 60%, transparent), transparent 65%)",
+          }}
         />
-        <div className="container-x relative z-10">
+        <div className="container-x">
           <ScrollReveal>
-            <div className="text-center">
-              <p className="eyebrow-light inline-block">{tx.timeline.eyebrow}</p>
-              <h2 className="text-title font-bold text-white mt-2">{tx.timeline.title}</h2>
-              <p className="mt-4 text-lede text-white/70 max-w-2xl mx-auto">{tx.timeline.subtitle}</p>
-              <div className="mt-5 h-1 w-12 rounded-full bg-accent mx-auto" />
-            </div>
+            <SectionTitle
+              variant="split"
+              tone="dark"
+              index="04"
+              eyebrow={tx.timeline.eyebrow}
+              title={tx.timeline.title}
+              description={tx.timeline.subtitle}
+            />
           </ScrollReveal>
 
-          <RevealGroup className="mt-20 relative" threshold={0.2}>
-            {/* The rail draws itself from the same trigger that cascades the
-                year nodes, so the line always arrives just ahead of them
-                instead of each running an independent observer. */}
+          <RevealGroup className="relative mt-16 md:mt-24" threshold={0.2}>
             <TimelineRail />
-
-            <div className="grid gap-12 md:gap-6 md:grid-cols-4 relative z-10">
+            <ol className="relative grid gap-12 pl-10 md:grid-cols-4 md:gap-8 md:pl-0">
               {tx.timeline.events.map((e, i) => (
-                <RevealItem key={e.year} index={i} step={150} direction="up">
-                  <div className="text-center group">
-                    <div className="w-14 h-14 rounded-full bg-primary border-4 border-white shadow-[0_4px_20px_rgba(0,0,0,.2)] text-accent font-bold text-[18px] grid place-items-center mx-auto relative transition-transform duration-300 ease-out-soft group-hover:-translate-y-2 group-hover:shadow-[0_8px_30px_rgba(245,166,35,.4)] group-hover:bg-white">
-                      {e.year}
-                    </div>
-                    <h3 className="mt-6 text-[20px] font-bold text-white">{e.t}</h3>
-                    <p className="mt-3 text-[15px] text-white/70 leading-[1.6] px-2">{e.d}</p>
-                  </div>
+                <RevealItem
+                  key={e.year}
+                  as="li"
+                  index={i}
+                  step={160}
+                  className="group relative md:pt-12"
+                >
+                  <span
+                    aria-hidden="true"
+                    className="absolute -left-10 top-1.5 h-[15px] w-[15px] rounded-full border-2 border-accent bg-ink transition-colors duration-300 group-hover:bg-accent md:left-0 md:top-0"
+                  />
+                  <p className="font-display text-[clamp(2.5rem,2rem+1.8vw,3.5rem)] font-extrabold leading-none tabular-nums text-accent">
+                    {e.year}
+                  </p>
+                  <h3 className="mt-4 text-heading font-bold text-white md:mt-6">{e.t}</h3>
+                  <p className="mt-3 max-w-[32ch] text-[16px] leading-[1.6] text-white/65">{e.d}</p>
                 </RevealItem>
               ))}
-            </div>
+            </ol>
           </RevealGroup>
         </div>
       </section>
+
+      <CtaBand
+        title={all.home.cta.title}
+        description={all.home.cta.description}
+        primary={{ to: "/partner", label: all.home.cta.btn }}
+        secondary={{ to: "/contact", label: all.nav.contact }}
+      />
     </SiteLayout>
   );
 }
