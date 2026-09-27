@@ -44,9 +44,9 @@ const OG_LOCALE: Record<Lang, string> = { en: "en_US", cn: "zh_CN" };
 export function seoLinks(path: RoutePath, lang: Lang = "en") {
   return [
     { rel: "canonical", href: absoluteUrl(path, lang) },
-    { rel: "alternate", hreflang: HREFLANG.en, href: absoluteUrl(path, "en") },
-    { rel: "alternate", hreflang: HREFLANG.cn, href: absoluteUrl(path, "cn") },
-    { rel: "alternate", hreflang: "x-default", href: absoluteUrl(path, "en") },
+    { rel: "alternate", hrefLang: HREFLANG.en, href: absoluteUrl(path, "en") },
+    { rel: "alternate", hrefLang: HREFLANG.cn, href: absoluteUrl(path, "cn") },
+    { rel: "alternate", hrefLang: "x-default", href: absoluteUrl(path, "en") },
   ];
 }
 
@@ -301,7 +301,7 @@ const PAGE_SEO: Record<RoutePath, Record<Lang, PageMeta>> = {
     },
   },
 
-"/canton-fair-buyer-recruitment": {
+  "/canton-fair-buyer-recruitment": {
     en: {
       title: "Canton Fair Buyer Recruitment | JU Fair Global",
       description:
