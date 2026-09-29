@@ -3,11 +3,9 @@ import { LocalizedLink } from "@/components/site/LocalizedLink";
 import { useState } from "react";
 import { SiteLayout, PageHero } from "@/components/site/SiteLayout";
 import { ScrollReveal } from "@/components/site/ScrollReveal";
-import { RouteArc } from "@/components/site/RouteArc";
 import { useLanguage } from "@/hooks/useLanguage";
 import { t } from "@/translations";
 import { seoHead } from "@/lib/seo";
-import { HQ_COORDS } from "@/lib/media";
 import { redirectLegacyLang } from "@/lib/langRedirect";
 import {
   Mail,
@@ -16,8 +14,6 @@ import {
   Facebook,
   Linkedin,
   Instagram,
-  ArrowUpRight,
-  Check,
 } from "lucide-react";
 import { WhatsAppIcon, getWhatsAppLink } from "@/components/site/WhatsAppIcon";
 import { ContactMap } from "@/components/site/ContactMap";
@@ -32,21 +28,6 @@ export const Route = createFileRoute("/contact")({
 /** Cap on the message field — also what the live counter counts against. */
 const MESSAGE_MAX = 1200;
 
-const SOCIALS = [
-  {
-    icon: Linkedin,
-    href: "https://www.linkedin.com/company/ju-global-private-limited/",
-    name: "LinkedIn",
-  },
-  { icon: Facebook, href: "https://www.facebook.com/share/1BdSxmw4wg/", name: "Facebook" },
-  {
-    icon: Instagram,
-    href: "https://www.instagram.com/jufair_global?igsh=cmhnNHV1Y3RtajZm",
-    name: "Instagram",
-  },
-  { icon: WhatsAppIcon, href: getWhatsAppLink(), name: "WhatsApp" },
-];
-
 export function ContactPage() {
   const [sent, setSent] = useState(false);
   const { lang } = useLanguage();
@@ -54,161 +35,152 @@ export function ContactPage() {
 
   return (
     <SiteLayout>
-      <PageHero eyebrow={tx.hero.eyebrow} title={tx.hero.title} subtitle={tx.hero.subtitle} />
+      <PageHero
+        eyebrow={tx.hero.eyebrow}
+        title={tx.hero.title}
+        subtitle={tx.hero.subtitle}
+      />
 
       <section className="section-pad bg-surface-sunken">
-        <div className="container-x grid items-start gap-6 lg:grid-cols-12 lg:gap-8">
-          {/* ─── DIRECT LINES ───
-              Every line is now actionable: the phone opens WhatsApp and the
-              address below it is a real mailto, where both used to be plain
-              text. Sticky on desktop, so the details stay in view while the
-              visitor fills the form. */}
-          <div className="lg:sticky lg:top-28 lg:col-span-4">
-            <aside className="relative isolate overflow-hidden rounded-[28px] bg-ink p-7 text-white shadow-panel md:p-8">
-              <div
-                aria-hidden="true"
-                className="bg-dots absolute inset-0 -z-10 text-white/[0.06] [mask-image:linear-gradient(180deg,#000,transparent_75%)]"
-              />
-              <RouteArc className="absolute -right-32 -top-20 -z-10 w-[360px] text-white opacity-40" />
+        <div className="container-x">
+          <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-start">
 
-              <h2 className="text-heading font-bold text-white">{tx.sidebar.contactInfo}</h2>
+            {/* ─── 70% LEFT COLUMN (FORM + MAP) ─── */}
+            <div className="lg:col-span-8 space-y-8">
 
-              <ul className="mt-7 space-y-3">
-                <li className="flex gap-4 rounded-2xl border border-white/10 p-4">
-                  <span className="icon-chip-invert !h-11 !w-11 !rounded-xl">
-                    <MapPin size={18} />
-                  </span>
-                  <div>
-                    <div className="meta text-[11px] text-white/50">{tx.sidebar.hq}</div>
-                    <div className="mt-1 font-display text-[16px] font-semibold">
-                      {tx.sidebar.address}
-                    </div>
-                    <div className="meta mt-1 text-[10.5px] text-white/40">{HQ_COORDS}</div>
-                  </div>
-                </li>
-                <li>
-                  <a
-                    href={getWhatsAppLink()}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="group flex gap-4 rounded-2xl border border-white/10 p-4 transition-colors hover:border-accent/50 hover:bg-white/[0.05]"
-                  >
-                    <span className="icon-chip-invert !h-11 !w-11 !rounded-xl">
-                      <WhatsAppIcon size={18} />
-                    </span>
-                    <div className="min-w-0 flex-1">
-                      <div className="meta text-[11px] text-white/50">{tx.sidebar.phone}</div>
-                      <div className="mt-1 font-display text-[16px] font-semibold tabular-nums">
-                        {tx.sidebar.phoneValue}
+              {/* Form Card */}
+              <ScrollReveal direction="left">
+                <div className="card-elevated p-8 md:p-12">
+                  {sent ? (
+                    <div className="py-12 text-center max-w-md mx-auto animate-fade-in">
+                      <div className="w-20 h-20 bg-accent/15 rounded-full grid place-items-center mx-auto mb-6 border border-accent/20">
+                        {/* Drawn rather than bounced — a checkmark that writes
+                            itself reads as confirmation; a bouncing one reads
+                            as an alert. pathLength normalises the dash maths. */}
+                        <svg
+                          width="40"
+                          height="40"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="text-accent-text"
+                          aria-hidden="true"
+                        >
+                          <path d="M20 6 9 17l-5-5" pathLength={1} className="check-draw" />
+                        </svg>
+                      </div>
+                      <h3 className="text-heading font-bold text-primary mb-3">{tx.form.success.title}</h3>
+                      <p className="text-[16px] text-muted-foreground leading-[1.6] mb-8">
+                        {tx.form.success.desc}
+                      </p>
+                      <div className="flex justify-center gap-4">
+                        <LocalizedLink to="/services" className="btn-outline">
+                          {tx.form.success.btnServices}
+                        </LocalizedLink>
+                        <LocalizedLink to="/" className="btn-primary">
+                          {tx.form.success.btnHome}
+                        </LocalizedLink>
                       </div>
                     </div>
-                    <ArrowUpRight
-                      size={18}
-                      className="self-center text-white/40 transition-all group-hover:rotate-45 group-hover:text-accent"
-                    />
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href={`mailto:${tx.sidebar.emailValue}`}
-                    className="group flex gap-4 rounded-2xl border border-white/10 p-4 transition-colors hover:border-accent/50 hover:bg-white/[0.05]"
-                  >
-                    <span className="icon-chip-invert !h-11 !w-11 !rounded-xl">
-                      <Mail size={18} />
-                    </span>
-                    <div className="min-w-0 flex-1">
-                      <div className="meta text-[11px] text-white/50">
-                        {tx.sidebar.emailSupport}
+                  ) : (
+                    <ContactForm tx={tx} onSuccess={() => setSent(true)} />
+                  )}
+                </div>
+              </ScrollReveal>
+
+              {/* Map Card — Dynamic Map Provider (AMap if API key available, Google Maps as fallback) */}
+              <ScrollReveal direction="up" delay={200}>
+                <div className="card-elevated p-2 overflow-hidden">
+                  <ContactMap
+                    latitude={31.23}
+                    longitude={121.47}
+                    locationName="JU Fair Global"
+                    zoom={15}
+                    title={tx.sidebar.mapTitle}
+                  />
+                </div>
+              </ScrollReveal>
+            </div>
+
+            {/* ─── 30% RIGHT COLUMN (STICKY SIDEBAR) ─── */}
+            <div className="lg:col-span-4 lg:sticky lg:top-28 space-y-6">
+
+              <ScrollReveal direction="right" delay={100}>
+                <div className="card-elevated bg-primary text-white border-none shadow-[0_12px_30px_rgba(11,61,145,0.15)] p-8 relative overflow-hidden">
+                  <div
+                    className="absolute inset-0 opacity-[0.05]"
+                    style={{ backgroundImage: "radial-gradient(#ffffff 1px, transparent 1px)", backgroundSize: "16px 16px" }}
+                  />
+                  <h3 className="font-bold text-[20px] text-white mb-6 relative z-10">{tx.sidebar.contactInfo}</h3>
+                  <ul className="space-y-6 text-[15px] text-white/80 relative z-10">
+                    <li className="flex gap-4">
+                      <div className="w-10 h-10 rounded-full bg-white/10 grid place-items-center shrink-0">
+                        <MapPin size={18} className="text-accent" />
                       </div>
-                      <div className="mt-1 truncate font-display text-[16px] font-semibold">
+                      <div>
+                        <div className="font-semibold text-white mb-1">{tx.sidebar.hq}</div>
+                        {tx.sidebar.address}
+                      </div>
+                    </li>
+                    <li>
+                      <a
+                        href={getWhatsAppLink()}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="flex gap-4 group hover:opacity-90 transition-opacity cursor-pointer"
+                        title="Chat with us on WhatsApp"
+                      >
+                        <div className="w-10 h-10 rounded-full bg-white/10 grid place-items-center shrink-0 group-hover:bg-accent group-hover:text-white transition-colors duration-300">
+                          <WhatsAppIcon size={18} className="text-accent group-hover:text-white transition-colors" />
+                        </div>
+                        <div>
+                          <div className="font-semibold text-white mb-1 group-hover:text-accent transition-colors">{tx.sidebar.phone}</div>
+                          <span className="text-white/80 group-hover:text-white underline decoration-white/30 underline-offset-4 group-hover:decoration-accent transition-colors">{tx.sidebar.phoneValue}</span>
+                        </div>
+                      </a>
+                    </li>
+                    <li className="flex gap-4">
+                      <div className="w-10 h-10 rounded-full bg-white/10 grid place-items-center shrink-0">
+                        <Mail size={18} className="text-accent" />
+                      </div>
+                      <div>
+                        <div className="font-semibold text-white mb-1">{tx.sidebar.emailSupport}</div>
                         {tx.sidebar.emailValue}
                       </div>
-                    </div>
-                    <ArrowUpRight
-                      size={18}
-                      className="self-center text-white/40 transition-all group-hover:rotate-45 group-hover:text-accent"
-                    />
-                  </a>
-                </li>
-              </ul>
+                    </li>
+                  </ul>
+                </div>
+              </ScrollReveal>
 
-              <div className="mt-8 border-t border-white/10 pt-6">
-                <h3 className="meta text-white/55">{tx.sidebar.connectWith}</h3>
-                <ul className="mt-4 flex gap-3">
-                  {SOCIALS.map((s) => (
-                    <li key={s.name}>
+              <ScrollReveal direction="right" delay={200}>
+                <div className="card-elevated p-8 text-center">
+                  <h3 className="font-bold text-[18px] text-primary mb-5">{tx.sidebar.connectWith}</h3>
+                  <div className="flex justify-center gap-4">
+                    {[
+                      { icon: Facebook,     href: "https://www.facebook.com/share/1BdSxmw4wg/", name: "Facebook" },
+                      { icon: Instagram,    href: "https://www.instagram.com/jufair_global?igsh=cmhnNHV1Y3RtajZm", name: "Instagram" },
+                      { icon: Linkedin,     href: "https://www.linkedin.com/company/ju-global-private-limited/", name: "LinkedIn" },
+                      { icon: WhatsAppIcon, href: getWhatsAppLink(), name: "WhatsApp" },
+                    ].map((s) => (
                       <a
+                        key={s.name}
                         href={s.href}
                         target="_blank"
                         rel="noreferrer"
                         aria-label={s.name}
-                        className="grid h-11 w-11 place-items-center rounded-full border border-white/15 text-white/80 transition-all duration-300 ease-spring hover:-translate-y-1 hover:border-accent hover:bg-accent hover:text-accent-ink"
+                        className="w-12 h-12 rounded-full bg-surface text-primary grid place-items-center hover:bg-accent hover:text-white transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
                       >
-                        <s.icon size={17} />
+                        <s.icon size={20} />
                       </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </aside>
-          </div>
-
-          {/* ─── FORM ─── */}
-          <div className="space-y-6 lg:col-span-8">
-            <ScrollReveal>
-              <div className="rounded-[28px] border border-border bg-card p-6 shadow-card sm:p-10 md:p-12">
-                {sent ? (
-                  <div className="mx-auto max-w-md py-10 text-center animate-fade-in">
-                    <div className="mx-auto mb-7 grid h-20 w-20 place-items-center rounded-full bg-accent text-accent-ink shadow-[var(--shadow-btn-hover)]">
-                      {/* Drawn rather than bounced — a checkmark that writes
-                          itself reads as confirmation, not as an alert. */}
-                      <svg
-                        width="38"
-                        height="38"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        aria-hidden="true"
-                      >
-                        <path d="M20 6 9 17l-5-5" pathLength={1} className="check-draw" />
-                      </svg>
-                    </div>
-                    <h2 className="text-title font-extrabold text-primary">
-                      {tx.form.success.title}
-                    </h2>
-                    <p className="mt-4 text-[16px] leading-[1.6] text-muted-foreground">
-                      {tx.form.success.desc}
-                    </p>
-                    <div className="mt-9 flex flex-wrap justify-center gap-3">
-                      <LocalizedLink to="/services" className="btn-outline">
-                        {tx.form.success.btnServices}
-                      </LocalizedLink>
-                      <LocalizedLink to="/" className="btn-primary">
-                        {tx.form.success.btnHome}
-                      </LocalizedLink>
-                    </div>
+                    ))}
                   </div>
-                ) : (
-                  <ContactForm tx={tx} onSuccess={() => setSent(true)} />
-                )}
-              </div>
-            </ScrollReveal>
+                </div>
+              </ScrollReveal>
 
-            <ScrollReveal delay={120}>
-              <div className="overflow-hidden rounded-[28px] border border-border bg-card p-2 shadow-card">
-                <ContactMap
-                  latitude={31.23}
-                  longitude={121.47}
-                  locationName="JU Fair Global"
-                  zoom={15}
-                  title={tx.sidebar.mapTitle}
-                  className="block h-[340px] w-full rounded-[22px] border-0 md:h-[420px]"
-                />
-              </div>
-            </ScrollReveal>
+            </div>
           </div>
         </div>
       </section>
@@ -243,7 +215,7 @@ function ContactForm({
 
     // Makes emails easy to identify in Gmail
     formData.append("from_name", "JU Fair Global — Contact Form");
-    formData.append("subject", "New Inquiry via JU Fair Website");
+    formData.append("subject",   "New Inquiry via JU Fair Website");
 
     try {
       const response = await fetch("https://api.web3forms.com/submit", {
@@ -267,72 +239,56 @@ function ContactForm({
 
   return (
     <>
-      <div className="flex flex-wrap items-end justify-between gap-4 border-b border-border pb-8">
-        <div>
-          <h2 className="text-title font-extrabold text-primary">{tx.form.title}</h2>
-          <p className="mt-3 max-w-[48ch] text-[16px] text-muted-foreground">{tx.form.subtitle}</p>
-        </div>
-      </div>
+      <h2 className="text-title font-bold text-primary mb-2">{tx.form.title}</h2>
+      <p className="text-muted-foreground mb-8 text-[16px]">{tx.form.subtitle}</p>
 
-      <form onSubmit={handleSubmit} className="mt-8 grid gap-6 md:grid-cols-2">
+      <form onSubmit={handleSubmit} className="grid gap-6 md:grid-cols-2">
         {/* Honeypot field — Web3Forms uses this to silently reject bot submissions */}
-        <input
-          type="checkbox"
-          name="botcheck"
-          className="hidden"
-          aria-hidden="true"
-          tabIndex={-1}
-        />
+        <input type="checkbox" name="botcheck" className="hidden" aria-hidden="true" />
 
-        <Field label={tx.form.fields.name} name="name" autoComplete="name" required />
-        <Field label={tx.form.fields.company} name="company" autoComplete="organization" required />
-        <Field label={tx.form.fields.country} name="country" autoComplete="country-name" required />
-        <Field
-          label={tx.form.fields.email}
-          name="email"
-          type="email"
-          autoComplete="email"
-          required
-        />
-        <Field label={tx.form.fields.phone} name="phone" type="tel" autoComplete="tel" />
+        <Field label={tx.form.fields.name}    name="name"    required />
+        <Field label={tx.form.fields.company} name="company" required />
+        <Field label={tx.form.fields.country} name="country" required />
+        <Field label={tx.form.fields.email}   name="email"   type="email" required />
+        <Field label={tx.form.fields.phone}   name="phone" />
 
-        {/* Service — radio pills instead of a dropdown: five short options
-            are faster to scan and tap than to open a select for. Same
-            `service` field name and values, so submissions are unchanged. */}
-        <fieldset className="md:col-span-2">
-          <legend className="mb-3 block font-display text-[14px] font-semibold text-primary">
+        {/* Interested Service Dropdown */}
+        <div>
+          <label htmlFor="service" className="block text-[14px] font-bold text-primary mb-2">
             {tx.form.services.label}
-          </legend>
-          <div className="flex flex-wrap gap-2.5">
-            {tx.form.services.options.map((opt: string, i: number) => (
-              <label key={opt} className="relative cursor-pointer">
-                <input
-                  type="radio"
-                  name="service"
-                  value={opt}
-                  defaultChecked={i === 0}
-                  className="peer absolute inset-0 cursor-pointer opacity-0"
-                />
-                <span className="flex h-11 items-center gap-2 rounded-full border-[1.5px] border-border bg-surface px-4 font-display text-[14px] font-medium text-primary/80 transition-all duration-300 hover:border-primary/30 peer-checked:border-primary peer-checked:bg-primary peer-checked:text-white peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent [&>svg]:hidden peer-checked:[&>svg]:block">
-                  <Check size={14} strokeWidth={3} className="text-accent" />
-                  {opt}
-                </span>
-              </label>
+          </label>
+          <select
+            id="service"
+            name="service"
+            className="field-input w-full h-[52px] rounded-[12px] border-2 border-border/80 bg-background px-4 text-[15px] focus:outline-none focus:border-accent focus:ring-4 focus:ring-accent/10 transition-all appearance-none cursor-pointer"
+            style={{
+              backgroundImage: `url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230B3D91' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e")`,
+              backgroundRepeat: "no-repeat",
+              backgroundPosition: "right 16px center",
+              backgroundSize: "16px",
+            }}
+          >
+            {tx.form.services.options.map((opt: string) => (
+              <option key={opt} value={opt}>
+                {opt}
+              </option>
             ))}
-          </div>
-        </fieldset>
+          </select>
+        </div>
 
-        <div className="md:col-span-2">
+        <div className="md:col-span-2 mt-2">
           <div className="mb-2 flex items-baseline justify-between gap-4">
-            <label
-              htmlFor="message"
-              className="block font-display text-[14px] font-semibold text-primary"
-            >
+            <label htmlFor="message" className="block text-[14px] font-bold text-primary">
               {tx.form.fields.message} <span className="text-accent-text">*</span>
             </label>
-            {/* Colour set inline: in the browser a swapped Tailwind colour
-                class kept computing the previous value, while driving the
-                custom property directly is unambiguous. */}
+            {/* Digits only — no wording to translate, and it turns amber as
+                the visitor approaches the cap rather than only at it. */}
+            {/* Colour is set inline rather than by swapping Tailwind colour
+                utilities: in the browser the swapped class was applied to the
+                node but kept computing the previous colour, while an identical
+                class string on a fresh probe resolved correctly. Driving the
+                custom property directly is unambiguous and removes the
+                dependence on utility cascade order. */}
             <span
               aria-hidden="true"
               className="text-[12px] font-semibold tabular-nums transition-colors duration-200"
@@ -350,31 +306,32 @@ function ContactForm({
             id="message"
             name="message"
             required
-            rows={6}
+            rows={5}
             maxLength={MESSAGE_MAX}
             onChange={(event) => setMessageLength(event.currentTarget.value.length)}
-            className="field field-input resize-none py-4"
+            className="field-input w-full rounded-[12px] border-2 border-border/80 bg-background px-4 py-3 text-[15px] focus:outline-none focus:border-accent focus:ring-4 focus:ring-accent/10 transition-all resize-none"
             placeholder={tx.form.fields.messagePlaceholder}
           />
         </div>
 
+        {/* Inline error message */}
         {error && (
-          <p
-            role="alert"
-            className="md:col-span-2 rounded-[14px] border border-destructive/25 bg-destructive/[0.05] px-4 py-3 text-[14px] font-medium text-destructive"
-          >
-            {error}
+          <p className="md:col-span-2 text-red-600 text-[14px] font-medium bg-red-50 border border-red-200 rounded-[10px] px-4 py-3">
+            ⚠️ {error}
           </p>
         )}
 
-        <div className="flex justify-end border-t border-border pt-6 md:col-span-2">
+        <div className="md:col-span-2 mt-4">
           <button
             type="submit"
             disabled={submitting}
-            className="btn-primary w-full !min-h-14 !px-9 !text-[16px] disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+            className="btn-primary w-full md:w-auto !h-14 !px-10 !text-[16px] cursor-pointer group disabled:opacity-60 disabled:cursor-not-allowed"
           >
+            <Send
+              size={18}
+              className="transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
+            />
             {submitting ? tx.form.sending : tx.form.submit}
-            <Send size={17} />
           </button>
         </div>
       </form>
@@ -387,31 +344,25 @@ function Field({
   name,
   type = "text",
   required = false,
-  autoComplete,
 }: {
   label: string;
   name: string;
   type?: string;
   required?: boolean;
-  autoComplete?: string;
 }) {
   return (
     <div>
-      <label
-        htmlFor={name}
-        className="mb-2 block font-display text-[14px] font-semibold text-primary"
-      >
+      <label htmlFor={name} className="block text-[14px] font-bold text-primary mb-2">
         {label} {required && <span className="text-accent-text">*</span>}
       </label>
-      {/* `field-input` hooks up the :user-invalid styling in styles.css —
-          the field only turns red once the visitor has actually touched it. */}
       <input
         id={name}
         name={name}
         type={type}
         required={required}
-        autoComplete={autoComplete}
-        className="field field-input"
+        // `field-input` hooks up the :user-invalid styling in styles.css —
+        // the field only turns red once the visitor has actually touched it.
+        className="field-input w-full h-[52px] rounded-[12px] border-2 border-border/80 bg-background px-4 text-[15px] focus:outline-none focus:border-accent focus:ring-4 focus:ring-accent/10 transition-all"
       />
     </div>
   );
