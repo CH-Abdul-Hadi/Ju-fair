@@ -18,8 +18,8 @@ interface ContactMapProps {
 }
 
 export function ContactMap({
-  latitude = 31.23,
-  longitude = 121.47,
+  latitude = 30.99778,
+  longitude = 121.30178,
   locationName = "JU Fair Global",
   zoom = 15,
   className = "w-full h-80 rounded-[12px] border-0",

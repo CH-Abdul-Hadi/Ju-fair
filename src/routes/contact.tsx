@@ -95,8 +95,8 @@ export function ContactPage() {
               <ScrollReveal direction="up" delay={200}>
                 <div className="card-elevated p-2 overflow-hidden">
                   <ContactMap
-                    latitude={31.23}
-                    longitude={121.47}
+                    latitude={30.99778}
+                    longitude={121.30178}
                     locationName="JU Fair Global"
                     zoom={15}
                     title={tx.sidebar.mapTitle}
