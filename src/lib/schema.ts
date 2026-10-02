@@ -67,13 +67,11 @@ export type GraphContext = {
 /**
  * The company entity.
  *
- * Deliberately `Organization` and not `LocalBusiness`. LocalBusiness is for a
- * place a customer visits and expects a street address and geo coordinates; we
- * publish only "Shanghai, China", and the map component falls back to a
- * city-centre coordinate rather than a surveyed office location. Declaring a
- * precise `geo` from that would be asserting something we cannot stand behind,
- * and thin LocalBusiness markup gets ignored anyway. Upgrade this the day a
- * full registered address exists — see SEO.md §4b.
+ * Deliberately `Organization` and not `LocalBusiness`: this is an office
+ * clients contact rather than a shop they walk into. It carries the full
+ * registered address — the same one printed in the footer and on /contact —
+ * written in each language's own convention (Chinese runs largest unit to
+ * smallest).
  */
 function organization(ctx: GraphContext) {
   return {
@@ -102,7 +100,12 @@ function organization(ctx: GraphContext) {
     telephone: PHONE,
     address: {
       "@type": "PostalAddress",
-      addressLocality: "Shanghai",
+      streetAddress:
+        ctx.lang === "cn"
+          ? "松江区泖亭路188弄48号102室"
+          : "Room 102, Building 48, Lane 188, Maoting Road, Songjiang District",
+      addressLocality: ctx.lang === "cn" ? "上海市" : "Shanghai",
+      postalCode: "201611",
       addressCountry: "CN",
     },
     areaServed: AREA_SERVED,
